@@ -1,5 +1,27 @@
 # Implementation Status
 
+## 2026-10-16 — Integrated Reading scope, Gate 0 reconciliation
+
+This entry supersedes the planning-time current milestone below; historical entries remain evidence.
+
+- Branch: `docs/reading-integration-gate0-reconciliation`; initial plugin HEAD `4fa9f3638617bfd973edb2adeb84672a6f432eab`.
+- Upstream baseline: Quartzo `10e11ec93f52d1be34fa06c4d756342a8ae1e20e`, Companion `efa53aa64d8c08277aa7e68dbd79e8e9a61229be`, Reader `075458f6843df936b3810c12cd93851f57805eec`.
+- Reader stable sequencing is satisfied by existing v1.0.0/v1.2.0 tags and documented acceptance. Main source constants say 1.2.1. Subsequent USB inspection found Reader 1.3.0-rc.1 installed, with all 86 runtime Lua files matching branch `feature/reader-metadata-editing-v1.3.0` at e82130ad3d0aeb8ee6d36543e397c64009b36001 after EOL normalization. PR 27 / its M10 acceptance remains open; no Reader code or branch was changed.
+- User-confirmed latest physical baseline: PW3 / G090KB, firmware 5.16.2.1.1 (4097470002), KOReader **v2026.07.1**, package **kindlepw2**, functional jailbreak/KUAL. Reader `docs/KOREADER_UPGRADE.md` agrees. Reconfirm the actual installation before the next physical run. The user initially reported no connection, then identified the mounted Kindle drive. Read-only USB inspection confirmed KOReader git-rev v2026.07.1, SimpleUI 2.7.5 and SimpleUI Extra 1.15.0.
+- Official v2026.07.1 Statistics source was inspected: schema 20221111, page_stat_data uniqueness `(id_book,page,start_time)`, book title/authors/md5 uniqueness, flush at close/save/suspend. Source SHA-256 `da6db5e381bcfdaf05053d23bf75781166cc713b14076a65fcd2c527067fd088`. Installed Statistics source hash matches the official source byte-for-byte; mounted DB header also says user_version 20221111, WAL format. Live SQL was skipped to avoid auxiliary WAL writes. This is inspection evidence, not a plugin extraction/concurrency or runtime transport test.
+- A subsequent host-only immutable frozen-copy audit passed SQLite quick_check and confirmed 39 book rows, 5105 native events and two MD5 groups containing multiple book rows. Source bytes remained unchanged, no WAL appeared, and the temporary host copy was removed. No titles, raw private rows or credentials are recorded. This proves the need for row-scoped native identity; it does not establish Reader provenance or runtime transport.
+- Adopted scope: one-way validated reading/status evidence and restricted opt-in Reader-origin KOReader promotion through upstream Resource owners. Ordinary/unmatched documents do not auto-create. Reader-only catalog/progress does not create Resource or minutes. No bidirectional progress/status writeback or highlights owner added.
+- Quartzo candidate branch: `feature/reading-integration-contracts-g00-g03`; active spec `docs/specs/reading-integration.md`, ADR `docs/adrs/reading-integration-v1.md`, handoff `docs/reading-integration/STATUS.md`, versioned contracts in `contracts/quartzo/reading_identity`, `reading_evidence_status`, `reading_activity`. Candidate is not merged/deployed.
+- Upstream draft review: [aplicativo PR 65](https://github.com/olalaurao/aplicativo/pull/65), implementation commits 83f084ec (contracts), 16a775de (source-specific approval/canonical parser) and dbd38dcb (independent read-only catalog). Final combined targeted run: 98 PASS; documentation/architecture: 95 PASS. Initial full suite had 2422 PASS, one skipped and two failures corrected and rerun in full affected test files; no full-suite PASS is claimed. CI state is tracked in upstream STATUS.
+- Gate 0A: **IN_PROGRESS**, explicit upstream vault-domain/owner candidate, actual writer/Drive durability and Companion adoption still pending.
+- Gate 0B: **BLOCKED**, USB inspection succeeded but no selected runtime transport or authenticated payload/TLS/error/ACK proof exists. No endpoint or always-on backend assumed.
+- Gate 0C: **IN_PROGRESS**, raw-event/identity/status vectors implemented upstream; versioned authenticated request/response/ACK protocol and Lua consumer not yet implemented. Changed native duration with the same tuple is conflict, never a new event.
+- Gates 1–9 remain **BLOCKED**. No plugin runtime code, ZIP, live SQLite query, outbox, network action or Wi-Fi change was introduced. No runtime physical gate is marked PASS.
+- Changes here: reconcile IMPLEMENTATION_SPEC/PLAN/README target and scope; preserve original historical planning. No credentials or private document data added.
+- Validation here: documentation/Git diff inspection only; Lua unit/dev-check/package are not applicable because this repo still has no Lua implementation. Upstream Dart/architecture/schema/Companion compatibility results live in the upstream STATUS.
+- Exact next step: review/merge upstream canonical contracts, prove actual vault shard persistence/Drive recovery and Companion consumption, then run the smallest authenticated transport spike on PW3 after leaving USB export mode safely with canonical ACK. Do not start production plugin phases while 0A/0B/0C remain open.
+
+
 > **Repository:** `olalaurao/quartzo-koplugin`  
 > **Canonical implementation spec:** `IMPLEMENTATION_SPEC.md`  
 > **Product roadmap:** `PLAN.md`  

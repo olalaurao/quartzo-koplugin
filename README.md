@@ -2,7 +2,7 @@
 
 Planned KOReader plugin for synchronizing reading activity from KOReader into Quartzo.
 
-> **Status:** planning complete; implementation intentionally deferred until the current `olalaurao/reader` Readwise Reader plugin reaches the desired stable V1/tag, unless that sequencing is explicitly changed.
+> **Status:** Gate 0 reconciliation in progress. Reader stable sequencing is satisfied; canonical durability/protocol and physical transport remain unproved. No production plugin code exists.
 
 ## Goal
 
@@ -31,7 +31,9 @@ The plugin is intended to work with ordinary KOReader documents as well as files
 - Kindle Paperwhite 3 / 7th generation
 - Firmware 5.16.2.1.1
 - KUAL
-- KOReader 2025.04
+- KOReader v2026.07.1 (`kindlepw2`), physically documented Reader baseline; confirm current installation before new tests
+
+The 2026-10-16 integrated scope adds gated one-way status evidence and opt-in promotion only for proven Reader-origin KOReader reading, through the upstream Resource owner. Reader-only remains external, ordinary unmatched events remain preserved, and no staging ACK or automatic effect is enabled. See the precedence reconciliation in `IMPLEMENTATION_SPEC.md`.
 
 ## Project documents
 

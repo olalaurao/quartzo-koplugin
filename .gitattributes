@@ -1,0 +1,3 @@
+# The historical spec contains literal NUL separators in an example; keep its
+# documentation changes reviewable as text without changing that source data.
+IMPLEMENTATION_SPEC.md diff

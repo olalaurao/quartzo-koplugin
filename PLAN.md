@@ -1,14 +1,20 @@
 # Quartzo ↔ KOReader — Product & Delivery Plan
 
 > **Repository:** `olalaurao/quartzo-koplugin`  
-> **Status:** planned / intentionally deferred  
-> **Primary target:** Kindle Paperwhite 3 / 7th gen (PW3), firmware 5.16.2.1.1, KUAL, KOReader 2025.04  
+> **Status:** Gate 0 reconciliation in progress; production phases blocked
+> **Primary target:** Kindle Paperwhite 3 / 7th gen (PW3), firmware 5.16.2.1.1, KUAL, KOReader v2026.07.1 (`kindlepw2`)
 > **Implementation sequence dependency:** finish and stabilize `olalaurao/reader` V1 first  
 > **Canonical execution spec:** `IMPLEMENTATION_SPEC.md`  
 > **Progress ledger:** `STATUS.md`  
 > **Last planning pass:** 2026-09-22
 
 ---
+
+## 2026-10-16 adopted scope
+
+The current execution reconciliation is in `IMPLEMENTATION_SPEC.md` and `STATUS.md`. KOReader v2026.07.1 `kindlepw2` is the physically documented Reader baseline; 2025.04 references below record the original research only. The user initially reported no connection, then identified a mounted USB volume; inspection confirmed v2026.07.1, SimpleUI 2.7.5, Extra 1.15.0 and Reader 1.3.0-rc.1. No new runtime transport test was executed.
+
+The integrated product now includes gated one-way status evidence and opt-in promotion of verified Reader-origin KOReader reading through the upstream Resource owner. Ordinary files stay unmatched without a proven link. Reader-only catalog/progress never creates Resource or minutes. Bidirectional writeback remains excluded. The upstream canonical-store/identity/status candidates are under review; they do not pass 0A/0B/0C or authorize later plugin phases. No durable staging ACK, title-only identity or shared MD5 row collapse.
 
 # 1. Mission
 
@@ -728,7 +734,7 @@ Use short-lived connection and bounded timeout.
 
 Pass when:
 
-- target DB opens on KOReader 2025.04;
+- target DB opens read-only on KOReader v2026.07.1 (`kindlepw2`);
 - schema is exactly understood;
 - data counts are plausible;
 - reading normally while the probe exists still works;
@@ -1261,7 +1267,7 @@ Primary support target for V1:
 
 - Kindle Paperwhite 3 / 7th generation;
 - firmware 5.16.2.1.1;
-- KOReader 2025.04.
+- KOReader v2026.07.1 (`kindlepw2`).
 
 The code should avoid unnecessary target-specific hacks, but V1 is not blocked on every newer KOReader release.
 
