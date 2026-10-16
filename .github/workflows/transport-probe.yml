@@ -1,0 +1,30 @@
+name: Diagnostic transport host tests
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: diagnostic-transport-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  host-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: tools/transport_probe/requirements-test.txt
+      - name: Install pinned test-only Lua VM
+        run: python -m pip install --only-binary=:all: --no-deps -r tools/transport_probe/requirements-test.txt
+      - name: Real Lua 5.1 logic and loopback TLS tests (no Kindle proof)
+        run: python -m unittest discover -s tools/transport_probe -p 'test_*.py' -v

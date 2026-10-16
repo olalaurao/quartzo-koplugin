@@ -21,8 +21,9 @@ The integrated product now includes gated one-way status evidence and opt-in pro
 Gate 0B diagnostic tooling may be prepared and tested independently of open
 G01–G03, as allowed by the adopted integrated gate matrix, provided it makes no
 production write or canonical ACK claim. `tools/transport_probe/` currently
-contains only the bounded client/adapter and real-Lua-5.1 host logic tests; it
-is not a deployable plugin or physical transport proof. Production phases still
+contains the bounded client/adapter, ephemeral TLS fixture host, real-Lua-5.1
+logic tests and real loopback TLS tests. It is not a deployable Kindle plugin or
+physical transport proof. Production phases still
 require Gate 0A/0B/0C. The canonical transport decision remains unratified.
 
 Build a KOReader plugin that synchronizes reading activity from KOReader into Quartzo without turning the Kindle into a second Quartzo implementation and without creating a parallel source of truth.
