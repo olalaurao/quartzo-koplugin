@@ -1,5 +1,15 @@
 # Implementation Status
 
+## 2026-10-16 — Isolated G04 client preparation (no device deployment)
+
+- `tools/transport_probe/client.lua` adds only diagnostic request policy and a bounded LuaSec adapter, outside any `.koplugin` runtime. This is the independent non-production G04 spike preparation permitted by the adopted integrated gate matrix while G01–G03 remain open; it does not require or grant a production phase exit.
+- The installed KOReader v2026.07.1 package contains LuaSec 1.3.2 and exposes explicit TLS/peer/cafile options. The new adapter supplies those options rather than inheriting the packaged `verify = "none"` default. It accepts only explicit private-IPv4 HTTPS targets, disables redirects, bounds bytes/timeouts/retries, and requires exact diagnostic receipts whose canonical ACK/persistence flags are false. No conclusion about the entire Reader runtime's TLS policy is inferred from this library inspection.
+- Host validation: **9 PASS**, executed with real Lua 5.1 through Lupa 2.8 / Python 3.14, injecting HTTP/clock/sleep. Cases include wrong-CA certificate failure versus offline, invalid/expired auth, noncanonical receipt, private-target/trust/clock preflight, bounded Retry-After/retry exhaustion, TLS adapter options and response cap. These are logic tests, not native TLS, network or PW3 proof. Test dependency was installed only into the private host diagnostics directory; requirements are pinned for reproduction.
+- Extending the adapter case with a CRLF-header injection fixture initially produced **one test error / eight passed**: the Python triple-quoted Lua fixture interpreted the escape before Lua parsed it. Constructed the synthetic CRLF value with `string.char(13,10)` instead; the final rerun is **9 PASS**, including rejection before network I/O. The earlier error remains an error; no physical result is inferred from these runs.
+- No endpoint, production token, private key, runtime config, KUAL launcher, plugin ZIP or Kindle deployment is included yet. The ephemeral TLS fixture host, credential/cert setup, executable on-device harness and correlated collection remain next. No Statistics/config/sidecar/Reader/SimpleUI/Wi-Fi file or setting changed. The existing pure raw-event contracts are not replaced by this diagnostic receipt.
+- Gate 0A remains partial, 0B **BLOCKED for production**, and 0C lacks the authenticated canonical request/ACK protocol. Before any production transport selection, prove actual data-owner durability and authenticated PW3 behavior, errors/retry/revocation and real canonical ACK. A staging receipt never advances a cursor.
+- This entry supersedes earlier blanket descriptions of the repository as having no Lua: it now has diagnostic-only Lua, with no production plugin/codec/extractor/outbox/ingress implemented. See `tools/transport_probe/README.md` for exact boundaries and remaining steps.
+
 ## 2026-10-16 — Android local discovery proof and Kindle USB reconnection
 
 This supplements the integrated reconciliation below; no production plugin phase is unlocked.

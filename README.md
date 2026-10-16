@@ -4,6 +4,10 @@ Planned KOReader plugin for synchronizing reading activity from KOReader into Qu
 
 > **Status:** Gate 0 reconciliation in progress. Reader stable sequencing is satisfied; canonical durability/protocol and physical transport remain unproved. No production plugin code exists.
 
+Independent Gate 0B client preparation and real-Lua-5.1 host logic tests are in
+[tools/transport_probe](tools/transport_probe/README.md). This is diagnostic-only,
+with no deployable Kindle launcher/server or physical TLS PASS yet.
+
 ## Goal
 
 Read KOReader's native Reading Statistics **read-only**, normalize new reading events, queue them safely while offline, and synchronize them into a canonical Quartzo Reading Activity domain.
