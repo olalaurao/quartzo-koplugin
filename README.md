@@ -9,8 +9,8 @@ Independent Gate 0B client preparation and real-Lua-5.1 host logic tests are in
 with a temporary host TLS fixture, a single-use KUAL diagnostic launcher and
 explicit fresh-folder bundle installation/collection. The [physical PW3 diagnostic](docs/evidence/transport-probe-pw3-2026-10-16.json)
 passed TLS/auth/error/retry/replay on KOReader v2026.07.1; canonical ACK and full
-G04 acceptance remain open. Temporary-file cleanup is pending automatic-review
-blocked removal, as recorded in STATUS. This is not the production plugin.
+G04 acceptance remain open. Temporary files were manually removed and their
+absence verified with Kindle mounted, as recorded in STATUS. This is not the production plugin.
 
 ## Goal
 

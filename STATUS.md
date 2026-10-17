@@ -1,5 +1,11 @@
 # Implementation Status
 
+## 2026-10-16 — Manual diagnostic cleanup verified complete
+
+- The user confirmed removing the three owned diagnostic folders in Explorer. Read-only verification at **2026-10-17T00:31:31.2109438Z** confirmed all three absent: the isolated Kindle extension and private host session/bundle. D: was mounted, and KOReader still reported **v2026.07.1**, so the missing extension was not inferred from an unavailable volume.
+- Updated the [physical evidence cleanup flags](docs/evidence/transport-probe-pw3-2026-10-16.json) to verified removed, preserving the two automatic-review rejections as history and recording manual removal separately. No further deletion command was attempted. The listener was already closed. **Diagnostic cleanup: COMPLETE**; the successful physical result and source hashes are unchanged.
+- Validation: direct filesystem/version inspection and JSON/source-fingerprint integrity check; no runtime source changed, so the existing 34-test host CI and physical proof retain their original source boundary. Full G04/canonical persistence/ACK, Drive/Companion and device recovery gates remain open. Next finish those canonical contracts/proofs before production ingestion; temporary-file cleanup is no longer a blocker.
+
 ## 2026-10-16 — Physical PW3 synthetic TLS diagnostic PASS; full G04 open
 
 - The user confirmed executing the installed KUAL diagnostic and reconnecting USB. The actual device observation and independently collected host observation agree on correlation `ba83c75346161f6b671c72b1c6a2406c`; the collector revalidated every installed bundle file against the clean-source manifest. **Physical synthetic TLS diagnostic: PASS** on the user-confirmed PW3, observed KOReader **v2026.07.1**, Lua **5.1**, LuaSec **1.3.2**. Runtime source: `f080644a7dbf9a16e7f9b94759ae0b42525fa9d8`; later commits so far are evidence-only.

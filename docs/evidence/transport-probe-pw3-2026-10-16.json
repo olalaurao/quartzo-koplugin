@@ -85,11 +85,13 @@
   "statistics_source_sha256": "da6db5e381bcfdaf05053d23bf75781166cc713b14076a65fcd2c527067fd088",
   "cleanup": {
     "automatic_review_rejected_attempts": 2,
-    "pending_manual_owned_folder_removal": true,
+    "pending_manual_owned_folder_removal": false,
+    "removal_method": "User manual Explorer removal; independently verified absent with Kindle mounted",
+    "verified_absent_at_utc": "2026-10-17T00:31:31.2109438+00:00",
     "temporary_listener_closed": true,
-    "diagnostic_extension_removed": false,
-    "host_private_runtime_removed": false,
-    "host_private_bundle_removed": false,
+    "diagnostic_extension_removed": true,
+    "host_private_runtime_removed": true,
+    "host_private_bundle_removed": true,
     "wifi_changed_by_harness": false
   }
 }

@@ -63,11 +63,12 @@ isolated runner environment and runs the same discovery suite on Linux.
 Extended source f080644a passed all **34 Linux cases**, including actual POSIX
 deadline/single-use process checks. The successful physical run additionally
 has explicit user KUAL-execution confirmation and separately correlated native
-observations. The server closed afterward. Removal of the diagnostic extension
-and private host session/bundle remains pending: automatic review rejected both
-guarded cleanup attempts, including individual known-file deletion. No command
-was run to bypass that rejection; the user received exact owned paths for manual
-removal. Evidence cleanup flags remain false until absence is verified.
+observations. The server closed afterward. Automatic review rejected both guarded
+cleanup attempts, including individual known-file deletion. The user then removed
+the exact owned diagnostic extension and private host session/bundle manually;
+read-only verification confirmed all three absent with Kindle mounted and still
+reporting v2026.07.1. Evidence cleanup flags now record verified removal, retaining
+the two rejected attempts as history. No command bypassed the rejection.
 
 `host.py` is opt-in: it binds only an explicit private IPv4, accepts exactly the
 small synthetic fixture bytes, and returns only diagnostic false-ACK receipts.
