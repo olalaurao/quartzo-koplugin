@@ -1,5 +1,12 @@
 # Implementation Status
 
+## 2026-10-17 — Upstream wire contract candidate (no plugin runtime change)
+
+- Upstream app `bb32e96e42027ec3a411fd96268fbd49e2056483` adds separate `readingTransportContractVersion: 1.0.0`: current opaque pairing/vault/device/epoch binding, five-minute explicit UTC freshness, immutable line/batch digest, attempt-specific nonce and exact ordered per-event response matching. Invalid/unsupported lines remain isolated; same-ID divergent native facts quarantine matching positions. Staging/errors cannot carry canonical revisions, and parsed claims have no durable ACK/cursor authority. Raw event/shard versions are unchanged.
+- Upstream validation: **242 protocol/contracts/shards/architecture PASS**, supplementary **40 protocol PASS**, clean scoped model/test analysis, preflight and independent Python checks of four schemas/12 shared negative wire vectors plus event/shard/batch/native SHA-256 goldens. [Hosted CI 39030194441](https://github.com/olalaurao/aplicativo/actions/runs/39030194441) is still pending. Initial source ddf73b69 omitted the ignored public requirements file; bb32e96e includes it plus a narrow ignore exception. No CI PASS is inferred for the new source.
+- This is only the candidate wire/parser boundary. Authenticated production receiver, credential/revocation/replay lifecycle, canonical receipt issuer and actual per-event outbox acknowledgements remain unimplemented. Lua parity and Companion semantic/lock adoption must follow upstream ratification/merge. Production 0A/0B/0C and G08 remain open; no plugin extractor/outbox/transport is enabled by adding schemas.
+- Kindle runtime source remains f080644a with its already-recorded narrow physical TLS diagnostic and verified manual cleanup. No Lua/device/Reader/Companion/Statistics/settings/Wi-Fi file or setting was changed. Validation here is document/diff inspection only; no new device execution is claimed. Exact next dependency remains canonical cross-process/Drive/Companion durability and authenticated receipt semantics; the protocol candidate makes those boundaries explicit without granting them.
+
 ## 2026-10-16 — Manual diagnostic cleanup verified complete
 
 - The user confirmed removing the three owned diagnostic folders in Explorer. Read-only verification at **2026-10-17T00:31:31.2109438Z** confirmed all three absent: the isolated Kindle extension and private host session/bundle. D: was mounted, and KOReader still reported **v2026.07.1**, so the missing extension was not inferred from an unavailable volume.
