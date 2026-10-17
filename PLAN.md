@@ -12,7 +12,7 @@
 
 ## 2026-10-16 adopted scope
 
-The current execution reconciliation is in `IMPLEMENTATION_SPEC.md` and `STATUS.md`. KOReader v2026.07.1 `kindlepw2` is the physically documented Reader baseline; 2025.04 references below record the original research only. The user initially reported no connection, then identified a mounted USB volume; inspection confirmed v2026.07.1, SimpleUI 2.7.5, Extra 1.15.0 and Reader 1.3.0-rc.1. No new runtime transport test was executed.
+The current execution reconciliation is in `IMPLEMENTATION_SPEC.md` and `STATUS.md`. KOReader v2026.07.1 `kindlepw2` is the physically documented Reader baseline; 2025.04 references below record the original research only. USB inspection confirmed v2026.07.1, SimpleUI 2.7.5, Extra 1.15.0 and Reader 1.3.0-rc.1. The isolated synthetic KUAL TLS/auth/error/retry/replay diagnostic subsequently passed on the actual PW3 with nine requests in about five seconds; canonical persistence/ACK and full production transport are still unproved. See the source-specific sanitized physical report and cleanup limitation in STATUS.
 
 The integrated product now includes gated one-way status evidence and opt-in promotion of verified Reader-origin KOReader reading through the upstream Resource owner. Ordinary files stay unmatched without a proven link. Reader-only catalog/progress never creates Resource or minutes. Bidirectional writeback remains excluded. The upstream canonical-store/identity/status candidates are under review; they do not pass 0A/0B/0C or authorize later plugin phases. No durable staging ACK, title-only identity or shared MD5 row collapse.
 

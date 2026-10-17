@@ -3,7 +3,11 @@
 This is diagnostic tooling outside `quartzo.koplugin`, not a production transport.
 The ephemeral TLS host, single-use KUAL launcher, explicit bundle preparation/
 fresh-folder installation and correlated observation collection are implemented.
-Native Kindle execution still needs physical proof. Nothing here selects a production backend,
+The [actual PW3 run](../../docs/evidence/transport-probe-pw3-2026-10-16.json) passed
+on clean harness source f080644a: nine attempts in about five seconds with
+KOReader v2026.07.1 / Lua 5.1 / LuaSec 1.3.2. Both reports agree on TLS/auth/
+error/retry/replay. Full G04 canonical durability and recovery remain open.
+Nothing here selects a production backend,
 loads Reader credentials, reads Statistics/sidecars, changes Wi-Fi or supplies a
 canonical ACK. Do not deploy it as a plugin or call host tests a Kindle TLS PASS.
 
@@ -55,6 +59,15 @@ python -c "import sys,unittest; sys.path.insert(0,r'<outside-repo-test-deps>'); 
 
 The dedicated GitHub workflow installs the pinned test-only requirement in its
 isolated runner environment and runs the same discovery suite on Linux.
+
+Extended source f080644a passed all **34 Linux cases**, including actual POSIX
+deadline/single-use process checks. The successful physical run additionally
+has explicit user KUAL-execution confirmation and separately correlated native
+observations. The server closed afterward. Removal of the diagnostic extension
+and private host session/bundle remains pending: automatic review rejected both
+guarded cleanup attempts, including individual known-file deletion. No command
+was run to bypass that rejection; the user received exact owned paths for manual
+removal. Evidence cleanup flags remain false until absence is verified.
 
 `host.py` is opt-in: it binds only an explicit private IPv4, accepts exactly the
 small synthetic fixture bytes, and returns only diagnostic false-ACK receipts.

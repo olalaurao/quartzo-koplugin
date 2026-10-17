@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "proof": "physical_pw3_synthetic_tls_diagnostic",
+  "observed_at_utc": "2026-10-17T00:16:41.7388231+00:00",
+  "source_head": "f080644a7dbf9a16e7f9b94759ae0b42525fa9d8",
+  "source_clean_at_provisioning": true,
+  "physical_execution_attestation": {
+    "confirmed": true,
+    "basis": "User confirmed executing KUAL diagnostic and reconnecting USB; host/device observations independently correlated",
+    "baseline_device": "Kindle Paperwhite 3",
+    "baseline_device_source": "User confirmed device family; mounted KOReader version and native runtime versions observed"
+  },
+  "correlation": {
+    "probe_version": 1,
+    "proof": "correlated_synthetic_transport_observations",
+    "run_id": "ba83c75346161f6b671c72b1c6a2406c",
+    "source_data": "synthetic",
+    "observations_match": true,
+    "physical_execution_attested": false,
+    "canonical_ack_claimed": false,
+    "canonical_persistence_proven": false,
+    "source_hashes": {
+      "client.lua": "bc7e1f781061777226df1dcfa2392ae62ec1cd2816bc3582b314c16f1496813d",
+      "device.lua": "b8691f594728c5428045ce8479a094cb0401c5f4a6d3d2daefa4339f5c8a12b8",
+      "kindle.lua": "61f86658ed870d84af0339e5b916ae488d5bcbccd51a7c72c7acc6337feccf59",
+      "run.sh": "dd42d3d3820135149626f099a4583376c009c013ec5763a845fe43d7ba8baf22",
+      "menu.json": "8e70ed7b110cb18721aeb68ec0e2163c740f51ab6faa834cebacd0956b718ee9",
+      "config.xml": "1486f6945915bc8fdef39dfc8ac15f705ab4c8d286a31ef4d14c1536db174528"
+    },
+    "request_attempts": 9,
+    "tls_versions": [
+      "TLSv1.2"
+    ],
+    "koreader_version": "v2026.07.1"
+  },
+  "device_observation": {
+    "canonical_ack_claimed": false,
+    "canonical_persistence_proven": false,
+    "statistics_accessed": false,
+    "wifi_changed": false,
+    "request_attempts": 9,
+    "bad_ca_rejected": true,
+    "unauthorized_rejected": true,
+    "expired_token_rejected": true,
+    "rate_limit_retried": true,
+    "server_error_retried": true,
+    "replay_receipt_received": true,
+    "elapsed_seconds": 5.0198678970337,
+    "lua_version": "Lua 5.1",
+    "luasec_version": "1.3.2",
+    "koreader_version": "v2026.07.1",
+    "run_id": "ba83c75346161f6b671c72b1c6a2406c",
+    "probe_version": 1,
+    "phase": "passed",
+    "proof": "device_transport_diagnostic",
+    "source_data": "synthetic"
+  },
+  "host_observation": {
+    "probe_version": 1,
+    "proof": "host_tls_fixture_only",
+    "source_data": "synthetic",
+    "run_id": "ba83c75346161f6b671c72b1c6a2406c",
+    "counts": {
+      "unauthorized": 1,
+      "expired": 1,
+      "rate": 1,
+      "server": 1,
+      "ok": 4
+    },
+    "unique_payloads": 1,
+    "tls_versions": [
+      "TLSv1.2"
+    ],
+    "server_errors": 0,
+    "canonical_ack_claimed": false,
+    "canonical_persistence_proven": false,
+    "kindle_runtime_proven": false
+  },
+  "limitations": [
+    "Synthetic fixture only; no native reading events or Statistics database opened",
+    "No production backend selected",
+    "No canonical persistence or durable ACK",
+    "No Drive, Companion, reboot or power-loss acceptance"
+  ],
+  "statistics_source_sha256": "da6db5e381bcfdaf05053d23bf75781166cc713b14076a65fcd2c527067fd088",
+  "cleanup": {
+    "automatic_review_rejected_attempts": 2,
+    "pending_manual_owned_folder_removal": true,
+    "temporary_listener_closed": true,
+    "diagnostic_extension_removed": false,
+    "host_private_runtime_removed": false,
+    "host_private_bundle_removed": false,
+    "wifi_changed_by_harness": false
+  }
+}

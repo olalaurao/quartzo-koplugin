@@ -2,13 +2,15 @@
 
 Planned KOReader plugin for synchronizing reading activity from KOReader into Quartzo.
 
-> **Status:** Gate 0 reconciliation in progress. Reader stable sequencing is satisfied; canonical durability/protocol and physical transport remain unproved. No production plugin code exists.
+> **Status:** Gate 0 reconciliation in progress. The isolated synthetic TLS diagnostic passed on PW3; canonical durability/protocol and production transport remain unproved. No production plugin code exists.
 
 Independent Gate 0B client preparation and real-Lua-5.1 host logic tests are in
 [tools/transport_probe](tools/transport_probe/README.md). This is diagnostic-only,
 with a temporary host TLS fixture, a single-use KUAL diagnostic launcher and
-explicit fresh-folder bundle installation/collection. Native Kindle execution
-and physical TLS proof remain pending; this is not the production plugin.
+explicit fresh-folder bundle installation/collection. The [physical PW3 diagnostic](docs/evidence/transport-probe-pw3-2026-10-16.json)
+passed TLS/auth/error/retry/replay on KOReader v2026.07.1; canonical ACK and full
+G04 acceptance remain open. Temporary-file cleanup is pending automatic-review
+blocked removal, as recorded in STATUS. This is not the production plugin.
 
 ## Goal
 
