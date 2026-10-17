@@ -21,8 +21,9 @@ The integrated product now includes gated one-way status evidence and opt-in pro
 Gate 0B diagnostic tooling may be prepared and tested independently of open
 G01–G03, as allowed by the adopted integrated gate matrix, provided it makes no
 production write or canonical ACK claim. `tools/transport_probe/` currently
-contains the bounded client/adapter, ephemeral TLS fixture host, real-Lua-5.1
-logic tests and real loopback TLS tests. It is not a deployable Kindle plugin or
+contains the bounded client/adapter, ephemeral TLS fixture host, single-use KUAL
+diagnostic launcher, explicit bundle installer/collector, real-Lua-5.1 logic
+tests and real loopback TLS tests. It is not a production Kindle plugin or
 physical transport proof. Production phases still
 require Gate 0A/0B/0C. The canonical transport decision remains unratified.
 

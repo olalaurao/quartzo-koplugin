@@ -195,7 +195,11 @@ def main():
         host = DiagnosticHost(args.runtime_directory, args.bind, args.openssl, args.lifetime_seconds)
         host.start()
         print("Ephemeral synthetic TLS fixture ready; credentials remain in private runtime files", flush=True)
-        while host._thread.is_alive(): host._thread.join(timeout=1)
+        while host._thread.is_alive():
+            if (host.directory / "stop-requested").is_file() or (
+                host.counts == dict(unauthorized=1, expired=1, rate=1, server=1, ok=4)):
+                break
+            host._thread.join(timeout=1)
     except KeyboardInterrupt:
         pass
     except Exception as error:

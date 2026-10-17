@@ -27,6 +27,6 @@ jobs:
       - name: Install pinned test-only Lua VM
         run: |
           python -m pip install --only-binary=:all: --no-deps -r tools/transport_probe/requirements-test.txt
-      - name: Real Lua 5.1 logic and loopback TLS tests (no Kindle proof)
+      - name: Lua 5.1, TLS, bundle and process tests (no Kindle proof)
         run: |
           python -m unittest discover -s tools/transport_probe -p 'test_*.py' -v

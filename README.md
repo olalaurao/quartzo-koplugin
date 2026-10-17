@@ -6,8 +6,9 @@ Planned KOReader plugin for synchronizing reading activity from KOReader into Qu
 
 Independent Gate 0B client preparation and real-Lua-5.1 host logic tests are in
 [tools/transport_probe](tools/transport_probe/README.md). This is diagnostic-only,
-with a temporary host TLS fixture, no deployable Kindle launcher and no physical
-Kindle TLS PASS yet.
+with a temporary host TLS fixture, a single-use KUAL diagnostic launcher and
+explicit fresh-folder bundle installation/collection. Native Kindle execution
+and physical TLS proof remain pending; this is not the production plugin.
 
 ## Goal
 
