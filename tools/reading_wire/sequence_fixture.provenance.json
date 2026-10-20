@@ -1,0 +1,33 @@
+{
+  "upstreamRepository": "olalaurao/aplicativo",
+  "sourceCommit": "93a0ddeeb25cc0e54cef4ca5bd3d0199706ba3a3",
+  "files": {
+    "tool/reading_wire_fixture.dart": {
+      "gitBlobSha": "c4703caadaff0a458cb0880f06c9f5ecae8c4d1b",
+      "sha256": "3712a408d828cdb488c6fd2b59d467f4dae126c0fb79ce4f04da3bd1ba6f7f0d"
+    },
+    "lib/models/reading_activity_event.dart": {
+      "gitBlobSha": "f057a15f01b717ec6b1d452905d914f2f6faee08",
+      "sha256": "176ddb26246b2e9f82f222f67370a4ca15bbe9ae62f685cfd08ec436eb05585f"
+    },
+    "lib/models/reading_transport.dart": {
+      "gitBlobSha": "bbea360037aa6e2409dcadc73512b4fe0c7e67ad",
+      "sha256": "4f470b76eefaabf7320aecd518d6a468d4254072bca1f2a04a23e8f65794c8c8"
+    },
+    "lib/services/reading_activity_shards.dart": {
+      "gitBlobSha": "e27b5fe223adcddabc79305fe81909bf6018630e",
+      "sha256": "b6646ce1440b18c68af627d31eaef6dcab52f096997366e81a6fdb62a8d13f4c"
+    }
+  },
+  "arguments": [
+    "0123456789abcdef0123456789abcdef",
+    "2026-10-20T10:00:00.123456Z"
+  ],
+  "fixtureSha256": "d208b94fb9558fbe77226f5ce9a244fb0a637caa9dd3502a4382016d4b63e9b6",
+  "proof": {
+    "actualDartModel": true,
+    "syntheticInputs": true,
+    "physicalExecutionAttested": false,
+    "canonicalAck": false
+  }
+}
