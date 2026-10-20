@@ -25,8 +25,10 @@ received the verified final artifact. Actual canonical reconciliation preserved
 good Reading originals and explicit original-byte repair restored their remote
 copies; independent downloads matched. Fresh opaque Reading/binary creation,
 ordinary update and restart/quiet replay also passed. These are partial actual
-byte/recovery observations. Reviewed-adoption UI, actual multi-client cloud races,
-authenticated receiver delivery and durable source ACK still gate production.
+byte/recovery observations. A separate actual reviewed-adoption UI case then
+published one 83-byte opaque fixture and independently verified all six unique
+files/hashes. Actual multi-client cloud races, authenticated receiver delivery
+and durable source ACK still gate production.
 See STATUS and the source-bound Companion evidence; no later phase is activated.
 
 # 1. Mission

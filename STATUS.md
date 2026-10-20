@@ -28,6 +28,17 @@
   physical result is claimed. Prior
   5250eee/1af5a67 physical/host reports retain their original source boundaries.
 
+- The sibling actual native TLS compound fixture also passed at Quartzo
+  **1457f02d565085264899d36532c7288f04035e11**, hosted **39433387042**: 75 native
+  cases / four skips and 2781 full cases / five skips. The compound case executed
+  in both runs, combining rejected peer/401/429/503/discard with exact three-shard
+  replay and credential revocation. Both reported three pre-publication HTTP
+  requests and **zero transport errors**, with no later increase. The collector's
+  strict zero-error requirement is unchanged and now agrees with actual host
+  observations; actual Android/PW3 counts and source-bound byte collection remain
+  unproved. No fresh expiring session was started while physical execution
+  availability was unknown.
+
 ## 2026-10-20 — Official Companion byte recovery and restart acceptance
 
 The user-authorized Companion PR89/90 merges completed as `5b69a6e` and
@@ -58,8 +69,15 @@ complete G03/G04 or distributed/canonical ACK proof. Evidence is in Companion
 `docs/reading-integration/live-official-byte-recovery-2026-10-20.json` and private
 source-bound sandbox observations.
 
-The actual reviewed-adoption UI branch, Quartzo/Companion multi-client cloud
-exchange/races, source-bound Android/PW3 wire session, durable acknowledgement
+The actual reviewed-adoption UI branch then passed: the plugin was temporarily
+unloaded only in the sandbox to seed an 83-byte opaque file without a watcher
+creation intent. After normal reload, Manual sync reported one adoption-required
+path, zero files synced and no errors/conflicts. Review adoption / Adopt file showed
+the exact paired test target and completed one applied / zero failed. Separate
+inventory/download verified all six unique files and hashes, with zero pending/
+conflicts. Plugin enablement configuration remained byte-identical; baselines
+were never edited manually. Quartzo/Companion multi-client cloud exchange/races,
+source-bound Android/PW3 wire session, durable acknowledgement
 and production extraction/outbox still require their own evidence. No cursor,
 Resource effect, Readwise migration or later product phase is activated. The
 latest read-only device check again sees one authorized Android phone and
