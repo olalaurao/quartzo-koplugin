@@ -80,5 +80,25 @@
     "power_loss_tested": false,
     "full_gate_0_passed": false
   },
-  "diagnostic_cleanup": "Owned diagnostic preserved pending evidence review; no deletion performed."
+  "diagnostic_cleanup": {
+    "owned_diagnostic_removed": true,
+    "absence_verified": true,
+    "nonrecursive_only": true,
+    "archived_files": 13,
+    "archive_sha256": {
+      "bundle-manifest.json": "13aecdad806c595466cb8cef6d63ed69046ce9b3fafe6fb9504dbd9c86e63724",
+      "codec.lua": "e4fcbe04b31d8925bd2ce929f9d52b1c3dc89f59d283a14c0375d46f1f3ffb93",
+      "config.xml": "b8d62e4b7288bff9f2b86bb0b1775a0ed1af8a5e46079803d1d5fa6148d595e0",
+      "dart-reference.json": "8f3fde39cc0d86d3ddc22ddcef6b8158b553c6ecddb06f10304854b65054aabb",
+      "device-observation.json": "156f51b2976d9d72e60d00db94dedee1301c7481ff81d0d1186d92c3b07294eb",
+      "kindle.lua": "366160de537013fecb0a0a32d125d5ef3fe52c3203ad6869b7cb7af65faf060b",
+      "koreader_deps.lua": "ba20d6619e0572e2b5860be4059f17d065b3f4414cb5f3a76cbc9a195e128418",
+      "launcher-status.txt": "d3be030801b90ea8057d3997d9845c7f850cc7b784450645d5ec2811cc927d7a",
+      "menu.json": "73d941a62999e25c7b4a82e74f634b97e5d1a1d4d4eafcd986017f45b6b5cbe2",
+      "probe.lua": "18f90efcffd86dcc100de7f408a0297f0eb525c36e4e3827aef17b6663409d33",
+      "public-session.json": "a38bb0339eeb212ef2203386528d871b75a15e1b31feb66415880ada56ec93d4",
+      "run.sh": "7cc4513fbc045bd0416b7559ae2ecd7499b49bd139adc3ee32193f1f2a24740c",
+      "wire-vectors.json": "26518d6044e65cb633353e8210974187b05e04ecdedac8ea6e2bc720cc6ade8f"
+    }
+  }
 }
