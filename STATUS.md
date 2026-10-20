@@ -1,5 +1,14 @@
 # Implementation Status
 
+## 2026-10-20 — Actual cloud races, authorized Companion refresh and receiver target composition
+
+Companion source-bound evidence now includes actual independent six-file peer recovery after explicit canonical OAuth renewal, a real two-client mutable CAS (one412, preserved losing baseline/edits/conflict bytes), and concurrent canonical Reading creation (two exact remote IDs, both quarantined without a synchronized baseline). Clients were independent adapters/coordinators/local roots in one renderer; no separate-process/global exclusive-create or source ACK proof is inferred. Those observations retain official8c source boundaries and preserve the original401 failure.
+
+Separately authorized PR92 passed all six checks and merged10e840ab09fe98fe2365c3a30a34be4c0eef6b4d. Exact-main official Preflight39488284446 passed; verified artifact main.js SHA256ad9e604339363e6e8d5bdfa5d6700e364f822d9c6242498396119eb3003c09e3 was installed only in the existing paired Manual sandbox. Actual renderer reload, one real Google401 induced with a synthetic invalid credential, canonical OAuth renewal, same-parent recovery and all six downloaded/host-verified hashes passed. This is not a waited-out issued-token expiry proof. Normal mainCI39488225722 passed Linux/Windows, macOS cancelled without steps; all six approved PR92 checks and official preflight remain successful. Companion docs236e17d passed all three OS checks39490847254. No production install/release occurred.
+
+Quartzo candidate35af64a0 adds a final transient current-target capability from the existing SyncManager, required by normal receiver construction and checked around credential/store waits. Account generation/folder/root/owner-instance/queue/lifecycle changes suppress replies, including same-target roundtrips; existing diagnostic fixtures are explicit. Local target17PASS/three native-platform skips, expanded241PASS/twelve skips, strict analysis/preflight/whitespace PASS; new hosted/native CI is pending. Explicit configured vaultPath is currently required; default named-root composition, production pairing/certificate/lifecycle and trusted durable per-event source ACK still need implementation/proof. No Lua runtime/contract, cursor/outbox, Statistics access, Wi-Fi behavior or physical source claim changed. Full G03/G04/G08 and later gates remain open. Source-bound Companion evidence is in its docs/reading-integration/live-*.json; prior physical reports remain unchanged.
+
+
 ## 2026-10-20 — Actual PW3 to Android canonical wire diagnostic
 
 [Source-bound physical evidence](docs/evidence/wire-canonical-physical-2026-10-20.json).
