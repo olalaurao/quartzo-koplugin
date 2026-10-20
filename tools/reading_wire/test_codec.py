@@ -20,8 +20,10 @@ def compact(value):
 
 
 class WireCodecTest(unittest.TestCase):
+    lua_type = LuaRuntime
+
     def setUp(self):
-        self.lua = LuaRuntime(unpack_returned_tuples=True, encoding=None)
+        self.lua = self.lua_type(unpack_returned_tuples=True, encoding=None)
         self.assertEqual(self.lua.eval("_VERSION"), b"Lua 5.1")
         self.null = self.lua.table()
         self.mark = self.lua.eval("function(value, kind) return setmetatable(value, {wire_kind=kind}) end")

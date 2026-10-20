@@ -14,7 +14,7 @@ substitute a proposed local schema. `.gitattributes` keeps their bytes stable.
 ```sh
 python tools/reading_wire/verify_upstream.py
 python tools/reading_wire/verify_upstream.py --remote
-python -m unittest discover -s tools/reading_wire -p 'test_*.py' -v
+python -m unittest discover -s tools/reading_wire -p 'test_codec.py' -v
 ```
 
 The remote check uses the existing `gh` login against the exact revision; it
@@ -29,9 +29,39 @@ transport diagnostic suite.
 must preserve objects versus arrays (including empty containers), null and
 string/number types. `kind` returns `object` or `array` for those tables.
 SHA-256 returns lowercase hex and passes a known-answer check at construction.
-Native KOReader JSON/SHA adapters are not installed or certified by this module.
-The host tests inject Python JSON and SHA providers while executing the codec
-itself in real Lua 5.1. That is not ARM, LuaJIT, native-library or physical proof.
+The base host tests inject Python JSON and SHA providers while executing the
+codec itself in real Lua 5.1. That base suite is not native-library proof.
+
+`koreader_deps.load(require_module)` is the explicit dependency adapter. It loads
+the existing `dkjson` and `ffi/sha2` APIs, supplies separate object/array metadata
+and a stable null sentinel, and probes empty containers, null, safe integers and
+SHA-256 before returning dependencies. Missing/incompatible modules fail with
+`nil, "unsupported_reading_wire_dependencies"`; no simple-JSON or alternate-hash
+fallback is used. `deps.object(table)` and `deps.array(table)` mark trusted
+constructor input shapes. No runtime module is loaded until the caller invokes
+this adapter explicitly. It is not wired to a production plugin or transport.
+
+The complete suite also executes the same codec cases in host LuaJIT 2.1 using
+actual pinned dkjson 2.10 and KOReader SHA source, rather than Python providers.
+The dependency recipe/blob identities, SHA-256 and license are recorded in
+`REFERENCE_RUNTIME.lock.json`. The reference preparer downloads only those exact
+public sources to a fresh explicit directory, reads the one approved archive
+member without extracting paths, verifies hashes before execution and never
+overwrites/deletes an existing directory. Third-party sources are test-only
+downloads, not vendored plugin files. The JSON API is probed rather than inferred
+from a version string. Published reference APIs do not prove the installed PW3
+library identity, ARM branch or actual KOReader lifecycle.
+
+Prepare references, set `READING_WIRE_REFERENCE_DIR` to that directory's absolute
+path, then run the complete suite:
+
+```sh
+python tools/reading_wire/prepare_reference_runtime.py <fresh-directory>
+python -m unittest discover -s tools/reading_wire -p 'test_*.py' -v
+```
+
+Missing reference setup is an error, not a silent native-provider skip. CI
+prepares the exact dependencies and sets the variable before executing all cases.
 
 - `encode_request(fields, expected_binding, now_utc)` returns canonical UTF-8
   request bytes. Fields are the contracted request except `batch_id`, which is
@@ -82,7 +112,7 @@ The generator does not write files. Normalize only the generated output's line
 ending to LF before intentionally updating the consumer reference and its hashes.
 Do not alter upstream copies to make a consumer test pass.
 
-Production native adapters, authenticated network binding, durable receipt
-verification, persistent replay/outbox acknowledgements and PW3
+Actual PW3 provider/lifecycle acceptance, authenticated network binding, durable
+receipt verification, persistent replay/outbox acknowledgements and PW3
 offline/reboot/cancellation/lost-response tests remain required. This pure
 consumer unlocks none of those gates by itself.

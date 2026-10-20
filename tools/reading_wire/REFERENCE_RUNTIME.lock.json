@@ -1,0 +1,19 @@
+{
+  "purpose": "host-only actual KOReader dependency API reference; not installed PW3 provenance",
+  "dkjson": {
+    "version": "2.10",
+    "url": "https://dkolf.de/dkjson-lua/dkjson-2.10.tar.gz",
+    "archive_md5": "eededec0ec8befa97fc88947a668b5e6",
+    "file": "dkjson.lua",
+    "sha256": "52f30be905216796ccb1e97da6135f3f5cfaaf6359544e66046e40f516a36b94",
+    "koreader_recipe_blob": "7d98a1f2dbf31cc7fc9ebe57166edd3d4b6ae194",
+    "license": "MIT"
+  },
+  "sha2": {
+    "url": "https://api.github.com/repos/koreader/koreader-base/git/blobs/201f52ea674b23248afb60e1328905f57afb3a89",
+    "git_blob_sha": "201f52ea674b23248afb60e1328905f57afb3a89",
+    "file": "sha2.lua",
+    "sha256": "62d2e0885931a1f14db87e61cb3d74936bb5b1e19eb2b4994ab04c03d78f9ed6",
+    "license": "MIT"
+  }
+}
