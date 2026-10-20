@@ -6,7 +6,7 @@
 > **Product roadmap:** `PLAN.md`  
 > **Progress ledger:** `STATUS.md`  
 > **Implementation state:** Gate 0 reconciliation in progress — production plugin not started
-> **Last reconciled:** 2026-10-16 (historical planning pass: 2026-09-22)
+> **Last reconciled:** 2026-10-20 (historical planning pass: 2026-09-22)
 
 This file is the implementation source of truth once implementation begins. If code and this specification disagree, either the code is wrong or this file must be deliberately updated in the same change, with the reason recorded in `STATUS.md`.
 
@@ -14,15 +14,15 @@ This file is the implementation source of truth once implementation begins. If c
 
 ## 2026-10-16 reconciliation (takes precedence over the historical proposals below)
 
-The user adopted the integrated Quartzo Reading Integration requirements. Upstream candidate: `olalaurao/aplicativo`, branch `feature/reading-integration-contracts-g00-g03`, active spec `docs/specs/reading-integration.md`, contracts `reading_identity`, `reading_evidence_status`, `reading_activity`. These are not merged/deployed yet; Gate 0 is not PASS.
+The user adopted the integrated Quartzo Reading Integration requirements. Upstream `olalaurao/aplicativo` PR65 merged as `e7a661d4ed6d572cdbf722f4e697fea461005b69` after its necessary checks, ratifying the active spec `docs/specs/reading-integration.md` and contracts `reading_identity`, `reading_evidence_status`, `reading_activity` including the versioned transport envelope. Companion adopted that exact upstream through its official lock process; guarded owner changes remain in draft PR86. Ratification is distinct from deployment, live interoperability and canonical ACK; Gate 0 is not PASS. STATUS records exact source/build/device proof boundaries.
 
 - Physical documented baseline is KOReader **v2026.07.1**, **kindlepw2**, PW3/G090KB, firmware 5.16.2.1.1, functional jailbreak/KUAL, confirmed by the user and Reader migration guide. 2025.04 remains historical evidence. Confirm installed version before new tests; no firmware/KUAL/jailbreak updates.
 - Reader stable sequencing is satisfied by its stable v1.0.0/v1.2.0 tags and documented acceptance. This does not validate this plugin's transport or Statistics access.
 - Reader-only remains external. Only proven Reader-origin KOReader reading can qualify for opt-in Resource promotion through the upstream canonical owner; ordinary USB/unmatched events never auto-create. Reader-only progress creates neither Resource nor minutes.
 - One-way validated status evidence is now in scope: upstream may reconcile existing linked Resource status with explicit finished/abandoned or reliable progress, preserving manual/terminal intent. Bidirectional status/progress writeback, highlights and another Reader API client remain excluded.
-- New event ID candidate is SHA-256 of compact UTF-8 JSON tuple `[domain,device_id,source_epoch,book_row_id,page,started_at_unix_seconds]`. MD5/title is not the native event key. Duration corrections for the same tuple are conflict, not new events. This replaces the legacy duration/MD5 ID example below once upstream ratifies it. No Lua codec has been implemented yet.
-- Canonical destination candidate is immutable bounded vault JSONL shards under `sessions/reading_activity_v1/`, separate from Activity History. Existing vault/sync owners remain responsible; actual durable writer/Drive recovery and Companion consumption still need proof.
-- Gate 0A: IN_PROGRESS upstream candidate; 0B: BLOCKED (mounted USB baseline inspected; runtime transport still unproved); 0C: IN_PROGRESS pure raw-event vectors only, authenticated request/response/ACK protocol unresolved. No production phases start. Staging never returns durable ACK or advances cursors.
+- Ratified event ID is SHA-256 of compact UTF-8 JSON tuple `[domain,device_id,source_epoch,book_row_id,page,started_at_unix_seconds]`. MD5/title is not the native event key. Duration corrections for the same tuple are conflict, not new events. This supersedes the historical duration/MD5 example below. No production Lua codec has been implemented yet.
+- Ratified canonical destination is immutable bounded vault JSONL shards under `sessions/reading_activity_v1/`, separate from Activity History. Existing vault/sync owners remain responsible. Android local persistence and actual-owner synthetic byte exchange have source-specific evidence; live Drive/Companion and canonical source acknowledgement still need proof.
+- Gate 0A: IN_PROGRESS with ratified contracts and guarded owner implementations; 0B: IN_PROGRESS with actual isolated PW3 TLS/auth/retry proof, but no production canonical transport; 0C: IN_PROGRESS with ratified wire vectors and isolated Android secure admission, but no source-cursor ACK authority. No production phases start. Staging never returns durable ACK or advances cursors.
 - Proposed 30s promotion, session gaps and performance budgets remain unvalidated. No implicit Wi-Fi activation, SQLite writes, template edits or automatic effects.
 
 # 0. Mission
