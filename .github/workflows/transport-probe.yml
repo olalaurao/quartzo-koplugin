@@ -30,3 +30,7 @@ jobs:
       - name: Lua 5.1, TLS, bundle and process tests (no Kindle proof)
         run: |
           python -m unittest discover -s tools/transport_probe -p 'test_*.py' -v
+      - name: Pinned Reading wire consumer (pure Lua 5.1, no ACK authority)
+        run: |
+          python tools/reading_wire/verify_upstream.py
+          python -m unittest discover -s tools/reading_wire -p 'test_*.py' -v
