@@ -11,6 +11,13 @@ Nothing here selects a production backend,
 loads Reader credentials, reads Statistics/sidecars, changes Wi-Fi or supplies a
 canonical ACK. Do not deploy it as a plugin or call host tests a Kindle TLS PASS.
 
+The optional `client.wire_transport` factory now shares this same TLS carrier
+with canonical-wire diagnostic preparation in `tools/reading_wire/exchange.lua`.
+It changes neither the old diagnostic's false-ACK sequence nor its fixed routes.
+The new path is explicit and separately bounded; it is not installed or invoked
+by the old KUAL launcher. Old physical evidence remains source-specific and does
+not certify the refactored carrier or a combined native receiver round trip.
+
 The integrated gate matrix explicitly allows a non-production G04 spike while
 G01–G03 are open. It does not unlock ingestion or later production phases.
 

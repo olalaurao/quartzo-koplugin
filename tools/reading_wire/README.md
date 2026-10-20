@@ -117,6 +117,38 @@ receipt verification, persistent replay/outbox acknowledgements and PW3
 offline/reboot/cancellation/lost-response tests remain required. This pure
 consumer unlocks none of those gates by itself.
 
+## Explicit diagnostic wire exchange preparation
+
+`exchange.attempt(codec, binding, now, request_bytes, transport, token)` composes
+the actual pinned codec with one explicit HTTP attempt. It checks canonical
+request/binding/time before network, then independently rechecks the complete
+response against that exact request and a fresh UTC clock after network. It
+returns the codec's `untrusted_claims` with `canonical_ack=false`, never an
+accepted-event/cursor grant. Provider failures produce fixed errors without
+tokens, paths or response excerpts. 401 and retryable HTTP statuses are distinct;
+there is no hidden retry, nonce generation, credential lookup or queue mutation.
+A later diagnostic runner must own its explicit bounded sequence and fresh
+request nonce for each retry; production outbox remains gated.
+
+`tools/transport_probe/client.lua.wire_transport(config, https, ltn12)` reuses
+that diagnostic's one shared LuaSec carrier. It targets only the fixed
+`/reading/activity/v1` path on an explicit private IPv4 HTTPS endpoint, supplies
+the current 43-character bearer and captured binding in headers, and retains
+explicit peer trust, TLS1.2, disabled redirects and timeout. Endpoint/trust/binding
+are captured before I/O; request/response caps are the pinned 1MiB/512KiB bounds.
+Distinct good/bad dedicated test CA files remain required. This is the existing
+narrow dedicated-certificate diagnostic trust model, not production public-CA
+hostname verification or a new network/receipt owner.
+
+Real Lua5.1 tests compose the actual codec and carrier with injected HTTPS and
+cover expiry/scope changes during I/O, per-position binding, redirects, 401/429/
+5xx, header injection, bounds and error redaction. They are not native TLS,
+physical Kindle-to-receiver delivery or canonical persistence proof. No combined
+physical launcher/listener is installed. The earlier actual PW3 TLS report stays
+bound to its old exact source; shared-carrier refactoring does not extend that
+evidence. The independent offline codec report remains bound to its unchanged
+codec/native sources.
+
 ## Single-use offline PW3 compatibility probe
 
 `probe.lua` executes the three golden checks, all 12 negative wire mutations,

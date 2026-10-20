@@ -30,35 +30,27 @@ end
 -- Uses the installed KOReader LuaSec API with explicit peer trust. Its default
 -- verify setting is not sufficient. This binds only the isolated test cert;
 -- it is not a production/public-CA hostname-verification implementation.
-function M.transport(config, https, ltn12, payload)
+local function postTransport(config, https, ltn12, responseBound)
     assert(privateEndpoint(config.endpoint), "explicit private HTTPS endpoint required")
-    assert(type(payload) == "string" and #payload > 0 and #payload <= 8192, "invalid diagnostic payload")
     assert(type(config.ca_file) == "string" and #config.ca_file > 0
         and type(config.bad_ca_file) == "string" and #config.bad_ca_file > 0
         and config.ca_file ~= config.bad_ca_file, "explicit diagnostic trust files required")
+    local endpoint, ca, badCa = config.endpoint, config.ca_file, config.bad_ca_file
     https.TIMEOUT = 5
-    return function(path, token, trust)
-        if (path ~= "ok" and path ~= "rate" and path ~= "server")
-            or not hex(token, 64) or (trust ~= "good" and trust ~= "bad") then
-            return nil, "invalid_diagnostic_request"
-        end
+    return function(path, payload, headers, trust)
         local chunks, received, exceeded = {}, 0, false
+        headers["content-type"], headers["content-length"] = "application/json", tostring(#payload)
         local request = {
-            url = config.endpoint .. "/probe/" .. path,
+            url = endpoint .. path,
             method = "POST", redirect = false,
             protocol = "tlsv1_2", verify = "peer",
-            cafile = trust == "bad" and config.bad_ca_file or config.ca_file,
-            headers = {
-                ["content-type"] = "application/json",
-                ["content-length"] = tostring(#payload),
-                ["authorization"] = "Bearer " .. token,
-                ["x-quartzo-probe-run"] = config.run_id,
-            },
+            cafile = trust == "bad" and badCa or ca, headers = headers,
             source = ltn12.source.string(payload),
             sink = function(chunk)
                 if chunk then
+                    if type(chunk) ~= "string" then exceeded = true; return nil, "response_bound" end
                     received = received + #chunk
-                    if received > 2048 then exceeded = true; return nil, "response_bound" end
+                    if received > responseBound then exceeded = true; return nil, "response_bound" end
                     chunks[#chunks + 1] = chunk
                 end
                 return 1
@@ -69,6 +61,40 @@ function M.transport(config, https, ltn12, payload)
         if not ok then return nil, errorText(first) end
         if not first then return nil, errorText(code) end
         return tonumber(code), table.concat(chunks), headers
+    end
+end
+
+function M.transport(config, https, ltn12, payload)
+    assert(type(payload) == "string" and #payload > 0 and #payload <= 8192, "invalid diagnostic payload")
+    local post, runId = postTransport(config, https, ltn12, 2048), config.run_id
+    return function(path, token, trust)
+        if (path ~= "ok" and path ~= "rate" and path ~= "server")
+            or not hex(token, 64) or (trust ~= "good" and trust ~= "bad") then
+            return nil, "invalid_diagnostic_request"
+        end
+        return post("/probe/" .. path, payload, {
+            authorization = "Bearer " .. token, ["x-quartzo-probe-run"] = runId,
+        }, trust)
+    end
+end
+
+-- Opt-in canonical-wire diagnostic carrier, still no receipt/cursor authority.
+-- The caller supplies fresh canonical bytes and the current short-lived bearer.
+-- Shared TLS policy above remains the only network implementation.
+function M.wire_transport(config, https, ltn12)
+    assert(type(config.binding_id) == "string" and #config.binding_id >= 1
+        and #config.binding_id <= 128 and not config.binding_id:find("[^A-Za-z0-9_-]"),
+        "explicit diagnostic binding required")
+    local post, bindingId = postTransport(config, https, ltn12, 524288), config.binding_id
+    return function(payload, token, trust)
+        if type(payload) ~= "string" or #payload == 0 or #payload > 1048576
+            or type(token) ~= "string" or #token ~= 43 or token:find("[^A-Za-z0-9_-]")
+            or (trust ~= "good" and trust ~= "bad") then
+            return nil, "invalid_diagnostic_request"
+        end
+        return post("/reading/activity/v1", payload, {
+            authorization = "Bearer " .. token, ["x-quartzo-reading-binding"] = bindingId,
+        }, trust)
     end
 end
 
