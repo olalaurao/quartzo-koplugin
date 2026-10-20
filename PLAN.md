@@ -1,5 +1,13 @@
 # Quartzo ↔ KOReader — Product & Delivery Plan
 
+2026-10-20 checkpoint: actual exact-source PW3/Android finite canonical wire
+diagnostic passed independent byte/report collection (three shards, three
+synthetic events / 120 seconds; zero transport errors; credential revoked).
+Owned device diagnostics and active private session material were removed.
+See the current STATUS evidence. This supersedes earlier pending diagnostic
+execution notes only; canonical ACK/cloud races/production lifecycle and later
+gates remain open. No production activation follows this diagnostic.
+
 > **Repository:** `olalaurao/quartzo-koplugin`  
 > **Status:** Gate 0 reconciliation in progress; production phases blocked
 > **Primary target:** Kindle Paperwhite 3 / 7th gen (PW3), firmware 5.16.2.1.1, KUAL, KOReader v2026.07.1 (`kindlepw2`)
