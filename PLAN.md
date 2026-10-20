@@ -18,6 +18,13 @@ The integrated product now includes gated one-way status evidence and opt-in pro
 
 Gate 0C also has a pinned pure Lua wire consumer under `tools/reading_wire/`, with canonical byte/native identity validation and untrusted response projections. It is outside the production plugin. A separate exact-source offline KUAL diagnostic passed on the actual PW3 ARM runtime, verifying installed native JSON/SHA source identities and contract cases. Authenticated receipt verification, production lifecycle and device/outbox acknowledgement remain open as recorded in STATUS.
 
+Actual official-artifact Obsidian/Drive acceptance subsequently failed: the SDK
+renderer omitted binary media, creating three zero-byte synthetic files despite
+success and advertised hashes. Companion PR89 corrects byte transport/readback
+and passed all final checks; dependent PR90 exposes reviewed adoption and truthful
+pending feedback. Merge/official artifact/live recovery remain separate from
+local tests. No production phase or source ACK is unblocked by either candidate.
+
 # 1. Mission
 
 Gate 0B diagnostic tooling may be prepared and tested independently of open
