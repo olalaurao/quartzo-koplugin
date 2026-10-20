@@ -16,7 +16,7 @@ The current execution reconciliation is in `IMPLEMENTATION_SPEC.md` and `STATUS.
 
 The integrated product now includes gated one-way status evidence and opt-in promotion of verified Reader-origin KOReader reading through the upstream Resource owner. Ordinary files stay unmatched without a proven link. Reader-only catalog/progress never creates Resource or minutes. Bidirectional writeback remains excluded. Upstream PR65 ratified the canonical-store/identity/status/transport contracts at e7a661d4 after its necessary checks; Companion adopted that exact pin and authorized guarded-owner PR86 merged as 34d1244 with green main CI. Official preflight and live sandbox acceptance remain separate. Actual-owner synthetic exchange and source-specific Android/PW3 diagnostics do not pass 0A/0B/0C or authorize production phases. No durable staging ACK, title-only identity or shared MD5 row collapse.
 
-Gate 0C also has a pinned pure Lua wire consumer under `tools/reading_wire/`, with canonical byte/native identity validation and untrusted response projections. It is outside the production plugin and existing deployed diagnostic. Native KOReader JSON/SHA providers, authenticated receipt verification and device/outbox acknowledgement remain open as recorded in STATUS.
+Gate 0C also has a pinned pure Lua wire consumer under `tools/reading_wire/`, with canonical byte/native identity validation and untrusted response projections. It is outside the production plugin. A separate exact-source offline KUAL diagnostic passed on the actual PW3 ARM runtime, verifying installed native JSON/SHA source identities and contract cases. Authenticated receipt verification, production lifecycle and device/outbox acknowledgement remain open as recorded in STATUS.
 
 # 1. Mission
 
