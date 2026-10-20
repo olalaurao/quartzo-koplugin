@@ -27,7 +27,10 @@ G01–G03 are open. It does not unlock ingestion or later production phases.
   peer verification, redirects disabled, 5-second socket timeout, 8-KiB input
   and 2-KiB response limit.
 - The wrong-CA request uses an invalid credential and must fail for a certificate
-  reason. An offline timeout cannot satisfy that step.
+  verification reason. The shared `client.certificate_rejected` classifier accepts
+  only explicit `certificate verify failed` / `unknown ca` failure fragments with
+  no HTTP status. Offline, generic TLS and certificate-file configuration errors
+  cannot satisfy that step. The finite wire sequence uses this same classifier.
 - Invalid and expired test credentials must receive 401 without retry. A bounded
   Retry-After is required for 429; one bounded retry covers the 5xx scenario.
 - Replay must return the exact diagnostic receipt with `canonical_ack: false`

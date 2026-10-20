@@ -20,6 +20,7 @@ class WireSequenceTest(unittest.TestCase):
         self.codec_module = self.lua.execute((ROOT / 'codec.lua').read_bytes())
         self.codec = self.codec_module[b'new'](self.deps)
         self.exchange = self.lua.execute((ROOT / 'exchange.lua').read_bytes())
+        self.client = self.lua.execute((ROOT.parent / 'transport_probe' / 'client.lua').read_bytes())
         self.sequence = self.lua.execute((ROOT / 'sequence.lua').read_bytes())
         self.fixture = self.deps[b'decode_json'](FIXTURE_BYTES)
         self.binding = self.fixture[b'binding']
@@ -35,6 +36,7 @@ class WireSequenceTest(unittest.TestCase):
             b'now': wrap(lambda: self.current_time),
             b'window': self.lua.eval("function() return '2026-10-20T10:01:00.000Z','2026-10-20T10:02:00.000Z' end"),
             b'nonce': nonce, b'pause': wrap(self.pause),
+            b'certificate_rejected': self.client[b'certificate_rejected'],
         })
 
     def pause(self, seconds):
@@ -46,7 +48,12 @@ class WireSequenceTest(unittest.TestCase):
         if self.mutation == 'provider_error':
             raise RuntimeError('PRIVATE_TOKEN_PATH_REMOTE_EXCERPT')
         if trust == b'bad':
-            return (200, b'bad') if self.mutation == 'bad_ca_accepted' else (None, b'tls_failed')
+            errors = {'bad_ca_timeout': b'timeout', 'bad_ca_offline': b'connection refused',
+                      'bad_ca_unclassified': b'tls_failed',
+                      'bad_ca_certificate_file': b'error loading certificate file PRIVATE_SENTINEL',
+                      'bad_ca_configuration': b'error loading CA file PRIVATE_SENTINEL'}
+            return ((200, b'bad') if self.mutation == 'bad_ca_accepted'
+                    else (None, errors.get(self.mutation, b'certificate verify failed')))
         if token != self.token:
             return (200, b'bad') if self.mutation == 'auth_accepted' else (401, b'auth_required')
         self.authenticated += 1
@@ -103,6 +110,7 @@ class WireSequenceTest(unittest.TestCase):
         self.assertEqual(report[b'deliberately_discarded_responses'], 1)
         self.assertEqual(self.pauses, [1])
         self.assertEqual(len(self.sent), 10)
+        self.assertNotEqual(self.sent[0][1], self.token)
         requests = [json.loads(item[0]) for item in self.sent]
         self.assertEqual(len({item['request_id'] for item in requests}), 10)
         self.assertEqual(len({item['batch_id'] for item in requests}), 3)
@@ -115,6 +123,17 @@ class WireSequenceTest(unittest.TestCase):
         self.assertLess(len(encoded), 8192)
         self.assertNotIn(self.token, encoded)
         self.assertNotIn(b'event_lines', encoded)
+
+    def test_network_and_ca_configuration_failures_are_not_certificate_rejection(self):
+        for mutation in ('bad_ca_timeout', 'bad_ca_offline', 'bad_ca_unclassified',
+                         'bad_ca_configuration', 'bad_ca_certificate_file'):
+            with self.subTest(mutation=mutation):
+                self.setUp()
+                self.mutation = mutation
+                report = self.run_sequence()
+                self.assertEqual(report[b'phase'], b'failed')
+                self.assertEqual(len(self.sent), 1)
+                self.assertNotIn(b'PRIVATE_', self.json[b'encode'](report))
 
     def test_changed_trust_auth_http_and_bound_response_fail_closed(self):
         for mutation in ('bad_ca_accepted', 'auth_accepted', 'wrong_retry_code', 'wrong_nonce',

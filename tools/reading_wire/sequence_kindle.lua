@@ -55,14 +55,16 @@ local function execute()
         local function utc(value) return os.date("!%Y-%m-%dT%H:%M:%S",value) .. ".000Z" end
         local baseline = read("git-rev",64):gsub("%s+$","")
         assert(baseline == "v2026.07.1")
-        local carrier = dofile(directory .. "/client.lua").wire_transport({
+        local client = dofile(directory .. "/client.lua")
+        local carrier = client.wire_transport({
             endpoint=config.endpoint,binding_id=fixture.binding.binding_id,
             ca_file=directory .. "/server.pem",bad_ca_file=directory .. "/untrusted.pem",
         },https,require("ltn12"))
         local counter = 0
         local checks = dofile(directory .. "/sequence.lua").run(deps,dofile(directory .. "/codec.lua"),
             dofile(directory .. "/exchange.lua"),fixture,{
-                token=config.token,transport=carrier,now=function() return utc(seconds()) end,
+                token=config.token,transport=carrier,certificate_rejected=client.certificate_rejected,
+                now=function() return utc(seconds()) end,
                 window=function() local now=seconds(); return utc(now),utc(now+30) end,
                 nonce=function() counter=counter+1; assert(counter<=10)
                     return "qrtr_" .. config.run_id:sub(1,16) .. string.format("%016x",counter) end,

@@ -18,6 +18,7 @@ function M.run(deps, codec_module, exchange, fixture, runtime)
         check(type(runtime) == "table" and type(runtime.transport) == "function"
             and type(runtime.now) == "function" and type(runtime.window) == "function"
             and type(runtime.nonce) == "function" and type(runtime.pause) == "function"
+            and type(runtime.certificate_rejected) == "function"
             and type(runtime.token) == "string" and #runtime.token == 43
             and not runtime.token:find("[^A-Za-z0-9_-]"))
         check(fixture.schema_version == 1 and fixture.fixture_revision == "canonical-wire-synthetic-v1"
@@ -56,6 +57,7 @@ function M.run(deps, codec_module, exchange, fixture, runtime)
             batches[i] = batch
         end
         local token, transport = runtime.token, runtime.transport
+        local certificate_rejected = runtime.certificate_rejected
         local seen, batch_ids = {}, {}
         local function request(batch)
             local issued, expires = runtime.window()
@@ -91,10 +93,12 @@ function M.run(deps, codec_module, exchange, fixture, runtime)
             record(step,bytes,nonce,batch)
         end
         local bytes, nonce, batch = request(batches[1])
-        local bad_status = transport(bytes,token,"bad")
-        check(bad_status == nil)
-        record("untrusted_certificate_rejected",bytes,nonce,batch)
         local wrong_token = (token:sub(1,1) == "x" and "y" or "x") .. token:sub(2)
+        -- The untrusted peer must never receive the valid scoped bearer, even
+        -- if certificate verification unexpectedly accepts it.
+        local bad_status, bad_detail = transport(bytes,wrong_token,"bad")
+        check(certificate_rejected(bad_status,bad_detail) == true)
+        record("untrusted_certificate_rejected",bytes,nonce,batch)
         expected_error("unauthorized", "reading_http_unauthorized", wrong_token,401)
         expected_error("rate_limited", "reading_http_retryable", token,429)
         check(runtime.pause(1) == true)

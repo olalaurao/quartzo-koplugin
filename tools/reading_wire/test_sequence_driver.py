@@ -70,7 +70,7 @@ class WireSequenceDriverTest(unittest.TestCase):
             local body=r.source()
             assert(tonumber(r.headers['content-length'])==#body)
             local status,response=send(body,r.headers.authorization:sub(8),r.cafile==prefix..'untrusted.pem' and 'bad' or 'good')
-            if not status then return nil,'certificate_failed' end
+            if not status then return nil,response end
             assert(r.sink(response)); return 1,status,{}
           end}
           local ltn12 = {source={string=function(value)
@@ -109,6 +109,7 @@ class WireSequenceDriverTest(unittest.TestCase):
         self.assertTrue(output[b'paused'])
         self.assertEqual(report['jit_arch'], 'x64')
         self.assertEqual(report['attempts'], 10)
+        self.assertNotEqual(self.case.sent[0][1], self.case.token)
         self.assertFalse(report['canonical_ack'])
         self.assertFalse(report['physical_execution_attested'])
         self.assertLess(len(json.dumps(report)), 12288)
@@ -131,6 +132,18 @@ class WireSequenceDriverTest(unittest.TestCase):
                 self.assertEqual(report['phase'], 'failed')
                 self.assertEqual(output[b'exit_code'], 1)
                 self.assertEqual(self.case.sent, [])
+
+    def test_native_driver_preserves_non_certificate_tls_failure(self):
+        for mutation in ('bad_ca_timeout', 'bad_ca_offline', 'bad_ca_unclassified',
+                         'bad_ca_configuration', 'bad_ca_certificate_file'):
+            with self.subTest(mutation=mutation):
+                self.setUp()
+                self.case.mutation = mutation
+                report, _, output = self.driver()
+                self.assertEqual(report['phase'], 'failed')
+                self.assertEqual(output[b'exit_code'], 1)
+                self.assertEqual(len(self.case.sent), 1)
+                self.assertNotIn('PRIVATE_', json.dumps(report))
 
     def test_private_input_expiry_bad_scope_and_unknown_fields_cannot_start_a_sequence(self):
         for change in (

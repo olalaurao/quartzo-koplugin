@@ -27,6 +27,14 @@ local function errorText(value)
     return type(value) == "string" and value:lower() or "unclassified"
 end
 
+-- Diagnostic trust rejection must come from verification, not generic TLS,
+-- offline or certificate-file configuration failure. Never expose raw detail.
+function M.certificate_rejected(status, detail)
+    local text = errorText(detail)
+    return status == nil and (text:find("certificate verify failed", 1, true) ~= nil
+        or text:find("unknown ca", 1, true) ~= nil)
+end
+
 -- Uses the installed KOReader LuaSec API with explicit peer trust. Its default
 -- verify setting is not sufficient. This binds only the isolated test cert;
 -- it is not a production/public-CA hostname-verification implementation.
@@ -123,8 +131,7 @@ function M.run(config, deps)
     end
     -- Never send the valid credential during the untrusted-certificate test.
     local code, detail = request("ok", string.rep("0", 64), "bad")
-    if code ~= nil or not (errorText(detail):find("certificate", 1, true)
-        or errorText(detail):find("unknown ca", 1, true)) then
+    if not M.certificate_rejected(code, detail) then
         return nil, "bad_ca_not_rejected_by_certificate_validation"
     end
     code = request("ok", string.rep("0", 64), "good")

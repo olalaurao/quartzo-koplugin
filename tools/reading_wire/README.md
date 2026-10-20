@@ -211,6 +211,12 @@ phone execution/export, mounted target and KUAL execution observations remain
 separate required evidence. No actual combined launcher/listener is installed
 by development or tests. The old physical reports keep their original scope.
 
+The finite network sequence above uses the shared TLS client's certificate
+rejection classifier. Its wrong-CA attempt sends an invalid bearer, accepts no
+HTTP status and requires explicit verification-failure evidence; timeout,
+offline and certificate-file configuration failures stop the diagnostic. These
+host checks do not extend old PW3 physical evidence to new source.
+
 ## Single-use offline PW3 compatibility probe
 
 `probe.lua` executes the three golden checks, all 12 negative wire mutations,

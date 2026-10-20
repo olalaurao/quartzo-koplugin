@@ -36,17 +36,23 @@ class ClientContractTest(unittest.TestCase):
         return self.lua.execute(script)
 
     def test_full_diagnostic_sequence_is_bounded_and_never_acks(self):
-        deps, counts = self.dependencies()
-        result = self.module.run(self.config, deps)
-        self.assertEqual(result.phase, "passed")
-        self.assertEqual(result.request_attempts, 9)
-        self.assertEqual(counts(), (9, 2))
-        self.assertFalse(result.canonical_ack_claimed)
-        self.assertFalse(result.statistics_accessed)
-        self.assertFalse(result.wifi_changed)
+        for expression in ("return nil, 'certificate verify failed'",
+                           "return nil, {'TLSV1_ALERT_UNKNOWN CA'}"):
+            with self.subTest(expression=expression):
+                deps, counts = self.dependencies(expression)
+                result = self.module.run(self.config, deps)
+                self.assertEqual(result.phase, "passed")
+                self.assertEqual(result.request_attempts, 9)
+                self.assertEqual(counts(), (9, 2))
+                self.assertFalse(result.canonical_ack_claimed)
+                self.assertFalse(result.statistics_accessed)
+                self.assertFalse(result.wifi_changed)
 
     def test_bad_ca_must_fail_for_certificate_reason_not_offline(self):
-        for expression in ("return 401, ''", "return nil, 'timeout'"):
+        for expression in ("return 401, ''", "return nil, 'timeout'",
+                           "return nil, 'connection refused'", "return nil, 'tls_failed'",
+                           "return nil, 'error loading certificate file'",
+                           "return nil, 'error loading CA file'"):
             deps, counts = self.dependencies(expression)
             result, error = self.module.run(self.config, deps)
             self.assertIsNone(result)

@@ -1,5 +1,28 @@
 # Implementation Status
 
+## 2026-10-20 — Certificate rejection diagnostic now fails on unrelated errors
+
+- Review before any new native deployment found that the finite sequence treated
+  every missing HTTP status as certificate rejection and supplied its valid test
+  bearer during that step. New actual-Lua/driver regressions reproduced the
+  issue: twelve focused tests produced nine failing assertions, including four
+  generic failure classes incorrectly reaching `wire_claims_checked` and the
+  valid credential assertion. These were diagnostic correctness defects, not
+  evidence of a new physical run or an observed credential disclosure.
+- The existing shared TLS client now owns `certificate_rejected`, reused by both
+  diagnostic sequences. Only no-status `certificate verify failed` / `unknown ca`
+  text qualifies; generic TLS, timeout, offline and certificate-file errors stop
+  the run without exposing details. The wrong-CA attempt sends a deliberately
+  invalid bearer even if the peer unexpectedly accepts trust. The native driver
+  carries the same classifier and tests preserve actual carrier failure reasons
+  instead of rewriting every failure as a certificate error.
+- Final focused **12 PASS** (0.824s); complete wire/provider/sequence/driver/bundle
+  **82 PASS** (9.143s); existing transport **32 PASS / two POSIX skips** (17.437s).
+  Positive string/table/case variants and five unrelated failure classes are
+  covered. Whitespace passed. Exact committed-source Linux CI/package proof
+  follows; no new device installation or physical result is claimed. Prior
+  5250eee/1af5a67 physical/host reports retain their original source boundaries.
+
 ## 2026-10-20 — Official Companion byte recovery and restart acceptance
 
 The user-authorized Companion PR89/90 merges completed as `5b69a6e` and
