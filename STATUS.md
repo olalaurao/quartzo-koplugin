@@ -19,8 +19,13 @@
 - Final focused **12 PASS** (0.824s); complete wire/provider/sequence/driver/bundle
   **82 PASS** (9.143s); existing transport **32 PASS / two POSIX skips** (17.437s).
   Positive string/table/case variants and five unrelated failure classes are
-  covered. Whitespace passed. Exact committed-source Linux CI/package proof
-  follows; no new device installation or physical result is claimed. Prior
+  covered. Whitespace passed. Exact committed **b18e6f07bd2b4a5e6e48c96692a10faad7412aef**
+  passed [Linux CI 39432342451](https://github.com/olalaurao/quartzo-koplugin/actions/runs/39432342451):
+  **82 wire PASS** (1.492s), **34 transport PASS** (9.699s), no skips, and the
+  six-file upstream verifier. [Source-bound host evidence](docs/evidence/wire-certificate-rejection-host-2026-10-20.json)
+  fingerprints all nine exact source/prepared package files. Fresh private
+  input/package and actual device proof remain required; no new deployment or
+  physical result is claimed. Prior
   5250eee/1af5a67 physical/host reports retain their original source boundaries.
 
 ## 2026-10-20 — Official Companion byte recovery and restart acceptance
