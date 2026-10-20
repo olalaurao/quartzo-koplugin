@@ -116,3 +116,61 @@ Actual PW3 provider/lifecycle acceptance, authenticated network binding, durable
 receipt verification, persistent replay/outbox acknowledgements and PW3
 offline/reboot/cancellation/lost-response tests remain required. This pure
 consumer unlocks none of those gates by itself.
+
+## Single-use offline PW3 compatibility probe
+
+`probe.lua` executes the three golden checks, all 12 negative wire mutations,
+five actual-Dart reference cases, three same-ID conflict positions, three mixed
+entries and expired-window rejection. Its clock is deliberately synthetic. It
+never emits canonical ACK or advances a cursor. `probe_kindle.lua` is a separate
+KUAL entry point, using the installed KOReader modules after `setupkoenv`, with
+bounded fixture/native-source reads and a bounded public report. It loads no
+Statistics, sidecar, Reader, device/UI framework or network service.
+
+`probe_bundle.py` packages exact Git blobs from a full commit SHA, preserving
+canonical bytes. The launcher is derived from the already-tested transport
+diagnostic launcher by replacing only its fixed owned extension name; the
+single-use lock and owned-PID deadline remain the same. The two diagnostic
+profiles have separate directories and no shared runtime/session files.
+
+After host tests/CI pass for the intended source:
+
+```sh
+python tools/reading_wire/probe_bundle.py prepare --source-commit <40-character-commit> --output <fresh-bundle-directory>
+python tools/reading_wire/probe_bundle.py install --bundle <bundle-directory> --kindle-root <mounted-root> --observation <fresh-host-observation.json>
+```
+
+Installation requires the observed `v2026.07.1` baseline, its LuaJIT executable,
+plain installed `common/dkjson.lua` / `ffi/sha2.lua`, an existing plain KUAL
+extensions directory and at least 4 MiB free. It captures those source hashes
+before/after installation and creates only the fresh
+`extensions/quartzo-wire-probe` directory. Existing files/directories, junctions,
+changed source, unknown entries and unavailable device storage fail without
+replacement or automatic deletion. No credentials, reference libraries,
+Statistics or real event data are packaged.
+
+The required human step is safe USB disconnection, then KUAL → **Quartzo wire
+diagnostic** → **Run synthetic offline wire test**, followed by USB reconnection.
+The probe does not require a Wi-Fi change. The launcher's complete process is
+bounded to 120 seconds plus termination grace and discards arbitrary native
+stdout/stderr. A completed run is single-use; preserve its output for collection.
+
+```sh
+python tools/reading_wire/probe_bundle.py collect --bundle <bundle-directory> --kindle-root <mounted-root> --observation <installation-observation.json> --output <fresh-collected-report.json>
+```
+
+Collection revalidates exact source, run/manifest/commit identity, the installed
+native hashes, all counts, actual LuaJIT/ARM metadata and strict false effect/ACK
+fields. Changed modules, incomplete reports and leftover report staging reject.
+Matching synthetic input observations alone never establish hardware origin:
+the returned `physical_execution_attested` stays false. Any later source-specific
+physical acceptance must additionally record the real mounted target and human
+execution observation; a mocked mount or x64 host execution is not a PW3 PASS.
+
+Host tests exercise the harness through actual pinned JSON/SHA libraries, the
+driver with an explicit I/O/module/exit allow-list, and package/install/collect
+against owned synthetic mounts. They include a real Windows junction or Unix
+symlink guard, changed native source, low storage, malformed metadata,
+incomplete/ACK-claiming reports and preservation of existing fixtures. These are
+tool safety/compatibility tests, not Statistics extraction, durable storage,
+production networking, performance-budget or release acceptance.

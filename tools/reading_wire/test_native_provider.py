@@ -19,14 +19,18 @@ def libraries():
     return (directory / "dkjson.lua").read_bytes(), (directory / "sha2.lua").read_bytes()
 
 
-def provider(lua):
+def provider_modules(lua):
     json_bytes, sha_bytes = libraries()
     json_module = lua.execute(json_bytes)
     sha_module = lua.execute(sha_bytes)
     loader = lua.eval("function(json,sha) return function(name) if name=='dkjson' then return json end; "
                       "if name=='ffi/sha2' then return sha end; error('unsupported_reference_module') end end")(json_module, sha_module)
     adapter = lua.execute((ROOT / "koreader_deps.lua").read_bytes())
-    return adapter[b"load"](loader)
+    return adapter[b"load"](loader), json_module, sha_module
+
+
+def provider(lua):
+    return provider_modules(lua)[0]
 
 
 class NativeProviderCodecTest(test_codec.WireCodecTest):
