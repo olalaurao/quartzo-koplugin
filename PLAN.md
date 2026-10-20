@@ -18,12 +18,16 @@ The integrated product now includes gated one-way status evidence and opt-in pro
 
 Gate 0C also has a pinned pure Lua wire consumer under `tools/reading_wire/`, with canonical byte/native identity validation and untrusted response projections. It is outside the production plugin. A separate exact-source offline KUAL diagnostic passed on the actual PW3 ARM runtime, verifying installed native JSON/SHA source identities and contract cases. Authenticated receipt verification, production lifecycle and device/outbox acknowledgement remain open as recorded in STATUS.
 
-Actual official-artifact Obsidian/Drive acceptance subsequently failed: the SDK
-renderer omitted binary media, creating three zero-byte synthetic files despite
-success and advertised hashes. Companion PR89 corrects byte transport/readback
-and passed all final checks; dependent PR90 exposes reviewed adoption and truthful
-pending feedback. Merge/official artifact/live recovery remain separate from
-local tests. No production phase or source ACK is unblocked by either candidate.
+Actual official 5ba99fd acceptance failed with zero-byte synthetic Drive uploads.
+The separately authorized PR89/90 fixes then merged as 5b69a6e/8c51589, with green
+normal main CIs and official exact-main Preflights. Only the paired Manual sandbox
+received the verified final artifact. Actual canonical reconciliation preserved
+good Reading originals and explicit original-byte repair restored their remote
+copies; independent downloads matched. Fresh opaque Reading/binary creation,
+ordinary update and restart/quiet replay also passed. These are partial actual
+byte/recovery observations. Reviewed-adoption UI, actual multi-client cloud races,
+authenticated receiver delivery and durable source ACK still gate production.
+See STATUS and the source-bound Companion evidence; no later phase is activated.
 
 # 1. Mission
 

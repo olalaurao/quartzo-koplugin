@@ -1,5 +1,43 @@
 # Implementation Status
 
+## 2026-10-20 — Official Companion byte recovery and restart acceptance
+
+The user-authorized Companion PR89/90 merges completed as `5b69a6e` and
+`8c515898ab919a4b9e214ff84563cd36c6d4c243`, tree-identical to their approved
+heads. Normal main CI and both exact-main official preflights passed. Final
+Preflight **39425583160** produced the verified sandbox-only artifact with
+`main.js` SHA-256 `ffb75be60cbcf9e3e8c6c042d2fedec921b463fbbc0822fac3b2a2f551c8160c`.
+No release/tag or production installation occurred; older pending-approval and
+old-artifact statements below are historical checkpoints.
+
+Actual Obsidian 1.14.4 retained Manual/pairing after reload. Full reconciliation
+detected both zero-byte remote Reading copies despite their original hash
+properties, preserved the good local originals and reported one synced / two
+conflicts / zero errors / two pending. Explicit Sync Center Keep local repair
+restored both originals. Independent actual downloads verified the exact
+382-byte native Dart shard and 43-byte opaque future-schema shard. The ordinary
+mutable control pulled its empty remote version normally, with its original
+backup preserved outside the vault.
+
+A subsequent actual canonical sync created a 90-byte opaque Reading shard and
+32-byte binary control (NUL/Unicode), and updated the mutable control to its
+original 38 bytes: three synced / zero conflicts, errors or pending. Independent
+inventory/download verified all five exact hashes and unique identities. A real
+sandbox renderer restart restored Manual/pairing and zero pending; explicit full
+reconciliation then reported **zero synced / zero conflicts / zero errors /
+zero pending**. These are partial actual byte/recovery/replay acceptance, not
+complete G03/G04 or distributed/canonical ACK proof. Evidence is in Companion
+`docs/reading-integration/live-official-byte-recovery-2026-10-20.json` and private
+source-bound sandbox observations.
+
+The actual reviewed-adoption UI branch, Quartzo/Companion multi-client cloud
+exchange/races, source-bound Android/PW3 wire session, durable acknowledgement
+and production extraction/outbox still require their own evidence. No cursor,
+Resource effect, Readwise migration or later product phase is activated. The
+latest read-only device check again sees one authorized Android phone and
+KOReader v2026.07.1 at D:, without a new listener or installation.
+
+
 ## 2026-10-20 — Native wire sequence host CI and exact package smoke
 
 - Exact source **5250eee37da0b645a240ac82dba1ec118abc4737** passed
