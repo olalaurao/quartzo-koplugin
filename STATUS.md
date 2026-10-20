@@ -1,5 +1,28 @@
 # Implementation Status
 
+## 2026-10-20 — Native wire sequence host CI and exact package smoke
+
+- Exact source **5250eee37da0b645a240ac82dba1ec118abc4737** passed
+  [Linux CI 39399156981](https://github.com/olalaurao/quartzo-koplugin/actions/runs/39399156981):
+  **80 wire/provider/sequence/driver/bundle PASS** (1.925s), **34 existing transport
+  PASS** (11.110s), no skips, and the six-file upstream verifier. No runtime source
+  or test changed afterward. [Sanitized source-bound host evidence](docs/evidence/wire-native-sequence-host-2026-10-20.json)
+  records exact Git source hashes and strict false physical/ACK/cloud/cursor flags.
+- Actual private package preparation and verification passed using all thirteen
+  allow-listed source/runtime inputs from that exact source and the fresh actual
+  Dart/OpenSSL loopback session. Phone input and both private keys were excluded.
+  The sibling Android-mode parser accepted that same actual private input and
+  verified its scoped bearer/TLS context. The fixture was not installed anywhere;
+  there is no phone listener or enrolled secure record. Its synthetic credential
+  expires after thirty minutes. Package smoke does not establish any hardware or
+  canonical persistence evidence.
+- Read-only current mount still reports KOReader **v2026.07.1** at D:, while ADB
+  lists no connected authorized phone. The exact next physical step remains a
+  fresh source-bound isolated phone provision/start, actual KUAL execution and
+  independent phone/device collection. Preserve the earlier exact-source physical
+  reports; do not extend them to this new driver. Companion PR89/90 remain open
+  with all checks green and their separately requested merge permissions pending.
+
 ## 2026-10-20 — Finite native wire diagnostic and byte-correlating collection
 
 - Added a separate finite diagnostic sequence/KOReader driver, outside production.

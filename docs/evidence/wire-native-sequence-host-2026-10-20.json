@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "proof": "source_bound_host_diagnostic_tests",
+  "source_commit": "5250eee37da0b645a240ac82dba1ec118abc4737",
+  "source_sha256": {
+    "tools/reading_wire/codec.lua": "e4fcbe04b31d8925bd2ce929f9d52b1c3dc89f59d283a14c0375d46f1f3ffb93",
+    "tools/reading_wire/koreader_deps.lua": "ba20d6619e0572e2b5860be4059f17d065b3f4414cb5f3a76cbc9a195e128418",
+    "tools/reading_wire/exchange.lua": "6396998cac3ab4739c00fc76467240232bad4286686a668b99f824b15a8f3d04",
+    "tools/reading_wire/sequence.lua": "632901f5c0208227c8b0dfa83816b52e1e422d7f0d81e8a47856ec7e67eb9200",
+    "tools/reading_wire/sequence_kindle.lua": "843c4815f738dd0284ebe5fce87648921e53e0783d11ccd8965e5677227cb946",
+    "tools/reading_wire/sequence_bundle.py": "49ce962e8f81963b24d66fd32065732322d57c69f6f54dcae374f9397fd4a73c",
+    "tools/transport_probe/client.lua": "62957514ab76c9ef7df64dcc984c768f436c5b15c31dd0daa2f517377c5aadf3",
+    "tools/transport_probe/run.sh": "dd42d3d3820135149626f099a4583376c009c013ec5763a845fe43d7ba8baf22",
+    "tools/reading_wire/sequence_fixture.json": "d208b94fb9558fbe77226f5ce9a244fb0a637caa9dd3502a4382016d4b63e9b6",
+    "tools/reading_wire/sequence_fixture.provenance.json": "e49d77b8350feb2395054243ec2d64e43ce10cf6b59aae45beac920d2fe9724f",
+    "tools/reading_wire/test_sequence.py": "e095bd36dce6a3553aaf66c70df150b47eeb162f77611935115a67affa4d7991",
+    "tools/reading_wire/test_sequence_driver.py": "34a4025b48cc2a9b7c8d2bffc420508026e58affe404386a6c16a45eb9a5704d",
+    "tools/reading_wire/test_sequence_bundle.py": "8dce446167054377facb300ce34a4509b8bd3ebdb7448718f03bae3e06d1205f"
+  },
+  "ci": {
+    "url": "https://github.com/olalaurao/quartzo-koplugin/actions/runs/39399156981",
+    "conclusion": "success",
+    "wire_tests_passed": 80,
+    "wire_seconds": 1.925,
+    "transport_tests_passed": 34,
+    "transport_seconds": 11.11,
+    "skipped": 0
+  },
+  "local_windows": {
+    "wire_tests_passed": 80,
+    "transport_tests_passed": 32,
+    "transport_posix_skipped": 2
+  },
+  "package_smoke": {
+    "exact_git_sources_verified": true,
+    "private_phone_keys_excluded": true,
+    "files": 13,
+    "deployed": false
+  },
+  "fixture_source_commit": "93a0ddeeb25cc0e54cef4ca5bd3d0199706ba3a3",
+  "ratified_contract_pin": "e7a661d4ed6d572cdbf722f4e697fea461005b69",
+  "physical_execution_attested": false,
+  "canonical_ack": false,
+  "canonical_persistence_proven": false,
+  "cloud_delivery_proven": false,
+  "source_cursor_changed": false,
+  "production_changed": false
+}
