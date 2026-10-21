@@ -25,8 +25,15 @@ adapter. The final **twelve actual-Lua focused cases PASS** (0.089s), including
 401/429/503/redirect, expiry after I/O and unchanged parser authority. Full wire
 suite: **101 PASS/four explicit native-TLS skips** (105 total,5.886s), with
 actual pinned JSON/SHA libraries through host LuaJIT. Shared transport regression:
-**32 PASS/two POSIX skips** (34 total,13.753s). New exact-source Linux CI is
-pending; the combined paired path still uses injected TLS in local tests.
+**32 PASS/two POSIX skips** (34 total,13.753s).
+Exact6cfdba8e6e5d9e9d4b59be209621e0ea7fc8e0f8 then passed
+[Linux39533385767](https://github.com/olalaurao/quartzo-koplugin/actions/runs/39533385767):
+**105 wire/34 transport tests, no skips**, including the four real native carrier
+cases and twelve injected-SDK paired-consumer cases. The combined paired path
+still uses injected TLS here. Quartzo's next required native host test pins this
+exact source and composes its normal canonical receiver with actual native
+LuaJIT/LuaSec, original JSON/SHA libraries and independent persisted-byte/replay
+checks; its execution remains separate and pending at this checkpoint.
 
 The test's locally computed synthetic approval is not actual user-approved
 source import. Normal-issuer/native combined interoperability and fresh PW3/
