@@ -4,17 +4,22 @@
 
 Quartzo c6ec01a1 hosted39623152396 passed its actual native certificate and
 paired-receipt steps on system OpenSSL and official KOReader v2026.07.1 bundled
-LibreSSL4.3.2. The full hosted suite is still running. The bounded correction
+LibreSSL4.3.2. Its completed hosted job119301522068 subsequently passed2836 full
+tests/eight explicit skips, with actual logs preserved. The bounded correction
 changes the same self-signed peer to CA:true/pathLen:0 with keyCertSign usage;
 exact peer DER pinning and independently approved finite pairing remain required.
 No new CA/key/chain, issuer API, OS trust enrollment or verification bypass is
 added. This host result does not supersede either failed physical attempt.
 
-Quartzo is preparing the same isolated probe in profile/AOT mode after the
-observed Android LOW_MEMORY exit; build success will not prove memory acceptance.
+Quartzo's clean7d3b6735 profile/AOT ARM64 probe built in336.5s and passed exact
+package/AOT/source20/archive verification after using standard ABI splitting.
+APK SHA256205a551d9d8d810baa1315a52ea3c7e931035c59ce49c542d7585356ef96f270;
+no installation or memory acceptance is claimed after the Android LOW_MEMORY exit.
 The user will disconnect the phone and cannot run more KUAL work now. No session
 or installation is started. Runtime source remains7555814; G03 stays PASS, G04
-and production phases remain open. Resume only with a newly verified APK/source
+and production phases remain open. Exact55d5a10 docs CI39623786358 passed34
+transport and111 wire tests without skips; runtime bytes are unchanged7555814.
+Resume only with rechecked source/CI and a newly verified APK/source
 and a new finite session when the user can operate both devices.
 
 ## 2026-10-21 — Second paired PW3 execution identifies certificate rejection

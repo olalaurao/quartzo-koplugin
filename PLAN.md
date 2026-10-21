@@ -5,8 +5,9 @@ The second exposed certificate verification rejection with zero receipts, and
 Android separately reported a low-memory exit. Cleanup is complete. Quartzo's
 bounded certificate correction at c6ec01a1 passed the existing native certificate
 and paired-receipt steps on system OpenSSL and official KOReader v2026.07.1
-LibreSSL4.3.2 in hosted39623152396; its full suite is still running. A profile/AOT
-isolated APK is being prepared. The user cannot perform device work now; no
+LibreSSL4.3.2 in hosted39623152396; its completed job passed2836 full tests.
+The clean7d3b6735 profile/AOT ARM64 APK built and passed provenance checks.
+Physical memory/receipt acceptance remains required. The user cannot perform device work now; no
 session is active and no further device step is requested. G04 stays open.
 
 Current G04 work now includes finite source receipt composition through the
