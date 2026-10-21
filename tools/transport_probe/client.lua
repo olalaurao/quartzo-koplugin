@@ -128,7 +128,7 @@ local function postTransport(config, https, ltn12, responseBound, pin, http)
             and config.ca_file ~= config.bad_ca_file, "explicit diagnostic trust files required")
     end
     local endpoint, ca, badCa = config.endpoint, config.ca_file, config.bad_ca_file
-    local requestPeer = pin and pinnedRequester(endpoint,ca,pin,https,http) or https.request
+    local requestPeer = pin and pinnedRequester(endpoint,ca,pin,https,http) or nil
     https.TIMEOUT = 5
     return function(path, payload, headers, trust)
         local chunks, received, exceeded = {}, 0, false
@@ -149,7 +149,7 @@ local function postTransport(config, https, ltn12, responseBound, pin, http)
                 return 1
             end,
         }
-        local ok, first, code, headers = pcall(requestPeer, request)
+        local ok, first, code, headers = pcall(requestPeer or https.request, request)
         if exceeded then return nil, "response_bound" end
         if not ok then return nil, pin and "reading_transport_failed" or errorText(first) end
         if not first then return nil, pin and code or errorText(code) end
