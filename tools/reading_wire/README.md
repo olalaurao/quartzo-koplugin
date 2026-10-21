@@ -30,6 +30,10 @@ test-only dependencies and requires exact version checks. Rejected CA and a
 trusted-CA/wrong-leaf test must observe zero application bytes, including
 incomplete HTTP. This host test never substitutes new-source physical PW3
 acceptance or a canonical receiver/storage test.
+The receive-timeout case uses the same authenticated native path with a finite
+delayed synthetic response: credentials may reach the trusted peer, but timeout
+must return no delivery. Its clock bound checks this fixture only, not total
+production lifecycle or PW3 latency/performance budgets.
 
 `codec.lua` is a pure Lua 5.1 consumer of the ratified upstream Reading transport
 contract. It is outside the production plugin and the deployed TLS diagnostic.

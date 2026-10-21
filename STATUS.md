@@ -36,6 +36,15 @@ fixed it without changing the assertion. Final transport regression: **32 PASS /
 two POSIX platform skips** (34 total,10.920s). The initial failure remains in
 the private log; it was not a native pin acceptance result.
 
+Exact implementation3ed1fa7f5351f3f13c457c086bfae31906024c50 passed
+[Linux CI39525466459](https://github.com/olalaurao/quartzo-koplugin/actions/runs/39525466459):
+**92 wire PASS /34 transport PASS, no skips**. All three actual native
+LuaSec/LuaSocket cases executed: bound TLS1.2 delivery, trusted CA/wrong leaf
+with zero application bytes, and wrong CA with zero application bytes. The
+first f916afb CI reproduced the same legacy callback regression and failed;
+it was fixed at3ed1fa7, not retried unchanged. A fourth native case now requires
+the configured receive timeout to return no delivery; its CI is pending.
+
 ## 2026-10-20 — Actual physical-shard cloud path and canonical Quartzo consumption passed
 
 [Combined source-bound evidence](docs/evidence/wire-cloud-canonical-bridge-2026-10-20.json) has byte-identical copies across all three repositories (SHA2568428ade8d85a74e51ee0681e1970fe697888e69cdc82e761093a888089bed8f5). The exact three synthetic shards collected from the physical Android run passed actual official Companion10e840ab SDK/OAuth/HTTP upload, independent fresh-peer download and separate remote byte checks (three unique files /1356bytes). Source and rehydrated-peer replay performed zero sync work; both peers were synced and the original six sandbox hashes plus Manual/pairing remained unchanged. These are separate adapters/coordinators/local roots/state in one renderer, not separate OS-process restart proof. The dedicated child is under the selected sandbox's excluded diagnostics tree; no production target was selected.
