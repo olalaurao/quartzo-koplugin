@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "scope": "actual normal canonical receiver with native paired LuaJIT/LuaSec receipt and independently verified synthetic publication/replay",
+  "observed_at_utc": "2026-10-21T02:56:19.472400+00:00",
+  "quartzo": {
+    "source_commit": "bad105188f4c88af58076fbc50d5b4f300beb53a",
+    "ci_run": 39534498768,
+    "ci_url": "https://github.com/olalaurao/aplicativo/actions/runs/39534498768",
+    "sources": {
+      "lib/services/reading_transport_pairing_session.dart": {
+        "git_blob_bytes_sha256": "ad5120cd09c8fe10f1870b2af05cee95ec032a4aa7359930954ffd600b82df73",
+        "git_blob_sha": "3d2adc6b7920fbe18c283c8fa7e55080febf33c8"
+      },
+      "lib/services/reading_transport_receiver.dart": {
+        "git_blob_bytes_sha256": "d2b014addd4d4e32cfa5bea5d4416e9f442b43e45c180ac44a1701af38936c42",
+        "git_blob_sha": "871dc9bdf30196bc68c2f5d1277e74584e5e4759"
+      },
+      "lib/services/reading_transport_tls_identity.dart": {
+        "git_blob_bytes_sha256": "63ff994e38c0180417e23fad6219cd6ddfec47e3fa93c81beea393bd0309cf9b",
+        "git_blob_sha": "772a33b2bb121c384de79aa968703306f2990ea6"
+      },
+      "lib/services/reading_activity_local_store.dart": {
+        "git_blob_bytes_sha256": "5577f8be22a9807ba4e7cd192ae7a7fbafa084933556d1cc793bb148ad0fe922",
+        "git_blob_sha": "f586858aec1c2efdf4ce35db91eec7289855b87b"
+      },
+      "lib/services/sync_manager.dart": {
+        "git_blob_bytes_sha256": "418a6799c4101e0959e7cab1db4c398cd6436982cb11421e2f11ebc9cf6a4865",
+        "git_blob_sha": "8397e29933afabd568402a6a252439b1b7297849"
+      },
+      "lib/providers/settings_provider.dart": {
+        "git_blob_bytes_sha256": "f1b2abe212aad35efa95dae0b15dbd9803f76b51f90353f8f1a2dcaa44a5e279",
+        "git_blob_sha": "658f9a216c1c0d2c683968b94734e16f09ad5c5d"
+      },
+      "test/reading_transport_target_test.dart": {
+        "git_blob_bytes_sha256": "bb7622b70a6233a470e4f65b8c0ea408491036c401710323db6acb1ee6494b7c",
+        "git_blob_sha": "e3a5f171cf4256270b027e2d1e543b981d9a81ee"
+      },
+      "test/fixtures/reading/paired_native_driver.lua": {
+        "git_blob_bytes_sha256": "d108a115f19532ff15e75df331d61317a3dd8ba2b99261205f659620ec5d68c1",
+        "git_blob_sha": "3fb373863577fb195a7b2bf50074fe1e4dfc5524"
+      },
+      "test/reading_transport_tls_identity_test.dart": {
+        "git_blob_bytes_sha256": "970aea3a4fdfe51f1e89dc5ee1894e48f9093c9392c9933fa2d7567551a99b41",
+        "git_blob_sha": "48a14e1e815ba0a4f0cef4a40d7c55a9905748d6"
+      },
+      "tool/reading_tls_native_client.lock.json": {
+        "git_blob_bytes_sha256": "b07c251d478fd5c97fea77d51f46191af7d418e8629ab129b8be9a6d8e4d19da",
+        "git_blob_sha": "8b3c33e29b896b03d2982da6812ae6fd97face63"
+      },
+      "tool/prepare_reading_tls_native_client.py": {
+        "git_blob_bytes_sha256": "645c3698af2c5fdca881b9c4ee9db00a72358475f74ed3a942ed9ed2d32c8b4d",
+        "git_blob_sha": "1d994259eff4597b822082f7b7c98f6bfccfbdd0"
+      },
+      ".github/workflows/hosted-docs-validation.yml": {
+        "git_blob_bytes_sha256": "83b29b4b853f1478c939d8fa6d656e18150d1236ea885d5cccac1e2775b1c3aa",
+        "git_blob_sha": "3201b895dd5417400c4f5e13c57a4ed099fb447d"
+      },
+      "pubspec.yaml": {
+        "git_blob_bytes_sha256": "dda0c2da8729d2abe30f311192cb7a963a291ea45ee4f3face975afaee632cd2",
+        "git_blob_sha": "0c8fd520b178e5c397787d042a2f278673cd5ed2"
+      },
+      "pubspec.lock": {
+        "git_blob_bytes_sha256": "dceca7b0ceada6bebdfb37de085411e85018d1488554e10e9edafcdd81bf9bbb",
+        "git_blob_sha": "12743e922740d93b1b4c3d6b466623a1dd284c2a"
+      }
+    },
+    "ci_log_sha256": "751f6f0effa7ccd463cb47dbd83bc0b631b36f3d68aaf4884cbd64004a3265fa"
+  },
+  "koreader": {
+    "source_commit": "6cfdba8e6e5d9e9d4b59be209621e0ea7fc8e0f8",
+    "ci_run": 39533385767,
+    "ci_url": "https://github.com/olalaurao/quartzo-koplugin/actions/runs/39533385767",
+    "sources": {
+      "tools/transport_probe/client.lua": {
+        "git_blob_bytes_sha256": "f29a14c9d785cc821eb946c38f01d777786cce8f41d45afdd757fd7cb3fdac27",
+        "git_blob_sha": "e48c6b1e2a35771a6ad71b062fde30b36a42b108"
+      },
+      "tools/reading_wire/codec.lua": {
+        "git_blob_bytes_sha256": "f8196ec5dc0686faa3da3dba9804fca663761b7f86939b749ffee94ea8787e9e",
+        "git_blob_sha": "644b266d068f3f45753f70e3a3b8a13628eb3b21"
+      },
+      "tools/reading_wire/koreader_deps.lua": {
+        "git_blob_bytes_sha256": "ba20d6619e0572e2b5860be4059f17d065b3f4414cb5f3a76cbc9a195e128418",
+        "git_blob_sha": "38a60b98fa4f43497a020ad33bc487419118915c"
+      },
+      "tools/reading_wire/paired_exchange.lua": {
+        "git_blob_bytes_sha256": "6ca340d43c656128300885d0eea376d9b9e8223d0cfe65e0aa3710810e08e31e",
+        "git_blob_sha": "ec3471bcb7fa2597c7c09db9b1c7d1588c953fb5"
+      },
+      "tools/reading_wire/prepare_reference_runtime.py": {
+        "git_blob_bytes_sha256": "e0094b29ee7d421f9daf7c893af8de882ecf7b86888dc72cdbc4e7b9c800b24c",
+        "git_blob_sha": "0df764da5e8f0b500589651a012e1f6312798066"
+      },
+      "tools/reading_wire/REFERENCE_RUNTIME.lock.json": {
+        "git_blob_bytes_sha256": "b275af60be3834ab13fb4a4ba62890fd9fbcffc663b2ca3f984958347be0d080",
+        "git_blob_sha": "aae169d9ec9d573d7e6632c79036009118885aa5"
+      }
+    },
+    "ci_log_sha256": "b7e52a608333279147b08dfcfea92f77a2a03d2ed1a0998e9d6b571eeac4bf6b"
+  },
+  "counts": {
+    "configured_certificate_pass": 5,
+    "configured_paired_native_pass": 1,
+    "configured_native_skipped": 0,
+    "native_pass": 122,
+    "native_skipped": 5,
+    "architecture_docs_pass": 95,
+    "shared_vectors_pass": 30,
+    "full_pass": 2834,
+    "full_skipped": 8,
+    "koreader_wire_pass": 105,
+    "koreader_transport_pass": 34,
+    "koreader_skipped": 0
+  },
+  "observations": {
+    "actual_app_generated_leaf_and_scoped_secure_credential": true,
+    "actual_normal_SyncManager_target_bound_receiver": true,
+    "host_parent_issued_exact_document_and_independent_approval": true,
+    "native_LuaJIT21_LuaSec132_LuaSocket_original_JSON_SHA_libraries": true,
+    "two_fresh_nonce_requests_valid_fact_beside_malformed_neighbor": true,
+    "only_valid_event_recognized_by_opaque_session_request_receipt": true,
+    "forged_receipt_rejected": true,
+    "independent_exact_canonical_shard_and_queue_checks": true,
+    "native_event_count": 1,
+    "native_seconds": 30,
+    "replay_native_event_count": 1,
+    "private_key_file_created": false
+  },
+  "limits": [
+    "Synthetic host fixture account/vault selection; not real Google account authorization or a production target.",
+    "Trusted parent models out-of-band approval; no production human importer or discovery is proven.",
+    "Actual native Linux x64 execution, not new Android/PW3 ARM acceptance.",
+    "Opaque source receipt observation is not persisted outbox acknowledgement or cursor movement.",
+    "No stable production key retention, unattended receiver, hardware power-loss or new cloud proof.",
+    "The ordinary full suite explicitly skips the unconfigured native case; the separate required step executed it.",
+    "The self-contained host proof does not certify later probe/deployment tool changes."
+  ],
+  "synthetic_native_paired_receipt_verified": true,
+  "canonical_source_ack": false,
+  "source_cursor_changed": false,
+  "physical_device_proven": false,
+  "production_registered": false,
+  "G04_complete": false,
+  "goal_complete": false
+}

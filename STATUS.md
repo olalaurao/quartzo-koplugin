@@ -1,5 +1,45 @@
 # Implementation Status
 
+## 2026-10-21 — Paired KUAL preparation and independent receipt collection
+
+The existing single-use extension/launcher now packages paired_sequence.lua
+and the existing approved paired consumer. Six fresh-nonce requests cover the
+same three actual-Dart batches, one discarded receipt and five verified receipt
+lookups. Host-generated keys/tokens are removed upstream: the isolated normal
+app receiver issues its exact private handoff, the checked APK/source/UID
+channel collects it and the USB bundle approves those exact bytes. The native
+event lines/IDs/shards are unchanged; only transport binding is replaced.
+The collector independently recomputes request SHA/batch/nonce/window and
+acknowledged line/native/event/revision bindings, checks complete exported bytes
+and deduplicated native-ID/time totals. Reports remain observations, not cursor,
+hardware or canonical receipt authority. There is no production plugin, new
+transport stack, data store, retry scheduler, Statistics or Wi-Fi action.
+
+Focused actual host LuaJIT/provider tests: four paired-sequence, four complete
+driver and eight final collector cases PASS. Full wire after migration:
+**105 PASS/four explicit native TLS skips** (109 total,19.137s), before the final
+additional collector case. TLS/IO are explicitly injected for these driver
+tests. The legacy host response fixture now uses its supplied current time so
+the new live-window driver does not rely on a frozen request timestamp. Exact
+source CI and actual paired PW3/Android execution are pending. No new bundle
+or device session was prepared or installed; historical reports retain sources.
+
+## 2026-10-20 — Actual normal-app/native paired receipt join PASS
+
+[Source-bound host proof](docs/evidence/wire-paired-canonical-host-2026-10-20.json)
+matches the Quartzo copy byte-for-byte. Quartzo bad10518 hosted39534498768 ran
+five configured certificate tests plus one required actual LuaJIT2.1/LuaSec1.3.2/
+LuaSocket paired receipt case without skips. The normal canonical app issuer,
+original pinned JSON/SHA and this exact6cfdba8 consumer recognized only the valid
+event beside malformed input twice with fresh nonces; the app independently
+verified one exact canonical event/shard/30 seconds and queued work after replay.
+Remaining app checks:122 native PASS/five skips,95 architecture/docs,30 shared,
+2834 full PASS/eight explicit skips. Source-specific KOReader6cfdba8 CI39533385767
+passed105 wire/34 transport with no skips. The report fingerprints both code
+sets and logs and explicitly excludes later physical-tool work, real Google
+authorization, production import/stable pairing, outbox/cursor and device proof.
+G03 is PASS; G04 and all dependent production/product/release gates stay open.
+
 ## 2026-10-20 — Finite approved-pairing receipt composition (host logic)
 
 `paired_exchange.lua` now composes the existing pure codec and shared pinned

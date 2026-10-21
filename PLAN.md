@@ -1,5 +1,11 @@
 # Quartzo ↔ KOReader — Product & Delivery Plan
 
+Current execution checkpoint: the normal-app/native LuaJIT paired receipt join
+passed on the host at exact bad10518/6cfdba8. The existing isolated phone/KUAL
+diagnostic is being upgraded to consume the actual app-issued pairing and
+independently verify per-event receipt/replay, with host key generation removed.
+Fresh physical acceptance is pending; this does not start production ingestion.
+
 Current G04 work now includes finite source receipt composition through the
 existing codec/carrier, conditioned on an independently approved exact pairing
 document from the canonical Quartzo receiver. It adds no production plugin,

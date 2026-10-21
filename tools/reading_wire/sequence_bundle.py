@@ -1,10 +1,13 @@
 """Exact-source disposable TLS bundle. Never provision a phone or attest hardware."""
 import argparse
 import base64
+import datetime
 import ipaddress
+import json
 import pathlib
 import re
 import shutil
+import ssl
 import subprocess
 import tempfile
 import time
@@ -13,20 +16,38 @@ from probe_bundle import (BASELINE, ROOT, encoded, hexadecimal, native_snapshot,
                           parse, plain_root, read, sha)
 
 NAME = 'quartzo-wire-tls-probe'
-REVISION = 'canonical-wire-sequence-v1'
+REVISION = 'canonical-paired-sequence-v1'
 SOURCE_MAP = {
     'codec.lua': 'tools/reading_wire/codec.lua',
     'koreader_deps.lua': 'tools/reading_wire/koreader_deps.lua',
-    'exchange.lua': 'tools/reading_wire/exchange.lua',
-    'sequence.lua': 'tools/reading_wire/sequence.lua',
+    'exchange.lua': 'tools/reading_wire/paired_exchange.lua',
+    'sequence.lua': 'tools/reading_wire/paired_sequence.lua',
     'client.lua': 'tools/transport_probe/client.lua',
     'kindle.lua': 'tools/reading_wire/sequence_kindle.lua',
     'run.sh': 'tools/transport_probe/run.sh',
     'menu.json': 'tools/reading_wire/sequence_menu.json',
     'config.xml': 'tools/reading_wire/sequence_config.xml',
 }
-INPUTS = {'private-session.json', 'server.pem', 'untrusted.pem', 'synthetic-fixture.json'}
+INPUTS = {'private-pairing.json', 'server.pem', 'synthetic-fixture.json'}
 RUNTIME = {'run.lock', 'launcher-status.txt', 'device-observation.json', 'device-observation.json.tmp'}
+
+
+def compact(value):
+    # Independent verification only; canonical events are still produced by
+    # Dart and persisted by the app, never serialized/written by this collector.
+    return json.dumps(value,ensure_ascii=False,separators=(',',':')).encode('utf-8')
+
+
+def native_binding(line):
+    event=parse(line.encode('utf-8'))
+    started=datetime.datetime.fromisoformat(event['started_at_utc'].replace('Z','+00:00'))
+    identity='qre_'+sha(compact(['quartzo-reading-event-v1',event['device_id'],event['source_epoch'],
+        event['book_row_id'],event['page'],int(started.timestamp())]))
+    if compact(event) != line.encode('utf-8') or event['event_id'] != identity:
+        raise ValueError('Synthetic native identity mismatch')
+    native=dict(event)
+    native.pop('observed_at_utc')
+    return event,sha(compact(native))
 
 
 def private_directory(path, fresh=False):
@@ -65,37 +86,47 @@ def read_sources(revision):
 
 def inputs(directory, live=False):
     values = {name: read(directory / name, 16384) for name in INPUTS}
-    session = parse(values['private-session.json'])
-    if (set(session) != {'endpoint', 'token', 'run_id', 'not_before_epoch', 'expires_at_epoch'}
-            or not hexadecimal(session['run_id'], 32)
-            or not isinstance(session['token'], str)
-            or re.fullmatch(r'[A-Za-z0-9_-]{43}', session['token']) is None):
-        raise ValueError('Invalid private synthetic session')
-    match = re.fullmatch(r'https://([0-9.]+):([0-9]+)', session['endpoint'])
+    pairing = parse(values['private-pairing.json'])
+    if (len(values['private-pairing.json']) > 8192 or set(pairing) != {'pairing_version','receiver_role',
+            'endpoint','certificate_pem','peer_certificate_sha256','binding','token','not_before_utc','expires_at_utc'}
+            or type(pairing['pairing_version']) is not int or pairing['pairing_version'] != 1
+            or pairing['receiver_role'] != 'canonical_reading_activity_v1'
+            or not isinstance(pairing['token'],str) or re.fullmatch(r'[A-Za-z0-9_-]{43}',pairing['token']) is None
+            or not isinstance(pairing['endpoint'],str)):
+        raise ValueError('Invalid app-issued private pairing')
+    match = re.fullmatch(r'https://([0-9.]+):([0-9]+)', pairing['endpoint'])
     if not match or not 1024 <= int(match[2]) <= 65535:
         raise ValueError('Explicit private HTTPS endpoint required')
     address = ipaddress.IPv4Address(match[1])
     if not any(address in ipaddress.IPv4Network(network) for network in
                ('10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16', '127.0.0.1/32')):
         raise ValueError('Unsupported diagnostic network')
-    start, expiry = session['not_before_epoch'], session['expires_at_epoch']
-    if type(start) is not int or type(expiry) is not int or not 0 < expiry-start <= 1800:
+    first,last = [datetime.datetime.fromisoformat(pairing[key].replace('Z','+00:00'))
+                  for key in ('not_before_utc','expires_at_utc')]
+    start,expiry=first.timestamp(),last.timestamp()
+    if first.utcoffset() != datetime.timedelta(0) or last.utcoffset() != datetime.timedelta(0) or not 0 < expiry-start <= 1800:
         raise ValueError('Invalid diagnostic lifetime')
     if live and not start <= time.time() < expiry-30:
         raise ValueError('Diagnostic session not currently usable')
-    for name in ('server.pem', 'untrusted.pem'):
-        if b'-----BEGIN CERTIFICATE-----' not in values[name] or b'PRIVATE KEY' in values[name]:
-            raise ValueError('Only public test certificates may leave the phone session')
-    if values['server.pem'] == values['untrusted.pem']:
-        raise ValueError('Distinct test trust material required')
+    if (not isinstance(pairing['certificate_pem'],str) or len(values['server.pem']) > 4096
+            or values['server.pem'] != pairing['certificate_pem'].encode('ascii')
+            or b'PRIVATE KEY' in values['server.pem']
+            or sha(ssl.PEM_cert_to_DER_cert(pairing['certificate_pem'])) != pairing['peer_certificate_sha256']):
+        raise ValueError('Exact app-issued public certificate required')
     fixture = parse(values['synthetic-fixture.json'])
-    scope = 'synthetic-wire-' + session['run_id']
+    binding=pairing['binding']
+    if (not isinstance(binding,dict) or set(binding) != {'binding_id','vault_scope','device_id','source_epoch'}
+            or not all(isinstance(value,str) for value in binding.values())
+            or re.fullmatch(r'qrp_[a-f0-9]{32}',binding['binding_id']) is None
+            or not hexadecimal(binding['vault_scope'],64) or not hexadecimal(fixture.get('run_id'),32)):
+        raise ValueError('Invalid finite app binding')
+    scope = 'synthetic-wire-' + fixture['run_id']
     if (type(fixture.get('schema_version')) is not int or fixture.get('schema_version') != 1
             or fixture.get('fixture_revision') != 'canonical-wire-synthetic-v1'
-            or fixture.get('run_id') != session['run_id'] or fixture.get('canonical_ack') is not False
+            or fixture.get('canonical_ack') is not False
             or fixture.get('physical_execution_attested') is not False
-            or fixture.get('binding') != dict(binding_id=scope, vault_scope=scope,
-                                             device_id='synthetic-wire-device', source_epoch=scope)
+            or fixture.get('binding') != binding or binding['device_id'] != 'synthetic-wire-device'
+            or binding['source_epoch'] != scope
             or type(fixture.get('expected_unique_events')) is not int or fixture.get('expected_unique_events') != 3
             or type(fixture.get('expected_native_seconds')) is not int or fixture.get('expected_native_seconds') != 120
             or not isinstance(fixture.get('expected_shards'), list) or len(fixture['expected_shards']) != 3):
@@ -113,7 +144,8 @@ def inputs(directory, live=False):
         if not 0 < len(value) <= 8192 or sha(value) != digest:
             raise ValueError('Expected shard bytes do not match')
         paths.add(path)
-    return values, session, fixture
+    return values, dict(run_id=fixture['run_id'],not_before_utc=pairing['not_before_utc'],
+        expires_at_utc=pairing['expires_at_utc']), fixture
 
 
 def prepare(session_directory, output, revision):
@@ -200,11 +232,11 @@ def collect(bundle, root, observation, android_directory):
     if not (target / 'run.lock').is_dir():
         raise ValueError('Single-use launch not observed')
     device = parse(read(target / 'device-observation.json', 12288))
-    required = dict(probe_revision=REVISION, phase='wire_claims_checked', source_data='synthetic',
+    required = dict(probe_revision=REVISION, phase='paired_receipts_checked', source_data='synthetic',
         run_id=manifest['run_id'], source_commit=manifest['source_commit'], manifest_digest=digest,
         canonical_ack=False, canonical_persistence_proven=False, physical_execution_attested=False,
         source_cursor_changed=False, statistics_accessed=False, wifi_changed=False,
-        attempts=10, checked_responses=5, deliberately_discarded_responses=1,
+        attempts=6, checked_receipts=5, deliberately_discarded_responses=1,
         lua_version='Lua 5.1', jit_arch='arm', koreader_version=BASELINE,
         native_source_sha256=expected['native_source_sha256'])
     if set(device) != set(required) | {'steps', 'jit_version', 'json_version', 'luasec_version'}:
@@ -217,30 +249,51 @@ def collect(bundle, root, observation, android_directory):
                          ('luasec_version', r'[A-Za-z0-9 .()_-]{1,64}')):
         if not isinstance(device[key], str) or re.fullmatch(pattern, device[key]) is None:
             raise ValueError('Unsupported native runtime observation')
-    steps = ['untrusted_certificate_rejected', 'unauthorized', 'rate_limited', 'server_retryable',
-             'deliberately_discarded_response', 'seed_1', 'mixed_1', 'mixed_2',
-             'within_request_conflict_1', 'within_request_conflict_2']
-    if not isinstance(device['steps'], list) or len(device['steps']) != 10:
+    _,session,fixture=inputs(target)
+    steps=['seed_1','seed_2','mixed_1','mixed_2','within_request_conflict_1','within_request_conflict_2']
+    if not isinstance(device['steps'], list) or len(device['steps']) != 6:
         raise ValueError('Incomplete finite sequence')
+    first,last=[datetime.datetime.fromisoformat(session[key].replace('Z','+00:00'))
+                for key in ('not_before_utc','expires_at_utc')]
+    binding=fixture['binding']
     batches = []
     for index, (step, name) in enumerate(zip(device['steps'], steps), 1):
         nonce = 'qrtr_' + manifest['run_id'][:16] + format(index, '016x')
-        if (set(step) != {'step', 'request_id', 'batch_id', 'request_sha256'} or step['step'] != name
-                or step['request_id'] != nonce or not hexadecimal(step['request_sha256'], 64)
-                or not isinstance(step['batch_id'], str) or re.fullmatch(r'qrtb_[a-f0-9]{64}', step['batch_id']) is None):
+        if (set(step) != {'step','request_id','batch_id','request_sha256','issued_at_utc','expires_at_utc','receipt_event'}
+                or step['step'] != name or step['request_id'] != nonce):
             raise ValueError('Sequence request binding mismatch')
+        batch_index=(index-1)//2
+        lines=fixture['batches'][batch_index]['event_lines']
+        batch='qrtb_'+sha(compact(['quartzo-reading-transport-batch-v1',binding['binding_id'],
+            binding['vault_scope'],binding['device_id'],binding['source_epoch'],lines]))
+        request=dict(protocol_version=1,**{key:binding[key] for key in ('binding_id','vault_scope','device_id','source_epoch')},
+            request_id=nonce,issued_at_utc=step['issued_at_utc'],expires_at_utc=step['expires_at_utc'],
+            batch_id=batch,event_lines=lines)
+        issued,expires=[datetime.datetime.fromisoformat(step[key].replace('Z','+00:00'))
+                        for key in ('issued_at_utc','expires_at_utc')]
+        if (not first <= issued < last or (expires-issued).total_seconds() != 30
+                or step['batch_id'] != batch or step['request_sha256'] != sha(compact(request))):
+            raise ValueError('Independent request bytes or window mismatch')
+        if index == 1:
+            if step['receipt_event'] is not None:
+                raise ValueError('Discarded receipt was acknowledged')
+        else:
+            event,native_digest=native_binding(lines[-1])
+            receipt=dict(index=len(lines)-1,line_digest=sha(lines[-1].encode('utf-8')),event_id=event['event_id'],
+                native_digest=native_digest,canonical_commit='qrc_'+fixture['expected_shards'][batch_index]['sha256'])
+            if encoded(step['receipt_event']) != encoded(receipt):
+                raise ValueError('Independent acknowledged event binding mismatch')
         batches.append(step['batch_id'])
-    if len(set(batches)) != 3 or len(set(batches[:6])) != 1 or batches[6] != batches[7] or batches[8] != batches[9]:
+    if len(set(batches)) != 3 or any(batches[i] != batches[i+1] for i in (0,2,4)):
         raise ValueError('Immutable retry batch mismatch')
-    _, _, fixture = inputs(target)
     phone = parse(read(android / 'completed.json', 16384))
-    phone_required = dict(probe_revision='canonical-wire-tls-v1', phase='completed', run_id=manifest['run_id'],
-        source_data='synthetic', request_count=9, http_status_counts={'401':1,'429':1,'503':1,'200':6},
-        transport_error_count=0, credential_cleanup_failed=False, unique_events=3, native_seconds=120,
-        pending_queue_actions=6, canonical_ack=False, source_cursor_changed=False,
+    phone_required = dict(probe_revision='canonical-paired-wire-v1', phase='completed', run_id=manifest['run_id'],
+        source_data='synthetic',synthetic_account=True,credential_cleanup_failed=False,unique_events=3,native_seconds=120,
+        canonical_ack=False,source_cursor_changed=False,
         statistics_accessed=False, wifi_changed=False, physical_execution_attested=False,
         credential_revoked=True, control_failed=False, production_registered=False, cloud_delivery_proven=False)
-    if set(phone) != set(phone_required) | {'canonical_paths'}:
+    if (set(phone) != set(phone_required) | {'canonical_paths','pending_queue_actions'}
+            or type(phone['pending_queue_actions']) is not int or not 3 <= phone['pending_queue_actions'] <= 6):
         raise ValueError('Unexpected phone observation')
     for key, value in phone_required.items():
         if type(phone[key]) is not type(value) or encoded(phone[key]) != encoded(value):
@@ -262,15 +315,24 @@ def collect(bundle, root, observation, android_directory):
                 raise ValueError('Unexpected exported vault entry')
     if actual_paths != expected_paths:
         raise ValueError('Exported canonical inventory mismatch')
+    events={}
     for shard in fixture['expected_shards']:
         value = read(android / 'vault' / shard['path'], 8192)
         if value != base64.b64decode(shard['bytes_base64'], validate=True):
             raise ValueError('Actual canonical bytes mismatch')
+        for line in value.decode('utf-8').splitlines():
+            event,native_digest=native_binding(line)
+            previous=events.get(event['event_id'])
+            if previous is not None and previous[1] != native_digest:
+                raise ValueError('Canonical native payload conflict')
+            events[event['event_id']]=(event,native_digest)
+    if len(events) != 3 or sum(event['duration_seconds'] for event,_ in events.values()) != 120:
+        raise ValueError('Independent native event/time counts mismatch')
     # All evidence can be synthesized on a host: correlation is not attestation.
-    return dict(probe_revision=REVISION, proof='correlated_wire_and_owner_observations',
+    return dict(probe_revision=REVISION, proof='correlated_paired_receipts_and_owner_observations',
                 run_id=manifest['run_id'], source_commit=manifest['source_commit'], observations_match=True,
                 fixture_sha256=manifest['files']['synthetic-fixture.json'], canonical_paths=sorted(expected_paths),
-                unique_events=3, native_seconds=120, credential_revocation_observed=True,
+                unique_events=3,native_seconds=120,checked_receipts=5,credential_revocation_observed=True,
                 canonical_ack=False, physical_execution_attested=False, cloud_delivery_proven=False,
                 source_cursor_changed=False, production_changed=False)
 

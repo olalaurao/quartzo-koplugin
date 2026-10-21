@@ -1,5 +1,18 @@
 # Quartzo ↔ KOReader — Implementation Specification
 
+Current physical preparation uses the same single-use bundle/launcher with
+`paired_sequence.lua` and the existing approved-pairing consumer. Six requests
+over three Dart-generated batches deliberately discard one receipt and verify
+five per-event lookups. The actual normal Android receiver issues the document;
+the checked host UID/source channel delivers it over USB. Host keys/OpenSSL
+provisioning is removed. The collector independently reconstructs request and
+event bindings and compares the complete exported canonical byte inventory.
+This is still synthetic/unregistered; real source-bound PW3/Android execution
+is pending, no Statistics/outbox/cursor or production feature is enabled.
+The earlier untrusted-claim sequence remains a host reference, not the current
+physical source. The successful bad10518/6cfdba8 native host join has a separate
+exact-source report and does not silently certify this new orchestration.
+
 The next G04 candidate `tools/reading_wire/paired_exchange.lua` composes the
 existing pure codec and shared pinned TLS carrier only after exact private
 pairing bytes have an independently approved out-of-band fingerprint. It binds

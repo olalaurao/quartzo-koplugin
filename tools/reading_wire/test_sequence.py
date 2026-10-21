@@ -63,7 +63,7 @@ class WireSequenceTest(unittest.TestCase):
         request = json.loads(payload)
         if self.mutation == 'expiry_after_io':
             self.current_time = b'2026-10-20T10:02:00.000Z'
-        inspected = self.codec[b'inspect_request'](payload, self.binding, b'2026-10-20T10:01:00.000Z')
+        inspected = self.codec[b'inspect_request'](payload, self.binding, self.current_time)
         batch = next(batch for batch in FIXTURE['batches'] if batch['event_lines'] == request['event_lines'])
         results = []
         for index, outcome in enumerate(batch['expected_outcomes']):

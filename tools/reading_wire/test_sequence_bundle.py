@@ -24,12 +24,10 @@ class SequenceBundleTest(unittest.TestCase):
         self.session = self.root / 'private-session'
         self.session.mkdir()
         now = int(time.time())
-        session = dict(endpoint='https://127.0.0.1:8443', token='t'*43,
-            run_id=driver_reference.FIXTURE['run_id'], not_before_epoch=now-1, expires_at_epoch=now+120)
-        for name, value in {'private-session.json': bundle.encoded(session),
-            'server.pem': b'-----BEGIN CERTIFICATE-----\nsynthetic-public-test\n-----END CERTIFICATE-----',
-            'untrusted.pem': b'-----BEGIN CERTIFICATE-----\nsynthetic-untrusted-test\n-----END CERTIFICATE-----',
-            'synthetic-fixture.json': driver_reference.FIXTURE_BYTES,
+        self.fixture,pairing=driver_reference.paired_reference.fixture_and_pairing(now)
+        for name, value in {'private-pairing.json': bundle.encoded(pairing),
+            'server.pem': pairing['certificate_pem'].encode('ascii'),
+            'synthetic-fixture.json': bundle.encoded(self.fixture),
             'phone-input.json': b'PRIVATE_KEY_SENTINEL_MUST_NOT_LEAVE_HOST'}.items():
             (self.session / name).write_bytes(value)
         self.output = self.root / 'bundle'
@@ -64,17 +62,16 @@ class SequenceBundleTest(unittest.TestCase):
         observation = self.installed()
         driver = driver_reference.WireSequenceDriverTest()
         driver.setUp()
-        report, _, _ = driver.driver()
+        report, _, _ = driver.driver(document=json.loads((self.session/'private-pairing.json').read_bytes()))
         # Deliberately synthetic ARM-looking data must STILL never attest hardware.
         report.update(jit_arch='arm', source_commit='a'*40,
                       manifest_digest=observation['manifest_digest'])
         (self.target / 'run.lock').mkdir()
         (self.target / 'launcher-status.txt').write_bytes(b'completed\n')
         (self.target / 'device-observation.json').write_bytes(bundle.encoded(report))
-        fixture = driver_reference.FIXTURE
-        phone = dict(probe_revision='canonical-wire-tls-v1', phase='completed', run_id=fixture['run_id'],
-            source_data='synthetic', request_count=9, http_status_counts={'401':1,'429':1,'503':1,'200':6},
-            transport_error_count=0, credential_cleanup_failed=False, unique_events=3, native_seconds=120,
+        fixture = self.fixture
+        phone = dict(probe_revision='canonical-paired-wire-v1', phase='completed', run_id=fixture['run_id'],
+            source_data='synthetic',synthetic_account=True,credential_cleanup_failed=False,unique_events=3,native_seconds=120,
             pending_queue_actions=6, canonical_ack=False, source_cursor_changed=False,
             statistics_accessed=False, wifi_changed=False, physical_execution_attested=False,
             credential_revoked=True, control_failed=False, production_registered=False, cloud_delivery_proven=False,
@@ -101,13 +98,13 @@ class SequenceBundleTest(unittest.TestCase):
             bundle.private_directory(bundle.ROOT / 'never-create-this-test-bundle', fresh=True)
 
     def test_invalid_or_duplicate_private_session_and_private_key_certificate_reject_before_output(self):
-        original = (self.session / 'private-session.json').read_bytes()
-        invalid = original.replace(b'"run_id":', b'"run_id":"extra","run_id":')
-        (self.session / 'private-session.json').write_bytes(invalid)
+        original = (self.session / 'private-pairing.json').read_bytes()
+        invalid = original.replace(b'"pairing_version":', b'"pairing_version":1,"pairing_version":')
+        (self.session / 'private-pairing.json').write_bytes(invalid)
         with self.assertRaises(ValueError):
             bundle.prepare(self.session, self.root / 'fresh-1', 'a'*40)
         self.assertFalse((self.root / 'fresh-1').exists())
-        (self.session / 'private-session.json').write_bytes(original)
+        (self.session / 'private-pairing.json').write_bytes(original)
         with (self.session / 'server.pem').open('ab') as stream:
             stream.write(b'PRIVATE KEY')
         with self.assertRaises(ValueError):
@@ -149,7 +146,7 @@ class SequenceBundleTest(unittest.TestCase):
     def test_ack_claim_revocation_failure_wrong_counter_types_and_nonce_reuse_reject(self):
         device, phone = self.completed()
         for key, value in [('canonical_ack',True),('credential_revoked',False),
-                           ('http_status_counts',{'401':True,'429':1,'503':1,'200':6})]:
+                           ('pending_queue_actions',True)]:
             changed = {**phone, key:value}
             (self.android / 'completed.json').write_bytes(bundle.encoded(changed))
             with self.assertRaises(ValueError): self.collect()
@@ -157,6 +154,19 @@ class SequenceBundleTest(unittest.TestCase):
         device['steps'][5]['request_id'] = device['steps'][4]['request_id']
         (self.target / 'device-observation.json').write_bytes(bundle.encoded(device))
         with self.assertRaises(ValueError): self.collect()
+
+    def test_request_bytes_and_receipt_native_bindings_are_independently_recomputed(self):
+        device,_=self.completed()
+        target=self.target/'device-observation.json'
+        for field,value in [('request_sha256','0'*64),('event_id','qre_'+'0'*64),
+                            ('native_digest','0'*64),('canonical_commit','qrc_'+'0'*64)]:
+            changed=json.loads(json.dumps(device))
+            if field=='request_sha256':changed['steps'][1][field]=value
+            else:changed['steps'][1]['receipt_event'][field]=value
+            target.write_bytes(bundle.encoded(changed))
+            with self.assertRaises(ValueError):self.collect()
+        target.write_bytes(bundle.encoded(device))
+        self.assertTrue(self.collect()['observations_match'])
 
     def test_changed_source_unknown_entries_and_unfinished_report_preserve_evidence(self):
         self.completed()

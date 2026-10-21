@@ -1,1 +1,1 @@
-{"items":[{"name":"Quartzo canonical wire diagnostic","items":[{"name":"Run synthetic TLS wire test (Wi-Fi already on)","action":"sh /mnt/us/extensions/quartzo-wire-tls-probe/run.sh","exitmenu":true,"status":false}]}]}
+{"items":[{"name":"Quartzo paired canonical diagnostic","items":[{"name":"Run synthetic paired receipt test (Wi-Fi already on)","action":"sh /mnt/us/extensions/quartzo-wire-tls-probe/run.sh","exitmenu":true,"status":false}]}]}
