@@ -1,5 +1,43 @@
 # Implementation Status
 
+## 2026-10-21 — Certificate candidate passes both host backends; devices deferred
+
+Quartzo c6ec01a1 hosted39623152396 passed its actual native certificate and
+paired-receipt steps on system OpenSSL and official KOReader v2026.07.1 bundled
+LibreSSL4.3.2. The full hosted suite is still running. The bounded correction
+changes the same self-signed peer to CA:true/pathLen:0 with keyCertSign usage;
+exact peer DER pinning and independently approved finite pairing remain required.
+No new CA/key/chain, issuer API, OS trust enrollment or verification bypass is
+added. This host result does not supersede either failed physical attempt.
+
+Quartzo is preparing the same isolated probe in profile/AOT mode after the
+observed Android LOW_MEMORY exit; build success will not prove memory acceptance.
+The user will disconnect the phone and cannot run more KUAL work now. No session
+or installation is started. Runtime source remains7555814; G03 stays PASS, G04
+and production phases remain open. Resume only with a newly verified APK/source
+and a new finite session when the user can operate both devices.
+
+## 2026-10-21 — Second paired PW3 execution identifies certificate rejection
+
+Exact7555814 passed native CI39616194464:111 wire and34 transport tests without
+skips. Its new fixed error category then exposed the actual PW3 attempt1
+failure: reading_certificate_rejected, zero receipt lookups. No per-event ACK
+or G04 success follows. Independent mounted inspection found this LuaSec linked
+to libssl.so.60/libcrypto.so.57 (LibreSSL4.3.2), whereas earlier system-native
+host tests use OpenSSL. Quartzo is adding the same existing certificate/pairing
+tests against the official v2026.07.1 Linux runtime's exact bundled backend;
+no certificate/pin check or profile is relaxed on this evidence alone.
+
+The original Android probe PID exited with LOW_MEMORY. Standard stop/export
+could not observe completion or credential revocation. A separately labeled
+read-only post-exit forensic export, after source/UID/production checks, showed
+zero canonical JSONL files and no completed observation. The PID/listener were
+absent, and the isolated package was uninstalled with unchanged production
+metadata. Nonsecret failure evidence was preserved separately. The user again
+removed the exact extension and three temporary folders manually; all four
+absence checks passed. No current device session remains. This is FAILED;
+certificate interoperability and bounded Android memory remain unresolved.
+
 ## 2026-10-21 — Paired physical attempt FAILED; no events or ACK
 
 Exact Kindle7d0b75a with isolated Android runtime c4b84707 and host566792c8

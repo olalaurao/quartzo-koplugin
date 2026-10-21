@@ -1,9 +1,13 @@
 # Quartzo ↔ KOReader — Implementation Specification
 
-The new paired physical attempt at Kindle7d0b75a/APKc4b84707 failed before its
-first receipt, with zero persisted events. STATUS records closure/revocation
-and manual cleanup. The next correction preserves only fixed allowlisted error
-categories; it changes no TLS/authentication/receipt requirement or wire schema.
+The two new paired physical attempts failed before any receipt. Exact7555814
+identified reading_certificate_rejected; Android independently reported an
+original-process LOW_MEMORY exit. No clean revocation/completion was observed
+for that second interrupted process. Its package/listener are absent, forensic
+evidence is preserved and manual temporary-folder cleanup was verified. Quartzo
+now has a small certificate-profile candidate passing both native backend steps;
+fresh Android/PW3 acceptance remains pending and the user is unavailable for it.
+No pin, authentication, receipt requirement or wire schema is weakened.
 
 Current physical preparation uses the same single-use bundle/launcher with
 `paired_sequence.lua` and the existing approved-pairing consumer. Six requests

@@ -1,10 +1,13 @@
 # Quartzo ↔ KOReader — Product & Delivery Plan
 
-Current execution checkpoint: the normal-app/native LuaJIT paired receipt join
-passed on the host at exact bad10518/6cfdba8. The existing isolated phone/KUAL
-diagnostic is being upgraded to consume the actual app-issued pairing and
-independently verify per-event receipt/replay, with host key generation removed.
-Fresh physical acceptance is pending; this does not start production ingestion.
+Current execution checkpoint: both new app-issued-pairing PW3 attempts failed.
+The second exposed certificate verification rejection with zero receipts, and
+Android separately reported a low-memory exit. Cleanup is complete. Quartzo's
+bounded certificate correction at c6ec01a1 passed the existing native certificate
+and paired-receipt steps on system OpenSSL and official KOReader v2026.07.1
+LibreSSL4.3.2 in hosted39623152396; its full suite is still running. A profile/AOT
+isolated APK is being prepared. The user cannot perform device work now; no
+session is active and no further device step is requested. G04 stays open.
 
 Current G04 work now includes finite source receipt composition through the
 existing codec/carrier, conditioned on an independently approved exact pairing
