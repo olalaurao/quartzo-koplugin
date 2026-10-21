@@ -1,5 +1,12 @@
 # Quartzo ↔ KOReader — Product & Delivery Plan
 
+Current G04 work now includes finite source receipt composition through the
+existing codec/carrier, conditioned on an independently approved exact pairing
+document from the canonical Quartzo receiver. It adds no production plugin,
+Statistics access or outbox/cursor. Actual approval/import, combined native
+interoperability and new-source physical acceptance remain required; see STATUS
+and the canonical implementation spec rather than inferring a passed gate.
+
 2026-10-20 checkpoint: actual exact-source PW3/Android finite canonical wire
 diagnostic passed independent byte/report collection (three shards, three
 synthetic events / 120 seconds; zero transport errors; credential revoked).

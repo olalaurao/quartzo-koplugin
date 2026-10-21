@@ -35,7 +35,7 @@ jobs:
       - name: Lua 5.1, TLS, bundle and process tests (no Kindle proof)
         run: |
           python -m unittest discover -s tools/transport_probe -p 'test_*.py' -v
-      - name: Pinned Reading wire consumer (pure Lua 5.1, no ACK authority)
+      - name: Pinned Reading wire and gated pairing consumers (no production registration)
         env:
           READING_WIRE_REFERENCE_DIR: ${{ runner.temp }}/quartzo-reading-wire-reference
           READING_NATIVE_LUA51: /usr/bin/lua5.1

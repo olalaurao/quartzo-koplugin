@@ -86,6 +86,16 @@ local function compare(a, b)
     if a.seconds ~= b.seconds then return a.seconds < b.seconds end
     return a.micros < b.micros
 end
+-- Reuse the same canonical UTC parser for request and finite pairing windows.
+-- This pure predicate authenticates neither a peer nor an acknowledgement.
+local function window(issued_text, expiry_text, now_text, maximum, previous_text)
+    local issued, expiry, current = timestamp(issued_text), timestamp(expiry_text), timestamp(now_text)
+    local lifetime = expiry.seconds-issued.seconds + (expiry.micros-issued.micros)/1000000
+    check(lifetime > 0 and lifetime <= maximum and not compare(current, issued)
+        and compare(current, expiry), "invalid_window")
+    if previous_text then check(not compare(current,timestamp(previous_text)), "backward_clock") end
+    return true
+end
 local function guarded(fn, ...)
     local ok, value = pcall(fn, ...)
     if ok then return value end
@@ -147,9 +157,7 @@ local function create(deps)
         for _, key in ipairs(scope_keys) do
             check(scope(request[key]) and scope(expected[key]) and request[key] == expected[key], "binding_mismatch")
         end
-        local issued, expiry, current = timestamp(request.issued_at_utc), timestamp(request.expires_at_utc), timestamp(now)
-        local lifetime = expiry.seconds-issued.seconds + (expiry.micros-issued.micros)/1000000
-        check(lifetime > 0 and lifetime <= 300 and not compare(current, issued) and compare(current, expiry), "request_window")
+        window(request.issued_at_utc,request.expires_at_utc,now,300)
     end
     local function build_request(input, expected, now, decoding)
         local expected_keys = {}
@@ -226,6 +234,9 @@ local function create(deps)
         return result
     end
     local api = {}
+    function api.check_pairing_window(issued, expiry, now, previous)
+        return guarded(window,issued,expiry,now,1800,previous)
+    end
     function api.encode_request(input, expected, now)
         return guarded(function() return build_request(input, expected, now, false).bytes end)
     end

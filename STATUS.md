@@ -1,5 +1,40 @@
 # Implementation Status
 
+## 2026-10-20 — Finite approved-pairing receipt composition (host logic)
+
+`paired_exchange.lua` now composes the existing pure codec and shared pinned
+carrier only after the exact private pairing bytes match an independently
+approved out-of-band fingerprint and canonical receiver role/window. The
+document matches Quartzo0bf80ed0's normal current-target session handoff; no
+network discovery/import, caller-role boolean, new cryptographic receipt,
+credential/Statistics/outbox store, retry loop or production registration was
+added. The codec reuses its existing canonical UTC parser for the finite
+pairing window and backward-clock checks rather than another date engine.
+
+Opaque session/request-bound receipts expose copies only of fully validated
+committed/duplicate positions with exact line/native digest, event ID and
+revision. Raw parsed claims, forged/cloned handles, another session/request,
+staged/errors, missing TLS delivery, expiry/backward time and close cannot grant
+acceptance. Existing pure codec/exchange false-ACK behavior is preserved.
+This is a gated source receipt consumer, not durable outbox/cursor persistence.
+
+Initial focused execution exposed a missing object-constructor provider in the
+injected test fixture (four tests passed, five failed, ten failed assertions);
+that fixture now supplies the same API as the existing native dependency
+adapter. The final **twelve actual-Lua focused cases PASS** (0.089s), including
+401/429/503/redirect, expiry after I/O and unchanged parser authority. Full wire
+suite: **101 PASS/four explicit native-TLS skips** (105 total,5.886s), with
+actual pinned JSON/SHA libraries through host LuaJIT. Shared transport regression:
+**32 PASS/two POSIX skips** (34 total,13.753s). New exact-source Linux CI is
+pending; the combined paired path still uses injected TLS in local tests.
+
+The test's locally computed synthetic approval is not actual user-approved
+source import. Normal-issuer/native combined interoperability and fresh PW3/
+Android execution remain required for G04, as does real source approval/import.
+No new physical session was prepared, no source cursor/Statistics file changed,
+and G08 production ingestion remains blocked. Complexity review retained only
+composition through existing owners; no later product/effect gate was bypassed.
+
 ## 2026-10-20 — Native exact-leaf and timeout acceptance passed
 
 Exact **ac1ebd2a9a9df3d1d8c81144cedc892462ab0dc0** passed

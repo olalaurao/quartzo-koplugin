@@ -1,5 +1,42 @@
 # Pinned Reading wire consumer — Gate 0C
 
+## Finite approved-pairing composition (G04, unregistered)
+
+`paired_exchange.lua` reuses the existing codec and shared pinned carrier. It
+accepts the exact private document issued by Quartzo's normal current-target
+`ReadingTransportPairingSession`, plus its independently approved SHA256 from
+an explicit trusted out-of-band handoff. Never compute approval from an
+untrusted network document or trust a peer's role/hash advertisement. The
+delivery/import owner is still required; this module performs no file I/O or
+automatic pairing and is not loaded by a production plugin or current KUAL
+driver. Its nine-field pairing_version1 document is a finite spike's private
+handoff, not a replacement for the pinned event/wire contract.
+
+The trusted local composition root provides the existing native SDK/provider
+modules, clock and installed public CA path. Opening snapshots endpoint, pin,
+token, binding and clock callback; the document must claim the exact canonical
+receiver role, valid scope and at most thirty-minute UTC window. The codec's
+existing canonical UTC parser also checks pairing validity and backward time;
+it remains pure and grants no peer/ACK authority. Invalidity latches.
+
+`open` returns an opaque process-local handle. `attempt(handle, requestBytes)`
+checks the existing request codec, requires the carrier's exact opaque pinned
+delivery, then fully decodes the bound response before constructing an opaque
+session/request-bound receipt. Only `acknowledged(handle, receipt, requestBytes)`
+can expose copies of its committed/duplicate event ID, position, line/native
+digest and canonical revision. Staged/errors expose no acknowledged event;
+forged tables, raw decoded claims, another session/request, expiry/backward time
+and close cannot grant acceptance. No extra signature/HMAC protocol, retry,
+outbox/cursor store or persisted receipt ledger is introduced. Existing pure
+codec/exchange behavior and old diagnostic false-ACK reports remain unchanged.
+
+Twelve focused actual-Lua tests use an explicitly injected SDK model and a
+synthetic locally approved document. They do not prove actual user-approved
+import, canonical issuer interoperability, native TLS for this combined path or
+new PW3 execution. Those proofs, real transport failure/retry/lifecycle and
+source outbox persistence remain required before production ingestion. Merely
+hashing a fixture inside a test does not establish out-of-band trust in use.
+
 ## Opt-in exact leaf pin preparation (2026-10-20)
 
 `client.pinned_wire_transport(config, https, ltn12, http)` reuses the existing

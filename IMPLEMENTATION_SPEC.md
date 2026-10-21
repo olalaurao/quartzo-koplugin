@@ -1,5 +1,17 @@
 # Quartzo ↔ KOReader — Implementation Specification
 
+The next G04 candidate `tools/reading_wire/paired_exchange.lua` composes the
+existing pure codec and shared pinned TLS carrier only after exact private
+pairing bytes have an independently approved out-of-band fingerprint. It binds
+the normal Quartzo receiver role, endpoint/pin/token, scope/device/epoch and
+finite window; opaque per-session/request receipts expose only completely
+validated committed/duplicate positions. Raw parsers/delivery tables cannot
+grant that acceptance. The canonical UTC parser is reused for pairing windows,
+without a second date engine, crypto receipt protocol, ledger or retry loop.
+This remains unregistered tooling. Source approval/import, actual normal-issuer
+interoperability/native combined-path and fresh device proof remain required;
+synthetic injected-SDK tests do not close G04 or permit G08 ingestion/cursors.
+
 Current G04 preparation adds an opt-in exact-leaf DER SHA-256 gate to the
 existing shared isolated LuaSec/LuaSocket carrier, before HTTP credentials are
 sent. Its opaque process-local delivery capability binds bytes and connection
