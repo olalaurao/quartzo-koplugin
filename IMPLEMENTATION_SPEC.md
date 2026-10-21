@@ -10,6 +10,10 @@ proof; see `tools/reading_wire/README.md` and current STATUS. Upstream G03 store
 exit was separately audited PASS at Quartzo1db4c13b, using implementation
 ad5986fa's four successful workflows and the original source-bound physical,
 cloud conflict and canonical replay evidence. G04 and later gates stay open.
+Exact ac1ebd2 passed Linux CI39525626234 with all four actual native TLS/pin/
+timeout cases executed,93 wire and34 transport tests without skips. This
+establishes host-carrier acceptance only; it does not satisfy the remaining
+canonical pairing/receipt/lifecycle or new-source device requirements.
 
 2026-10-20 checkpoint: actual exact-source PW3/Android finite canonical wire
 diagnostic passed independent byte/report collection (three shards, three

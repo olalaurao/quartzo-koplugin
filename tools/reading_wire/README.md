@@ -35,6 +35,11 @@ delayed synthetic response: credentials may reach the trusted peer, but timeout
 must return no delivery. Its clock bound checks this fixture only, not total
 production lifecycle or PW3 latency/performance budgets.
 
+All four actual native cases passed at ac1ebd2 in Linux CI39525626234, with
+93 wire and34 transport tests and no skips. Exact source fingerprints, CI-log
+digest and explicit proof limits are recorded in
+[`wire-leaf-pin-host-2026-10-20.json`](../../docs/evidence/wire-leaf-pin-host-2026-10-20.json).
+
 `codec.lua` is a pure Lua 5.1 consumer of the ratified upstream Reading transport
 contract. It is outside the production plugin and the deployed TLS diagnostic.
 It performs no network/filesystem I/O, credential lookup, Statistics/sidecar

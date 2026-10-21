@@ -1,5 +1,30 @@
 # Implementation Status
 
+## 2026-10-20 — Native exact-leaf and timeout acceptance passed
+
+Exact **ac1ebd2a9a9df3d1d8c81144cedc892462ab0dc0** passed
+[Linux CI39525626234](https://github.com/olalaurao/quartzo-koplugin/actions/runs/39525626234):
+**93 wire PASS /34 transport PASS, no skips**, plus six pinned upstream files.
+All four native Lua5.1/LuaSec1.3.2/LuaSocket tests executed: actual TLS1.2
+delivery with exact CA/leaf identity and bound bytes, wrong leaf despite a
+trusted CA with zero application bytes, wrong CA with zero application bytes,
+and receive timeout with no delivery. The positive peer may receive synthetic
+credentials in the timeout test; no durable receipt is inferred.
+[Source-bound host evidence](docs/evidence/wire-leaf-pin-host-2026-10-20.json)
+records seven exact Git-blob fingerprints and the independently fetched CI-log
+digest. The earlier callback regression/failing CI is preserved. Final local
+focused seven actual-Lua tests passed; four native TLS tests explicitly skip
+without the Linux environment. Existing transport local32PASS/two POSIX skips
+and full wire local89PASS/three then-applicable native skips were recorded at
+the preceding source. New source physical PW3 acceptance remains absent.
+
+This completes only the isolated host trust preparation. G04 still requires
+canonical receiver-role/pairing/certificate provisioning, lifecycle and trusted
+durable per-event acknowledgement, followed by exact-source physical proof.
+No new device session was prepared or installed. Canonical ACK/cursor remains
+false; real Statistics/outbox/effects and production registration remain gated.
+Upstream G03 PASS is separate from this G04 preparation and full goal completion.
+
 ## 2026-10-20 — Exact leaf pin preparation; G03 store exit audited upstream
 
 Upstream Quartzo1db4c13b records G03 PASS against the integrated store exit,

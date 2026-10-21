@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "scope": "actual Linux native LuaSec/LuaSocket loopback carrier; synthetic bytes only",
+  "observed_at_utc": "2026-10-21T01:10:48.524534+00:00",
+  "source_commit": "ac1ebd2a9a9df3d1d8c81144cedc892462ab0dc0",
+  "ci_run": 39525626234,
+  "ci_url": "https://github.com/olalaurao/quartzo-koplugin/actions/runs/39525626234",
+  "ci_conclusion": "success",
+  "wire_suite": {
+    "passed": 93,
+    "skipped": 0,
+    "seconds": 9.19
+  },
+  "transport_suite": {
+    "passed": 34,
+    "skipped": 0,
+    "seconds": 10.717
+  },
+  "native_runtime_required": "Lua5.1 and LuaSec1.3.2, actual LuaSocket HTTP driver",
+  "native_cases_executed": [
+    "test_real_tls12_exact_leaf_pin_delivers_bound_bytes_without_ack",
+    "test_trusted_ca_wrong_leaf_pin_sends_no_http_credentials",
+    "test_wrong_ca_sends_no_http_credentials",
+    "test_native_receive_timeout_grants_no_delivery"
+  ],
+  "observations": {
+    "actual_tls12_explicit_ca_and_exact_leaf_delivery": true,
+    "trusted_ca_wrong_leaf_zero_application_bytes": true,
+    "wrong_ca_zero_application_bytes": true,
+    "native_receive_timeout_returns_no_delivery": true,
+    "opaque_delivery_bound_to_exact_request_token_context": true,
+    "fake_delivery_rejected": true,
+    "pinned_upstream_files_verified": 6
+  },
+  "source_files": {
+    "tools/transport_probe/client.lua": {
+      "git_blob_sha": "e48c6b1e2a35771a6ad71b062fde30b36a42b108",
+      "git_blob_bytes_sha256": "f29a14c9d785cc821eb946c38f01d777786cce8f41d45afdd757fd7cb3fdac27"
+    },
+    "tools/transport_probe/host.py": {
+      "git_blob_sha": "f87bcac86cac3aae2396c37b0dd027798bdab9b6",
+      "git_blob_bytes_sha256": "a853eafae91d5f8f30ad5f0e7a87e0f2f8cc688c686a9ecd865d7c941f09cefc"
+    },
+    "tools/reading_wire/test_pinned_tls_native.py": {
+      "git_blob_sha": "cd37745bd19c7f98162b2bd3c39c9505512b93f4",
+      "git_blob_bytes_sha256": "e5bed89b2fb3349fed3eebcf9a94609663fe912688095c608de20e2d0eb75c86"
+    },
+    "tools/reading_wire/test_pinned_transport.py": {
+      "git_blob_sha": "5420a8b50ea58ff3f1486f0dbcdebfff82f1390c",
+      "git_blob_bytes_sha256": "709d888b055a8896a51585cc1492c8c34fe5da3535a477372e9b8dfe23b6b0ec"
+    },
+    "tools/reading_wire/codec.lua": {
+      "git_blob_sha": "b8384e96f8ab4defa57fda57c2c8cab7645efdb4",
+      "git_blob_bytes_sha256": "e4fcbe04b31d8925bd2ce929f9d52b1c3dc89f59d283a14c0375d46f1f3ffb93"
+    },
+    "tools/reading_wire/exchange.lua": {
+      "git_blob_sha": "7ce12364129333edffc3d3bec6df328b8207d923",
+      "git_blob_bytes_sha256": "6396998cac3ab4739c00fc76467240232bad4286686a668b99f824b15a8f3d04"
+    },
+    ".github/workflows/transport-probe.yml": {
+      "git_blob_sha": "8ffcaa718a600846e4f97f540b1befcfd03ce3e0",
+      "git_blob_bytes_sha256": "1d8e71c50bbeb2aca130f858eb83cfe540e264de9d8b6042ada495fbec3babb4"
+    }
+  },
+  "verification": {
+    "ci_log_sha256": "cd21cc9c219e004eb80de2a8a1cb1c4a82d7c3a9a1a57e131c17d83301840495",
+    "source_hash_encoding": "exact Git blob bytes, not Windows checkout newline conversion",
+    "missing_native_environment": "Windows skips explicitly; CI requires configured runtime and exact SDK version"
+  },
+  "prior_failure": {
+    "source_commit": "f916afb0854d3eeb772a246e092020fe7ff71107",
+    "ci_run": 39525375382,
+    "cause": "legacy diagnostic callback captured too early; unchanged assertion passed after code fix at3ed1fa7"
+  },
+  "limits": [
+    "Loopback host acceptance, not new-source physical PW3 or Android proof.",
+    "Injected-SDK model cases are distinct from the four native TLS cases.",
+    "Exact leaf pin authenticates transport identity, not authorized canonical receiver role or durable storage.",
+    "No production pairing, credential/cancellation lifecycle, outbox or cursor implemented by this change.",
+    "Finite delayed-response timeout is not a production total deadline or PW3 performance budget."
+  ],
+  "canonical_ack_claimed": false,
+  "canonical_receiver_role_proven": false,
+  "canonical_persistence_proven": false,
+  "kindle_runtime_proven": false,
+  "source_cursor_advanced": false,
+  "production_registered": false,
+  "statistics_accessed": false,
+  "wifi_changed": false,
+  "G04_complete": false,
+  "goal_complete": false
+}
