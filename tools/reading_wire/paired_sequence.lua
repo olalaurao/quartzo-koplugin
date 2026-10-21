@@ -61,7 +61,15 @@ function M.run(deps,codec_module,paired,fixture,runtime)
                 if batch_ids[i] then check(batch_ids[i]==inspected.batch_id) end
                 batch_ids[i]=inspected.batch_id
                 report.attempts=report.attempts+1;check(report.attempts<=6)
-                local receipt=assert(paired.attempt(session,bytes))
+                local receipt,reason=paired.attempt(session,bytes)
+                if not receipt then
+                    local allowed={reading_transport_failed=true,reading_peer_unverified=true,
+                        reading_peer_pin_mismatch=true,reading_proxy_unsupported=true,response_bound=true,
+                        reading_certificate_rejected=true,reading_http_unauthorized=true,
+                        reading_http_retryable=true,unverified_reading_receipt=true}
+                    report.error_code=allowed[reason] and reason or "paired_sequence_failed"
+                    check(false)
+                end
                 local event=deps.null
                 if i==1 and attempt==1 then
                     -- Deliberately lose this source receipt; the exact same
@@ -88,7 +96,7 @@ function M.run(deps,codec_module,paired,fixture,runtime)
         report.phase="paired_receipts_checked"
     end)
     if session then pcall(paired.close,session) end
-    if not ok then report.phase,report.error_code="failed","paired_sequence_failed" end
+    if not ok then report.phase="failed";report.error_code=report.error_code or "paired_sequence_failed" end
     return report
 end
 return M

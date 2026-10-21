@@ -6,6 +6,8 @@ local sessions=setmetatable({}, {__mode="k"})
 local scope_keys = {"binding_id","vault_scope","device_id","source_epoch"}
 local document_keys = {"pairing_version","receiver_role","endpoint","certificate_pem",
     "peer_certificate_sha256","binding","token","not_before_utc","expires_at_utc"}
+local transport_errors={reading_transport_failed=true,reading_peer_unverified=true,
+    reading_peer_pin_mismatch=true,reading_proxy_unsupported=true,response_bound=true}
 local function check(value) if not value then error("invalid_approved_reading_pairing",0) end end
 local function hex(value)
     return type(value)=="string" and #value==64 and not value:find("[^a-f0-9]")
@@ -66,6 +68,12 @@ function M.open(document_bytes,approved_sha256,runtime)
             local succeeded,receipt,reason=pcall(function()
                 check(codec.inspect_request(request_bytes,binding,current()))
                 local status,body,_,delivery=send(request_bytes,token,"good")
+                if status==nil then
+                    -- The pinned carrier emits fixed codes only. Do not expose
+                    -- arbitrary SDK messages, certificate contents or paths.
+                    if body=="certificate verify failed" then return nil,"reading_certificate_rejected" end
+                    return nil,transport_errors[body] and body or "unverified_reading_receipt"
+                end
                 if status==401 then return nil,"reading_http_unauthorized" end
                 if status==429 or (type(status)=="number" and status>=500 and status<=599) then
                     return nil,"reading_http_retryable"

@@ -1,5 +1,10 @@
 # Quartzo ↔ KOReader — Implementation Specification
 
+The new paired physical attempt at Kindle7d0b75a/APKc4b84707 failed before its
+first receipt, with zero persisted events. STATUS records closure/revocation
+and manual cleanup. The next correction preserves only fixed allowlisted error
+categories; it changes no TLS/authentication/receipt requirement or wire schema.
+
 Current physical preparation uses the same single-use bundle/launcher with
 `paired_sequence.lua` and the existing approved-pairing consumer. Six requests
 over three Dart-generated batches deliberately discard one receipt and verify

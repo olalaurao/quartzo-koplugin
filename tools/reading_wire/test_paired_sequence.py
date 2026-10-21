@@ -123,5 +123,18 @@ class PairedSequenceTest(unittest.TestCase):
         self.assertEqual(self.run_sequence()[b'phase'],b'failed')
         self.assertEqual(len(self.case.sent),1)
 
+    def test_failed_attempt_reports_only_allowlisted_code_without_receipt_or_private_detail(self):
+        for reason,expected in [(b'reading_peer_pin_mismatch',b'reading_peer_pin_mismatch'),
+                (b'PRIVATE_TOKEN_PRIVATE_PATH',b'paired_sequence_failed')]:
+            self.setUp()
+            self.paired[b'attempt']=self.lua.eval('function(reason) return function() return nil,reason end end')(reason)
+            report=self.run_sequence()
+            self.assertEqual(report[b'phase'],b'failed')
+            self.assertEqual(report[b'error_code'],expected)
+            self.assertEqual(report[b'attempts'],1)
+            self.assertEqual(report[b'checked_receipts'],0)
+            self.assertEqual(self.case.sent,[])
+            self.assertNotIn(b'PRIVATE',self.case.json[b'encode'](report))
+
 
 if __name__=='__main__':unittest.main()

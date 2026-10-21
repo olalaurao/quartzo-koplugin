@@ -1,5 +1,42 @@
 # Implementation Status
 
+## 2026-10-21 — Paired physical attempt FAILED; no events or ACK
+
+Exact Kindle7d0b75a with isolated Android runtime c4b84707 and host566792c8
+was installed through verified Git/source/UID/USB channels. The user executed
+the KUAL command and reconnected the PW3. Its actual LuaJIT2.1 ARM,
+dkjson2.10 and LuaSec1.3.2 report failed on attempt1 before any receipt lookup.
+Android independently reported zero events/seconds/queued actions. Stop/export
+verified listener closure, credential revocation and unchanged production app
+metadata. The isolated Android package was removed only after UID/APK checks;
+nonsecret failure evidence was preserved. This is FAILED, not a G04 PASS.
+
+The original fixed generic sequence error does not identify the transport
+failure. The pending small correction preserves only allowlisted existing
+carrier error categories through the paired consumer and diagnostic report;
+raw SDK messages, paths, certificates and credentials remain redacted. No
+authentication, receipt or certificate check is relaxed. Diagnosis and a new
+physical execution remain required; no cause is inferred from the host PASS.
+
+The automatic approval review rejected removal of the owned Kindle extension
+and three temporary folders with only "blocked by policy". No alternate delete
+was attempted. The user removed those four exact folders manually; subsequent
+read-only absence checks confirmed all four were gone.
+The listener is closed and its credential revoked. Statistics, sidecars,
+production data and Wi-Fi settings were not modified.
+
+The bounded-error correction passed12 paired consumer,five sequence and four
+driver cases. Full local wire suite:107 PASS/four explicit native-TLS skips
+(111 total,18.212s), with all six upstream files verified unchanged. A first
+test invocation lacked the existing pinned Lupa path; rerunning with the
+already-installed pinned dependencies passed. No new dependency was installed.
+
+Separately exact7d0b75a passed native Linux39610734802:110 wire and34 transport
+tests without skips. Exact app c4b84707 passed hosted39610424132:five configured
+certificate tests plus one native paired case,124 native/five skips,95 docs,
+30 shared and2836 full/eight skips. These host proofs do not override the actual
+device failure. G03 stays PASS; G04 and the full seven-item goal stay open.
+
 ## 2026-10-21 — Paired KUAL preparation and independent receipt collection
 
 The existing single-use extension/launcher now packages paired_sequence.lua

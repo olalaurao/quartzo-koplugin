@@ -30,6 +30,11 @@ and close cannot grant acceptance. No extra signature/HMAC protocol, retry,
 outbox/cursor store or persisted receipt ledger is introduced. Existing pure
 codec/exchange behavior and old diagnostic false-ACK reports remain unchanged.
 
+Failed attempts preserve only an explicit allowlist of the pinned carrier's
+fixed connection/certificate/pin categories. The synthetic sequence may copy
+that category to its failure report; arbitrary SDK errors remain redacted.
+No category is a receipt or permission to retry/advance a source cursor.
+
 Twelve focused actual-Lua tests use an explicitly injected SDK model and a
 synthetic locally approved document. They do not prove actual user-approved
 import, canonical issuer interoperability, native TLS for this combined path or

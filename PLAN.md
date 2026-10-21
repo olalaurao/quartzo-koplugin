@@ -61,7 +61,8 @@ contains the bounded client/adapter, ephemeral TLS fixture host, single-use KUAL
 diagnostic launcher, explicit bundle installer/collector, real-Lua-5.1 logic
 tests and real loopback TLS tests. It is not a production Kindle plugin or
 physical transport proof. Production phases still
-require Gate 0A/0B/0C. The canonical transport decision remains unratified.
+require Gate 0A/0B/0C. The event/wire contract is ratified at upstream e7a661d4;
+the chosen route still requires G04 physical authenticated receipt acceptance.
 
 Build a KOReader plugin that synchronizes reading activity from KOReader into Quartzo without turning the Kindle into a second Quartzo implementation and without creating a parallel source of truth.
 

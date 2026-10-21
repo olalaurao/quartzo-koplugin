@@ -99,11 +99,17 @@ class PairedExchangeTest(unittest.TestCase):
                 self.assertEqual(counts[b'http'], 0)
 
     def test_wrong_pin_and_transport_shortcuts_cannot_manufacture_receipt(self):
-        for case, digest in [('ok', b'2'*64), ('never_connect', None), ('early_send', None),
-                             ('second_connection', None), ('certificate_error', None), ('timeout', None)]:
+        for case, digest, reason in [('ok', b'2'*64, b'reading_peer_pin_mismatch'),
+                ('never_connect', None, b'reading_transport_failed'),
+                ('early_send', None, b'reading_peer_unverified'),
+                ('second_connection', None, b'reading_transport_failed'),
+                ('certificate_error', None, b'reading_certificate_rejected'),
+                ('timeout', None, b'reading_transport_failed')]:
             with self.subTest(case=case):
                 handle, _, _ = self.open(case=case, digest=digest)
-                self.assertEqual(self.attempt(handle), (None, b'unverified_reading_receipt'))
+                result=self.attempt(handle)
+                self.assertEqual(result, (None, reason))
+                self.assertNotIn(b'PRIVATE',result[1])
 
     def test_claims_forged_session_receipt_and_retarget_cannot_grant_acknowledgement(self):
         handle, _, _ = self.open()
