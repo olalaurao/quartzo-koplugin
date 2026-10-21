@@ -1,5 +1,34 @@
 # Implementation Status
 
+## 2026-10-20 — Exact leaf pin preparation; G03 store exit audited upstream
+
+Upstream Quartzo1db4c13b records G03 PASS against the integrated store exit,
+including implementation ad5986fa's four successful workflows. This closes
+that store gate only; G04 authenticated transport/durable source ACK and every
+later gate remain required. Historical reports retain original proof limits.
+
+The existing shared diagnostic carrier now has an explicit opt-in pinned mode:
+native LuaSec1.3.2 TLS1.2/explicit CA, then exact leaf DER SHA-256 before any
+HTTP credential/body write. It uses the exported native TLS factory with the
+existing LuaSocket HTTP driver because LuaSec rejects caller create hooks.
+One exact private endpoint/connection, bounded response, fixed sanitized
+errors and idempotent cleanup fail closed. A private process-local capability
+can bind a verified HTTP200's exact bytes/token/context; it carries no canonical
+receiver role, accepted events, durable receipt or cursor authority. Existing
+codec/exchange ACK remains false, and existing diagnostic behavior is preserved.
+
+Missing API tests reproduced fourteen errors across seven cases before the
+implementation; final focused seven passed. Full local wire suite: **89 PASS /
+three explicit native-TLS platform skips** (92 total, 5.722s), including actual
+Lua5.1 and pinned native-provider references. New Linux CI requires actual
+Lua5.1/LuaSec1.3.2/LuaSocket loopback acceptance: positive bound delivery,
+trusted-CA/wrong-pin with zero HTTP bytes, and wrong-CA with zero HTTP bytes.
+That native run is pending at this checkpoint. This code is not installed on
+the PW3; old physical proof is not inherited. Production pairing/receiver role,
+credential/revocation/cancellation lifecycle and durable per-event receipt
+composition remain the next G04 work. No Statistics/outbox, Wi-Fi, contract,
+production install or release change occurred.
+
 ## 2026-10-20 — Actual physical-shard cloud path and canonical Quartzo consumption passed
 
 [Combined source-bound evidence](docs/evidence/wire-cloud-canonical-bridge-2026-10-20.json) has byte-identical copies across all three repositories (SHA2568428ade8d85a74e51ee0681e1970fe697888e69cdc82e761093a888089bed8f5). The exact three synthetic shards collected from the physical Android run passed actual official Companion10e840ab SDK/OAuth/HTTP upload, independent fresh-peer download and separate remote byte checks (three unique files /1356bytes). Source and rehydrated-peer replay performed zero sync work; both peers were synced and the original six sandbox hashes plus Manual/pairing remained unchanged. These are separate adapters/coordinators/local roots/state in one renderer, not separate OS-process restart proof. The dedicated child is under the selected sandbox's excluded diagnostics tree; no production target was selected.

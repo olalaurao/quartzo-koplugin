@@ -1,5 +1,16 @@
 # Quartzo ↔ KOReader — Implementation Specification
 
+Current G04 preparation adds an opt-in exact-leaf DER SHA-256 gate to the
+existing shared isolated LuaSec/LuaSocket carrier, before HTTP credentials are
+sent. Its opaque process-local delivery capability binds bytes and connection
+context only. It grants no canonical receiver role, durable event ACK, source
+cursor or production registration. Native host acceptance is explicitly
+required separately from injected-SDK tests and from new-source physical PW3
+proof; see `tools/reading_wire/README.md` and current STATUS. Upstream G03 store
+exit was separately audited PASS at Quartzo1db4c13b, using implementation
+ad5986fa's four successful workflows and the original source-bound physical,
+cloud conflict and canonical replay evidence. G04 and later gates stay open.
+
 2026-10-20 checkpoint: actual exact-source PW3/Android finite canonical wire
 diagnostic passed independent byte/report collection (three shards, three
 synthetic events / 120 seconds; zero transport errors; credential revoked).

@@ -1,5 +1,36 @@
 # Pinned Reading wire consumer — Gate 0C
 
+## Opt-in exact leaf pin preparation (2026-10-20)
+
+`client.pinned_wire_transport(config, https, ltn12, http)` reuses the existing
+shared carrier with mandatory explicit CA trust and a lowercase 64-hex
+`peer_certificate_sha256`: SHA-256 of the leaf X509 DER, not of its PEM file.
+It requires the target LuaSec1.3.2 native `https.tcp` factory and LuaSocket
+`http.request`; `https.request` rejects caller create hooks. The connection
+checks its actual certificate after handshake and before any HTTP send or
+receive, permits one exact private endpoint, and closes failed connections.
+Proxies and redirects cannot establish a delivery. This remains opt-in isolated
+tooling, not a production plugin registration or session/credential owner.
+
+Only verified HTTP200 can return an opaque delivery identity. The private weak
+map reader requires the exact request/token/endpoint/binding/pin. Neither JSON
+claims nor a cloned table can establish that identity. This authenticates
+transport bytes only: canonical receiver authorization, durable per-event
+receipt, revocation/cancel lifecycle and source cursor authority remain absent.
+The codec/exchange still treats response claims as untrusted, with ACK false.
+The existing five-second diagnostic timeout policy remains shared-process
+tooling and needs production lifecycle composition before plugin use.
+
+`test_pinned_transport.py` runs actual Lua with an injected SDK model; it is
+not native TLS proof. `test_pinned_tls_native.py` additionally uses real native
+Lua5.1/LuaSec1.3.2/LuaSocket and an ephemeral TLS1.2 loopback listener. Set
+`READING_NATIVE_LUA51=/usr/bin/lua5.1` to require it; an absent setting explicitly
+skips, while a configured missing/wrong runtime fails. CI installs those
+test-only dependencies and requires exact version checks. Rejected CA and a
+trusted-CA/wrong-leaf test must observe zero application bytes, including
+incomplete HTTP. This host test never substitutes new-source physical PW3
+acceptance or a canonical receiver/storage test.
+
 `codec.lua` is a pure Lua 5.1 consumer of the ratified upstream Reading transport
 contract. It is outside the production plugin and the deployed TLS diagnostic.
 It performs no network/filesystem I/O, credential lookup, Statistics/sidecar
