@@ -1,5 +1,29 @@
 # Implementation Status
 
+## 2026-10-22 — Native outbox host block passed; physical Gate4 remains open
+
+Exact `0bea3f92699e65a99c62f01066e3a4939bb0368a` CI39722438051 passed320
+tests without skips:171 plugin (54 actual official native SQLite, including20
+outbox cases),34 transport and115 wire. The actual39,962-byte Linux/Windows
+package matches SHA25658f23276256eeb4a2a6262b58a936d8876cd6ba5c7501ab0c1256513abcd6ef7.
+The live-journal process-stop cases, actual Linux OS entropy and joined actual
+paired-owner/shared-carrier fixture all executed. This is host/native SDK proof,
+not new PW3/Android/TLS, source-generation or hardware power-loss acceptance.
+
+[Host evidence](docs/evidence/outbox-host-2026-10-22.json) records exact scope;
+[physical resumption](docs/outbox-physical-resume.md) defines the next checks
+without an active test request. Draft PR5 targets merged mainf416b8d and remains
+open for the unfulfilled Gate4/lifecycle conditions. Standing merge authorization
+does not waive mandatory physical/spec checks. The final evidence-head CI must
+also pass; no release, device install or session is started while unavailable.
+
+Risk boundary: no observed source-data loss or source DB write. Missing/corrupt
+owned state deliberately stops; restore/review identity before historical replay.
+Core selected bytes/review persist, but source-generation enrollment, restore/
+reset UX and lifecycle/checkpoint composition still need implementation and real
+device proof. Do not describe the complete production plugin or full seven-topic
+goal as complete. Full goal ACTIVE/topic2; source/effect flags remain inactive.
+
 ## 2026-10-22 — Phase D durable delivery-state candidate; no device available
 
 PR4 merged after exact0d96d1e CI39720286930 passed262 cases without skips as
