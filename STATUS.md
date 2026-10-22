@@ -2,6 +2,17 @@
 
 ## 2026-10-22 — Offline outbox physical block preparation (not installed)
 
+Accepted exactb081938 native CI39729636826:364 cases/no skips (215 plugin,
+34 transport,115 wire). The standalone official LuaJIT/LFS/SQLite probe performed
+all six real child SIGKILL cases and the independent private-copy collector passed.
+The48,563-byte production archive is unchanged. See the new source-bound
+[offline host evidence](docs/evidence/outbox-offline-probe-host-2026-10-22.json).
+Additional driver-boundary tests use explicitly modeled ARM metadata and a stub
+core only to enforce source/native fingerprints, fixed I/O and failed-report
+behavior; they are not native ARM proof. The initial model fixture's byte-key
+metadata mistake was corrected; all three driver checks pass locally. Final
+exact-head CI is required for those added tests/documentation too.
+
 First source95d00c5 native CI39729483467 failed ONLY the independent collector's
 nonempty-file assumption after the actual standalone native six-case probe had
 passed. SQLite's real hot-journal rollback truncates fresh incomplete destinations

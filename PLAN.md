@@ -1,5 +1,14 @@
 # Quartzo ↔ KOReader — Product & Delivery Plan
 
+2026-10-22 offline PhaseD proof is prepared, NOT installed. Exactb081938 passed
+364 native/fixture CI cases without skips. Reuse the existing finite KUAL launcher
+and artifact owner, run six actual synthetic stage/backup/restore process stops,
+and independently inspect private copies of their bounded outputs. No phone,
+Wi-Fi, session or credentials are needed for this future offline portion. Wait
+for device availability before installation/execution; keep installed0.0.2 intact.
+The actual paired receipt/prune proof, source-generation enrollment and production
+lifecycle remain separate Gate4 obligations. Full goal stays ACTIVE/topic2/7.
+
 2026-10-22 PhaseD0.0.5 native host proof passed357 cases/no skips, including
 eight stage/prune/backup/restore process-stop cases. Source and restored identity/
 selected bytes/review are preserved; partial artifacts do not become empty new

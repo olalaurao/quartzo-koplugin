@@ -1,0 +1,73 @@
+{
+  "evidence_version": 1,
+  "scope": "Finite synthetic offline outbox diagnostic preparation; official Linux x64 LuaJIT/SQLite/LFS only",
+  "source_commit": "b081938f3d7e0e77dc6414934d36e9edcac73f17",
+  "host_result": "PASS",
+  "physical_result": "NOT_RUN",
+  "gate4_status": "OPEN",
+  "ci": {
+    "url": "https://github.com/olalaurao/quartzo-koplugin/actions/runs/39729636826",
+    "conclusion": "success",
+    "plugin_cases": 215,
+    "transport_cases": 34,
+    "wire_cases": 115,
+    "total": 364,
+    "skipped": 0,
+    "native_reference_lock": "tools/plugin/SQLITE_REFERENCE.lock.json",
+    "json_sha_reference_lock": "tools/reading_wire/REFERENCE_RUNTIME.lock.json"
+  },
+  "actual_standalone_native_probe": {
+    "runtime": "Official hash-pinned KOReader v2026.07.1 Linux x64 LuaJIT",
+    "process_stop": "Six owned fork children killed via SIGKILL; not a returned exception or SQLite close",
+    "before_commit_live_nonzero_journal_header_required": true,
+    "cases": ["stage_before_commit", "stage_after_commit", "backup_before_commit", "backup_after_commit", "restore_before_commit", "restore_after_commit"],
+    "native_entropy_identity_cases": 6,
+    "raw_receipt_rejection_cases": 5,
+    "same_identity_and_exact_pending_bytes_verified": true,
+    "review_retained": true,
+    "independent_private_copy_sql_inventory_verified": true,
+    "kernel_parent_death_termination_enabled": true,
+    "finite_child_and_parent_waits": true,
+    "parent_owned_temporary_fixture_cleanup": true,
+    "hardware_power_loss_proven": false
+  },
+  "artifact": {
+    "owner": "Existing tools/reading_wire/probe_bundle.py and tools/transport_probe/run.sh",
+    "definition": "tools/plugin/outbox_probe_bundle.py",
+    "extension_name": "quartzo-outbox-probe",
+    "source_files": 9,
+    "native_fingerprints": 7,
+    "ships_reference_libraries": false,
+    "installed": false,
+    "physical_execution_attested": false,
+    "positive_paired_receipt_proven": false
+  },
+  "prior_failure": {
+    "source_commit": "95d00c57e602e08555a12156051aedd80a64f605",
+    "ci_url": "https://github.com/olalaurao/quartzo-koplugin/actions/runs/39729483467",
+    "conclusion": "failure",
+    "plugin_total": 214,
+    "plugin_passed": 213,
+    "later_steps_skipped": true,
+    "cause": "Independent collector incorrectly required nonempty files for native rollback of fresh incomplete destinations",
+    "correction": "Zero bytes allowed only in the two explicit before-commit partial destinations, still requiring schema/version0; healthy empty outboxes remain refused",
+    "production_owner_changed": false,
+    "interruption_criteria_weakened": false
+  },
+  "production_plugin": {
+    "version": "0.0.5",
+    "changed_by_this_block": false,
+    "archive_bytes": 48563,
+    "archive_sha256": "4a7bbabef2cbf6e9c553edbba16a1e8c39988c175c36c9c712a515eb521ca7c1"
+  },
+  "statistics_accessed": false,
+  "network_session_started": false,
+  "wifi_changed": false,
+  "phone_used": false,
+  "device_files_changed": false,
+  "canonical_ack": false,
+  "canonical_persistence_proven": false,
+  "source_generation_enrollment_proven": false,
+  "production_registration_enabled": false,
+  "later_phases_or_full_goal_complete": false
+}

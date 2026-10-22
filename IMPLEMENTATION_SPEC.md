@@ -1,5 +1,23 @@
 # Quartzo ↔ KOReader — Implementation Specification
 
+2026-10-22 PhaseD offline acceptance preparation:
+Use tools/plugin/outbox_probe_bundle.py as a definition of the existing wire
+artifact owner and reuse its finite single-use KUAL launcher. No second installer,
+production store, journal, receipt issuer, service or production lifecycle is
+introduced. The same outbox/codec/paired consumer runs on synthetic isolated
+state only. Six own child SIGKILL cases cover before/after stage, backup and
+restore commits, with native entropy, live journal evidence, bounded waits and
+kernel termination on parent death. Offline raw claims must not prune. Positive
+receipt/prune acceptance still requires the normal scoped Android receiver.
+
+Independent SQL only examines bounded private copies of synthetic outputs, never
+mounted Statistics/user state. Exact expected schema/version0 partial files may
+be zero bytes after native rollback, but cannot be enrolled or treated as healthy
+empty outboxes. Unknown files/journals/schema/identity/bytes are refused. Matching
+observations alone cannot attest hardware, source generation or canonical ACK.
+Exactb081938 native x64 CI passed364 cases/no skips; actual PW3 proof is pending.
+The user cannot operate devices; this block does not install or request execution.
+
 2026-10-22 PhaseD0.0.5 recovery candidate:
 Use the SAME SQLite outbox owner for explicit point-in-time recovery copies.
 ATTACH/DELETE-journal/synchronous EXTRA transactions copy complete bounded

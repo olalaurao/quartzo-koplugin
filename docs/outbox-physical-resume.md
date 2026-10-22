@@ -1,9 +1,36 @@
 # Phase D physical resumption â€” not an active test request
 
-The user cannot operate the Kindle/phone now. There is no installed0.0.4 trial,
+The user cannot operate the Kindle/phone now. There is no installed0.0.5 trial,
 pairing, listener, timer or one-time credential waiting. Do not ask the user to
 run a menu that has not been installed. Existing development0.0.2 stays unchanged.
 The [host report](evidence/outbox-host-2026-10-22.json) is not physical Gate4 PASS.
+
+## Prepared offline block, awaiting availability
+
+`tools/plugin/outbox_probe_bundle.py prepare` now prepares committed source bytes
+for a fresh `quartzo-outbox-probe` extension through the existing artifact owner.
+Its exactb081938 [native host proof](evidence/outbox-offline-probe-host-2026-10-22.json)
+passed364 cases without skips. This extension is NOT installed; no KUAL action is
+currently requested. It does not replace installed0.0.2 or access Statistics.
+
+Once the user can operate the Kindle, the engineer must revalidate exact source/
+CI, KOReader baseline and preserved source/settings inventory, then install only
+the new diagnostic extension with a fresh installation observation. It needs no
+phone or Wi-Fi and has no timed network session. Only after installation is
+verified, the single human step is to disconnect USB safely, execute KUAL →
+Quartzo offline outbox diagnostic → Run synthetic offline outbox test, wait up to
+125 seconds and reconnect USB. Do not ask the user to execute this now.
+
+The engineer then collects with that same prepared bundle and installation
+observation. The shared launcher must report completed; all six native stop cases
+and seven native fingerprints must match. Collection checks exact fixed synthetic
+identities/bytes/review on bounded PRIVATE COPIES, never on mounted user databases.
+Every partial/journal/unknown file is preserved on failure; do not rerun in place.
+Two expected version0 partial destinations may be zero bytes after rollback and
+remain unregistered. A healthy empty outbox cannot pass in their place. Archive
+evidence, compare the preserved unrelated baseline, then clean up only the owned
+diagnostic when authorized and verify its absence. This is an offline sub-block;
+it does not close Gate4 or prove Android canonical delivery/source enrollment.
 
 ## Before preparing a device trial
 
