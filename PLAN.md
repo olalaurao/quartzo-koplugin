@@ -1,5 +1,11 @@
 # Quartzo ↔ KOReader — Product & Delivery Plan
 
+Current PhaseA bootstrap0.0.1 passed actual PW3 startup/menu/removal/restart
+acceptance with unchanged Statistics/settings and180 existing plugin Lua
+sources. The test installation has been removed. Next is PhaseB bounded
+read-only Statistics/schema/counts and physical Gate2. See STATUS and the
+source-bound bootstrap report; later source/outbox/release gates remain open.
+
 Current execution checkpoint: the new exact47aa17f/profile7d3b6735 PW3/Android
 trial passed independent per-event receipt, canonical-byte and replay collection.
 Its normal completion, credential revocation and full diagnostic cleanup were

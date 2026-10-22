@@ -1,5 +1,108 @@
 # Implementation Status
 
+## 2026-10-21 — Physical bootstrap Gate 1 PASS; Phase B is next
+
+The user completed both native PW3 steps: exact0.0.1 opened responsively with
+unchanged Wi-Fi, then KOReader restarted normally with the Quartzo menu absent
+after removal. Independent USB checks verified the exact two installed source
+files before removing only those files and their empty owned directory. The
+Statistics DB/WAL/SHM and reserved own settings paths (five tracked paths)
+remained unchanged after both executions, as did all180 existing Lua files in
+Statistics,Reader,SimpleUI and Extra. The bounded log tail (up to2,000 lines) had zero
+Quartzo error lines. Actual plugin absence was verified after the final restart.
+
+[Source-bound physical evidence](docs/evidence/plugin-bootstrap-pw3-2026-10-21.json)
+records source2a319d3, runtime firstc0af57b, exact package hashes and the two
+trusted user reports. Actual2a CI39711826260 and documentationea05 follow-up
+CI39712156217 passed all152 cases without skips; the1,599-byte ZIP matched
+Windows/Linux. The development test installation is now removed. This is
+KOReader PhaseA/Gate1 PASS, not integrated identity G01 or ingestion G08 PASS.
+
+PhaseB may now implement the small read-only Statistics/schema/count probe and
+its tests, with its own required physical Gate2. There is no Statistics query,
+event extraction,outbox/cursor,promotion or production release in this change.
+No raw/wire schema,upstream contract,Companion lock or other plugin changed.
+The full seven-topic goal remains ACTIVE and incomplete.
+
+Quartzo2261cf8f now has actual Windows Test PASS (2,807 tests/37skips) and
+Agent Contract Gate PASS, in addition to hosted2,836/eight skips. Analyze was
+running and Dial queued at this checkpoint; PR67 remains unmerged until all
+exact-head checks pass. PR1 is ready/green and PR2 stays stacked until the
+canonical-owner foundation is merged. Standing user merge authorization remains
+valid; no redundant merge permission is required.
+
+## 2026-10-21 — Exact Phase A package staged on PW3; user startup proof pending
+
+PR2 runtime source `2a319d3a43060be908627dd40f00492adefccd43` passed exact-head
+CI39711826260: seven bootstrap/package,34 transport and111 wire tests, all152
+without skips. The uncompressed1,599-byte ZIP is identical on actual Linux CI
+and Windows: SHA256 `58b55323c5f59a0f6e271816fd1da1d575aa3967cee17bc328586ae74e4ef85d`.
+It contains only `_meta.lua`/`main.lua`; their source bytes did not change after
+the first bootstrap commit. Earlier local full suites passed34/two POSIX skips
+and111/four native-platform skips; native CI executed those cases without skips.
+
+USB revalidated installed KOReader v2026.07.1. The two exact-source files were
+installed only in the previously absent `plugins/quartzo.koplugin` directory.
+Private before/after observations confirmed unchanged Statistics DB/WAL/SHM,
+reserved Quartzo settings files and all Lua sources of Statistics,Reader,
+SimpleUI and Extra. No configuration or database was opened by the plugin;
+this USB installation check does not prove its native runtime behavior.
+Private observations are outside Git under the workspace diagnostics folder.
+
+The user has been asked to start KOReader, open its Quartzo Tools diagnostic,
+check0.0.1/responsiveness/unchanged Wi-Fi, then close and reconnect USB. The
+offline trial needs no phone or time-limited session. Gate1 is OPEN until real
+startup/menu evidence, unchanged-file review and removal/restart acceptance.
+Do not install again, overwrite this trial or start PhaseB before that result.
+The bootstrap is a development test installation, not a production release.
+
+Quartzo exact2261cf8f hosted retry39710121391 passed2,836 tests/eight skips,
+analysis and both TLS backends; the original unrelated apt403 attempt remains
+recorded as failed. Windows Test remains in progress, and Analyze/Agent/Dial
+checks are queued. PR67 is not merged. PR1 exacte331f441 is green but awaits
+that canonical-owner merge; PR2 is stacked on PR1 until retargeted to main.
+The user's standing merge authorization is recorded below and applies only
+after all exact-head checks pass. Full goal remains ACTIVE and incomplete.
+
+## 2026-10-21 — Phase A bootstrap implemented; physical Gate 1 pending
+
+Branch `feature/reading-plugin-bootstrap` adds only `_meta.lua`/`main.lua`, a
+Quartzo Tools entry and versioned local diagnostics. The pinned KOReader
+PluginLoader supplies metadata; canonical DataStorage supplies reserved own
+config/state paths without reading or writing them. No Statistics, network,
+Reader import, outbox, lifecycle trigger or sync activation is added.
+
+Local bootstrap tests passed on both Lua 5.1 and LuaJIT: six behavior cases,
+including load without a document, canonical path/menu registration and inert
+diagnostics with filesystem/process/network dependencies unavailable. One
+package case passed exact two-file allowlist, byte reproducibility and refusal
+to overwrite an existing archive. CI now executes these seven cases and builds
+the exact package alongside the existing transport/wire suites. These local
+tests are not a PW3 install/start/menu/remove proof; Gate 1 remains OPEN.
+
+Exact initial bootstrap `c0af57b` CI39711628188 passed all152 cases without
+skips (seven bootstrap/package,34 transport,111 wire). Source file hashes were
+identical on Windows/Linux, but compressed ZIP bytes differed with their zlib
+versions. Packaging now uses uncompressed ZIP entries for these two tiny files,
+removing that platform variation without adding a compression dependency.
+No plugin runtime changed; a fresh exact-head CI/package comparison is required
+before the physical install. No initial archive was installed.
+
+Foundation sources remain Quartzo `2261cf8f` and KOReader `e331f441`, based on
+actual physical host `0e026599`/APK `7d3b6735`/Kindle `47aa17f`. Reader stable
+tags satisfy sequencing; Companion main remains `10e840ab`, with no new lock or
+contract changes. The user's standing authorization now permits merging PRs
+within this goal after **all exact-head checks** pass. It does not publish a
+release or install into production. PR67 still awaits its final CI, PR1's
+exact-head CI passed; neither is claimed merged here.
+
+Next: final CI/package verification, source-bound offline PW3 install/start/menu
+and removal/restart acceptance as documented in `tools/plugin/README.md`. Only
+after Gate 1 passes may Phase B implement bounded read-only Statistics access.
+No device installation has happened in this Phase A checkpoint. Full seven-topic
+goal remains ACTIVE and incomplete; data-loss risk is limited by the bootstrap's
+absence of data access, not asserted as a substitute for physical acceptance.
+
 ## 2026-10-21 — Paired PW3/profile trial passed; Gate 0 foundation accepted
 
 The user executed exact47aa17f through KUAL against the verified ARM64 profile
