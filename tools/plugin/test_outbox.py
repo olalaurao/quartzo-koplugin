@@ -630,7 +630,7 @@ class NativeOutboxTest(OutboxTest):
             stmt.bind(stmt,str(destination))
             stmt.step(stmt)
             stmt.close(stmt)
-            self.assertEqual(conn.rowexec(conn,"SELECT COUNT(*) FROM scratch.sqlite_master"),0)
+            self.assertEqual(self.lua.eval("tonumber")(conn.rowexec(conn,"SELECT COUNT(*) FROM scratch.sqlite_master")),0)
         finally:
             conn.close(conn)
 

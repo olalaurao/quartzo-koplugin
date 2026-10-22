@@ -1,5 +1,13 @@
 # Implementation Status
 
+Follow-upb90272c CI39725147557 confirmed the creating-mode diagnosis and passed
+all recovery/restore/process cases:207/208 plugin cases passed. The only failure
+was the new native API assertion comparing SQ3's int64 cdata COUNT directly with
+a Python integer. It now explicitly uses Lua tonumber (the production owner
+already does this) and still requires exactly zero. No runtime criterion or
+receipt rule changes. Later transport/wire steps were skipped, not passed.
+The failed logs remain preserved; the exact new head must pass the full CI.
+
 Initial0.0.5 sourcec6a7a86 CI39724674354 FAILED six actual-native backup cases
 (189/195 plugin cases passed; later transport/wire steps skipped). No backup
 artifact appeared, unlike the Python SQLite bridge. The source opens with
