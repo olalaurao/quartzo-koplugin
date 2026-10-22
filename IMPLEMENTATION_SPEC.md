@@ -1,5 +1,16 @@
 # Quartzo ↔ KOReader — Implementation Specification
 
+2026-10-22: exact0.0.2 source5b22dd6 passed actual PW3 Gate2. The manual
+read-only diagnostic preserved main DB bytes and logical counts/dates; the
+separate normal-reading trial remained responsive and added one native event.
+Other plugin sources and own settings remained unchanged. Empty WAL/SHM cache
+lifecycle is recorded separately, not labeled identical files. See STATUS and
+`docs/evidence/statistics-read-only-pw3-2026-10-22.json`. PhaseC bounded
+deterministic extraction may proceed; outbox/ingestion and full release gates
+remain open. No reading duration, canonical receipt or production effect is
+inferred from this diagnostic.
+
+
 The new exact47aa17f/profile7d3b6735 paired PW3/Android trial passed independent
 receipt/canonical-byte/replay collection and verified normal completion,
 revocation,package removal and full manual cleanup. The upstream G04 finite
@@ -63,7 +74,7 @@ gates remain open. No production activation follows this diagnostic.
 > **Target V1 device:** Kindle Paperwhite 3 / 7th gen (PW3), firmware 5.16.2.1.1, KUAL, KOReader v2026.07.1 (`kindlepw2`)
 > **Product roadmap:** `PLAN.md`  
 > **Progress ledger:** `STATUS.md`  
-> **Implementation state:** Gate 0 foundation and physical Phase A Gate 1 accepted; Phase B read-only Statistics probe next
+> **Implementation state:** Gate 0 and physical Phases A/B accepted; Phase C deterministic event extraction next
 > **Last reconciled:** 2026-10-21 (historical planning pass: 2026-09-22)
 
 This file is the implementation source of truth once implementation begins. If code and this specification disagree, either the code is wrong or this file must be deliberately updated in the same change, with the reason recorded in `STATUS.md`.
@@ -412,6 +423,19 @@ SQ3.open(path, "ro")
 when supported by pinned KOReader's sqlite wrapper.
 
 If target behavior differs, Gate 2 must experimentally prove the safest read-only equivalent.
+
+The Phase B diagnostic uses that exact native mode, a short `BEGIN DEFERRED`
+read snapshot and unconditional connection closure. It validates schema20221111
+columns and required index/foreign-key shapes, while allowing the observed
+nonunique SimpleUI MD5 index. It never migrates or repairs Statistics.
+
+To keep diagnostic work bounded on PW3, each count inspects at most100,001
+rows. Counts above100,000 are explicitly reported as `100000+`, not an exact
+total; first/last timestamps use the validated native start-time index. This
+bounded summary is not the Phase C collector or full-history backfill. Version
+0.0.2 performs this work only through the manual Reading Statistics menu action,
+never on startup, page turns, close or suspend. Native fixture CI and actual
+PW3 Gate2 remain required independently of the accepted bootstrap Gate1.
 
 ## 7.2 Busy handling
 

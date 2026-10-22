@@ -1,5 +1,16 @@
 # Quartzo ↔ KOReader — Product & Delivery Plan
 
+Current0.0.2 passed actual PW3 Gate2: diagnostic-only DB bytes/counts/dates
+unchanged, normal reading remained responsive and native events increased from
+5,726 to5,727 without plugin ingestion. Other plugin sources and own settings
+were preserved. PhaseC bounded deterministic event extraction is next; outbox,
+source acknowledgement,normal production delivery and later gates remain open.
+
+2026-10-22: foundations and accepted bootstrap merged as recorded in STATUS.
+PhaseB0.0.2 now implements only the bounded, manually requested read-only
+Statistics/schema/count diagnostic. Its native CI and physical Gate2 remain
+required; there is no PhaseC extraction, outbox,ingestion or lifecycle activation.
+
 Current PhaseA bootstrap0.0.1 passed actual PW3 startup/menu/removal/restart
 acceptance with unchanged Statistics/settings and180 existing plugin Lua
 sources. The test installation has been removed. Next is PhaseB bounded
