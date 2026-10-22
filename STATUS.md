@@ -1,6 +1,22 @@
 # Implementation Status
 
-## 2026-10-22 — Recovery schema preservation review (0.0.6, native CI pending)
+## 2026-10-22 — Recovery schema preservation review (0.0.6, host accepted)
+
+Exact9f7c3a7 CI39730904884 passed373 cases/no skips:224 plugin (70 actual
+official native SDK cases),34 transport,115 wire. Full Windows224:154 PASS/
+70 explicit native-Linux skips,32.671s. Both new regressions ran on actual native
+SDK as well as both bridge VMs. Normal recovery and all six standalone native
+stop cases still pass. New48,598-byte archive SHA256:
+4971c597858225852eee72431cbc291dc24a58deafdc009c9cadce66a7c751a1.
+Only _meta/outbox runtime bytes changed; the four other runtime sources and
+upstream contracts are identical. See the source-bound
+[schema preservation evidence](docs/evidence/outbox-schema-preservation-host-2026-10-22.json).
+
+Official hash-verified v2026.07.1 Linux archive Statistics main was also inspected:
+createDB lines454-495 set user_version to DB_SCHEMA_VERSION. It is not a unique
+database generation identifier; this source audit is not a new PW3 observation or
+permission to derive an epoch from schema/book/title/MD5/counts. Explicit verified
+generation enrollment and source/reset lifecycle remain incomplete.
 
 The previous goal turn made concrete host progress: exact8b73c6e passed367 CI
 cases and prepared an uninstalled offline artifact. The user still cannot operate
@@ -24,7 +40,7 @@ compatible; equivalent hand-edited SQL is deliberately not automatically adopted
 Focused Windows101 cases:66 PASS/35 explicit native-Linux skips,13.219s. Regressions
 cover CHECK, UNIQUE, FK, virtual/stored generated fields, collation and internal
 analysis objects; existing backup/restore/interruption paths still pass locally.
-Final full native CI is required. Prior8b73c6e artifact/evidence remains historical
+Final full native CI passed as recorded above. Prior8b73c6e artifact/evidence remains historical
 and must not be installed as this new source. No physical Gate4 or later-phase
 acceptance is claimed; full goal ACTIVE/topic2/7, source lifecycle still incomplete.
 

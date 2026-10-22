@@ -1,0 +1,75 @@
+{
+  "evidence_version": 1,
+  "scope": "Phase D recovery schema preservation correction, host and official native SDK only",
+  "source_commit": "9f7c3a72cf760d6fdaf97ebe20d07a70d9255130",
+  "plugin_version": "0.0.6",
+  "host_result": "PASS",
+  "physical_result": "NOT_RUN",
+  "gate4_status": "OPEN",
+  "exact_source_ci": {
+    "url": "https://github.com/olalaurao/quartzo-koplugin/actions/runs/39730904884",
+    "conclusion": "success",
+    "plugin_cases": 224,
+    "actual_official_native_plugin_cases": 70,
+    "transport_cases": 34,
+    "wire_cases": 115,
+    "total": 373,
+    "skipped": 0
+  },
+  "windows_local": {
+    "full_plugin_total": 224,
+    "passed": 154,
+    "native_linux_skipped": 70,
+    "seconds": 32.671,
+    "focused_outbox_total": 101,
+    "focused_passed": 66,
+    "focused_native_linux_skipped": 35,
+    "focused_seconds": 13.219
+  },
+  "reproduced_prior_failure": {
+    "source_commit": "8b73c6e20d276eab51d73713314c1f5c00e5c9cc",
+    "regression": "Recovery accepted an unfamiliar table CHECK and rebuilt only known declarations",
+    "actual_local_failures": 2,
+    "actual_local_native_linux_skipped": 1,
+    "native_pre_correction_failure_claimed": false,
+    "users_affected_or_user_data_loss_observed": false
+  },
+  "correction": {
+    "schema_declaration_owner": "Single existing outbox definition map used by both CREATE and validation",
+    "schema_version": 1,
+    "original_v1_create_sql_bytes_changed": false,
+    "new_state_store_or_sql_parser": false,
+    "recognized_objects": "Three exact original tables and their two implicit primary-key indexes only",
+    "bounded_sql_projection_bytes": 1024,
+    "maximum_schema_objects_read": 6,
+    "unknown_declarations_preserved_for_review": true,
+    "equivalent_hand_edited_sql_automatically_adopted": false,
+    "restore_target_created_for_unrecognized_schema": false,
+    "input_bytes_preserved_in_regressions": true,
+    "rejected_regressions": ["CHECK", "UNIQUE", "foreign key", "virtual generated column", "stored generated column", "collation", "internal analysis tables"],
+    "normal_recovery_and_six_standalone_native_stop_cases_passed": true
+  },
+  "archive": {
+    "bytes": 48598,
+    "sha256": "4971c597858225852eee72431cbc291dc24a58deafdc009c9cadce66a7c751a1",
+    "meta_sha256": "f7a0418776feee4eec020c405e9731b07c19c312df516c5eba6238797a6f19e3",
+    "outbox_sha256": "2a44ff0dc5b0555c91f11c1e5cedd8288eaed65e7f49922d2d924db8880a3d77",
+    "other_four_runtime_sources_changed": false,
+    "installed": false
+  },
+  "source_generation_audit": {
+    "source": "Hash-verified official KOReader v2026.07.1 Linux x64 archive, not a new PW3 observation",
+    "statistics_main_sha256": "da6db5e381bcfdaf05053d23bf75781166cc713b14076a65fcd2c527067fd088",
+    "create_db_lines": "454-495",
+    "finding": "createDB sets user_version to DB_SCHEMA_VERSION; that field is a schema revision, not a unique database generation",
+    "source_generation_enrollment_proven": false
+  },
+  "device_accessed": false,
+  "user_statistics_accessed": false,
+  "network_session_started": false,
+  "canonical_ack": false,
+  "production_registration_enabled": false,
+  "upstream_contract_changed": false,
+  "companion_lock_changed": false,
+  "full_goal_complete": false
+}

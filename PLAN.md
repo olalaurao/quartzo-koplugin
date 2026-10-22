@@ -6,6 +6,8 @@ silent removal of unfamiliar constraints/generated columns/internal objects.
 Untouched v1 schema CREATE bytes stay compatible; no migration/identity enrollment
 or later phase is enabled. Full native CI and refreshed source-bound artifacts
 are required; the prepared8b73c6e offline bundle remains historical, uninstalled.
+Exact9f7c3a7 passed373 native/fixture CI cases/no skips; preserve that source-bound
+host evidence and refresh the uninstalled artifact against the final accepted head.
 
 2026-10-22 offline PhaseD proof is prepared, NOT installed. Exactb081938 passed
 364 native/fixture CI cases without skips. Reuse the existing finite KUAL launcher

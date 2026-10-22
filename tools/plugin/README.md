@@ -155,6 +155,13 @@ pairing/session in advance of that availability.
 
 ### Explicit recovery snapshots (0.0.5 candidate)
 
+Correction0.0.6 recognizes the exact original table declarations plus two implicit
+PK indexes from the same declaration map used by CREATE. Original v1 CREATE bytes
+remain unchanged. table_info alone omits generated columns, constraints, collation
+and table options; unfamiliar declarations/internal objects now require review
+before copying. This deliberately refuses even equivalent hand-edited SQL rather
+than adopting or silently rewriting it. No schema parser/migration is introduced.
+
 `queue.backup()` creates a fresh `quartzo_sync_recovery_<32hex>.sqlite3` in the
 same owner directory. Native SQLite ATTACH/DELETE-journal transactions copy the
 complete bounded identity/pending/review state; a second serializer or bytewise

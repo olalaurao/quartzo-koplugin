@@ -1,11 +1,20 @@
 # Phase D physical resumption â€” not an active test request
 
-The user cannot operate the Kindle/phone now. There is no installed0.0.5 trial,
+The user cannot operate the Kindle/phone now. There is no installed0.0.6 trial,
 pairing, listener, timer or one-time credential waiting. Do not ask the user to
 run a menu that has not been installed. Existing development0.0.2 stays unchanged.
 The [host report](evidence/outbox-host-2026-10-22.json) is not physical Gate4 PASS.
 
 ## Prepared offline block, awaiting availability
+
+Recovery source0.0.6 supersedes the original8b73c6e candidate: it rejects unfamiliar
+constraints/generated columns/internal schema objects instead of silently dropping
+them during recovery. Exact9f7c3a7 native CI passed373 cases/no skips. See the
+[source-bound correction](evidence/outbox-schema-preservation-host-2026-10-22.json).
+The older prepared8b73c6e directory is historical and MUST NOT be installed for the
+current trial. Use the fresh artifact/manifest recorded in the latest private
+handoff, and verify the exact accepted source before installation. No device is
+available or accessed during this host correction; installed0.0.2 is untouched.
 
 `tools/plugin/outbox_probe_bundle.py prepare` now prepares committed source bytes
 for a fresh `quartzo-outbox-probe` extension through the existing artifact owner.

@@ -9,7 +9,8 @@ internal objects are not silently dropped. Stored SQL projection is bounded and
 there is no general SQL parser or second schema source. Unknown/equivalent edited
 declarations require review, preserving input before any restore target creation.
 Existing untouched owner CREATE bytes and schema version remain unchanged; this
-requires no data migration. Native CI/physical/source-enrollment gates remain.
+requires no data migration. Exact9f7c3a7 CI passed373 cases/no skips, including
+the actual native regression cases. Physical/source-enrollment gates remain.
 
 2026-10-22 PhaseD offline acceptance preparation:
 Use tools/plugin/outbox_probe_bundle.py as a definition of the existing wire
