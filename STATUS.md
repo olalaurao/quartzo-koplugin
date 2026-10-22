@@ -1,5 +1,38 @@
 # Implementation Status
 
+## 2026-10-21 — Exact Phase A package staged on PW3; user startup proof pending
+
+PR2 runtime source `2a319d3a43060be908627dd40f00492adefccd43` passed exact-head
+CI39711826260: seven bootstrap/package,34 transport and111 wire tests, all152
+without skips. The uncompressed1,599-byte ZIP is identical on actual Linux CI
+and Windows: SHA256 `58b55323c5f59a0f6e271816fd1da1d575aa3967cee17bc328586ae74e4ef85d`.
+It contains only `_meta.lua`/`main.lua`; their source bytes did not change after
+the first bootstrap commit. Earlier local full suites passed34/two POSIX skips
+and111/four native-platform skips; native CI executed those cases without skips.
+
+USB revalidated installed KOReader v2026.07.1. The two exact-source files were
+installed only in the previously absent `plugins/quartzo.koplugin` directory.
+Private before/after observations confirmed unchanged Statistics DB/WAL/SHM,
+reserved Quartzo settings files and all Lua sources of Statistics,Reader,
+SimpleUI and Extra. No configuration or database was opened by the plugin;
+this USB installation check does not prove its native runtime behavior.
+Private observations are outside Git under the workspace diagnostics folder.
+
+The user has been asked to start KOReader, open its Quartzo Tools diagnostic,
+check0.0.1/responsiveness/unchanged Wi-Fi, then close and reconnect USB. The
+offline trial needs no phone or time-limited session. Gate1 is OPEN until real
+startup/menu evidence, unchanged-file review and removal/restart acceptance.
+Do not install again, overwrite this trial or start PhaseB before that result.
+The bootstrap is a development test installation, not a production release.
+
+Quartzo exact2261cf8f hosted retry39710121391 passed2,836 tests/eight skips,
+analysis and both TLS backends; the original unrelated apt403 attempt remains
+recorded as failed. Windows Test remains in progress, and Analyze/Agent/Dial
+checks are queued. PR67 is not merged. PR1 exacte331f441 is green but awaits
+that canonical-owner merge; PR2 is stacked on PR1 until retargeted to main.
+The user's standing merge authorization is recorded below and applies only
+after all exact-head checks pass. Full goal remains ACTIVE and incomplete.
+
 ## 2026-10-21 — Phase A bootstrap implemented; physical Gate 1 pending
 
 Branch `feature/reading-plugin-bootstrap` adds only `_meta.lua`/`main.lua`, a
