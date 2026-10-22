@@ -2,6 +2,14 @@
 
 ## 2026-10-22 — Offline outbox physical block preparation (not installed)
 
+First source95d00c5 native CI39729483467 failed ONLY the independent collector's
+nonempty-file assumption after the actual standalone native six-case probe had
+passed. SQLite's real hot-journal rollback truncates fresh incomplete destinations
+to zero bytes. Collection now permits zero ONLY for the two specified unregistered
+before-commit destinations, still verifies schema/version0 and refuses empty
+healthy state. The production owner/fixture interruption criteria are unchanged;
+new regression covers this exact boundary. Full exact-head CI must be repeated.
+
 The user cannot operate either device now. Preparing a finite synthetic KUAL
 probe using the SAME outbox, codec and paired consumer, with no source/Statistics
 access, networking, pairing, receipt issuance or production registration. Six

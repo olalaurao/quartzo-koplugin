@@ -107,6 +107,16 @@ class OutboxProbeBundleTest(unittest.TestCase):
                 self.report_path.write_bytes(bundle.base.encoded({**copy.deepcopy(self.report),**change}))
                 with self.assertRaises(ValueError): self.collect()
 
+    def test_only_two_expected_unregistered_partials_may_be_zero_bytes(self):
+        self.completed()
+        for name in ("backup_before_commit","restore_before_commit"):
+            directory=self.target/"state"/name
+            leaf=("quartzo_sync_recovery_"+"c"*32+".sqlite3") if name.startswith("backup_") else bundle.PRIMARY
+            (directory/leaf).write_bytes(b"")
+        self.assertTrue(self.collect()["observations_match"])
+        (self.target/"state/stage_after_commit"/bundle.PRIMARY).write_bytes(b"")
+        with self.assertRaises(ValueError): self.collect()
+
     def test_unknown_directory_and_journal_are_refused(self):
         self.completed()
         directory=self.target/"state/stage_before_commit"

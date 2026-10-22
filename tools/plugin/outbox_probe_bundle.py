@@ -115,15 +115,18 @@ def inspect_state(state,run_id):
             require(base.read(directory/"gate.ready",16)==b"ready")
             contexts=set()
             for leaf in sorted(expected-{"gate.ready"}):
+                partial=(name=="restore_before_commit" and leaf==PRIMARY
+                         or name=="backup_before_commit" and leaf==backup)
                 data=base.read(directory/leaf,2097152)
-                require(len(data)>0)
+                # Native hot-journal rollback can truncate a newly created
+                # destination to zero. It is still an UNREGISTERED partial,
+                # never a healthy empty outbox. No other file may be empty.
+                require(partial or len(data)>0)
                 total+=len(data)
                 require(total<=4194304)
                 private=Path(temporary)/(name+"-"+leaf)
                 with private.open("xb") as stream:
                     stream.write(data)
-                partial=(name=="restore_before_commit" and leaf==PRIMARY
-                         or name=="backup_before_commit" and leaf==backup)
                 context=inspect_copy(private,partial,name!="stage_before_commit","probe_"+run_id)
                 if context is not None:
                     contexts.add(context)
