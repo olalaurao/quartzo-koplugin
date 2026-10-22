@@ -150,14 +150,47 @@ class CollectorTest(unittest.TestCase):
         self.assertTrue(batch.books[3].missing_book)
         self.assertTrue(all(batch.books[i].md5 is None for i in range(1, 4)))
 
-    def test_invalid_row_fails_whole_batch_without_scan_or_private_error(self):
+    def test_invalid_rows_remain_pending_review_without_canonical_acceptance(self):
         for field, value in (("duration", "0"), ("duration", "86401"), ("duration", "'private'"),
                              ("page", "-1"), ("total_pages", "0"), ("id_book", "NULL"),
                              ("start_time", "253402300800"), ("duration", "1.5")):
             with self.subTest(field=field, value=value):
                 self.mutate("DELETE FROM page_stat_data; INSERT INTO page_stat_data VALUES(1,1,100,20,10);")
                 self.mutate(f"UPDATE page_stat_data SET {field}={value}")
-                self.assertEqual(self.collect(), (None, "invalid_statistics_event"))
+                result = self.collect()
+                self.assertEqual((len(result.event_lines), len(result.rejections), result.scanned_count), (0, 1, 1))
+                self.assertEqual(result.rejections[1].reason, "invalid_statistics_event")
+                self.assertFalse(result.canonical_ack)
+                self.assertIsNone(result.acknowledged_watermark)
+                self.assertIsNotNone(result.next_scan)
+
+    def test_page_zero_review_preserves_raw_integer_and_does_not_block_valid_neighbors(self):
+        self.mutate("""INSERT INTO page_stat_data VALUES(1,0,100,20,10),
+          (1,1,100,20,10),(1,2,101,20,10);""")
+        first = self.collect(limit=1)
+        self.assertEqual((len(first.event_lines), len(first.rejections)), (0, 1))
+        self.assertEqual(first.rejections[1].integer_fields.page, "0")
+        self.assertFalse(first.complete)
+        second = self.collect(limit=2, after=first.next_scan)
+        self.assertTrue(second.complete)
+        self.assertEqual((len(second.event_lines), len(second.rejections)), (2, 0))
+        self.assertFalse(second.canonical_ack)
+
+    def test_corrupt_large_text_is_not_copied_and_int64_rejection_is_lossless(self):
+        self.mutate("""INSERT INTO page_stat_data VALUES(1,1,100,20,10),(1,1,101,20,10);
+          UPDATE page_stat_data SET duration=CAST(zeroblob(1048576) AS TEXT) WHERE start_time=100;
+          UPDATE page_stat_data SET duration=9223372036854775807 WHERE start_time=101;""")
+        result = self.collect()
+        self.assertEqual(len(result.rejections), 2)
+        self.assertEqual(result.rejections[1].field_types[4], "text")
+        self.assertIsNone(result.rejections[1].integer_fields.duration_seconds)
+        self.assertEqual(result.rejections[2].integer_fields.duration_seconds, "9223372036854775807")
+
+    def test_unrepresentable_scan_key_blocks_without_an_unsafe_continuation(self):
+        for value in ("'private source text'", "9223372036854775807"):
+            self.mutate("DELETE FROM page_stat_data; INSERT INTO page_stat_data VALUES(1,1,100,20,10)")
+            self.mutate("UPDATE page_stat_data SET start_time=" + value)
+            self.assertEqual(self.collect(), (None, "invalid_statistics_event"))
 
     def test_invalid_context_scan_and_limits_are_rejected(self):
         self.fixture()

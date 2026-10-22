@@ -105,8 +105,12 @@ or after database maintenance; overlap/deterministic identity handles repeats.
 Mutable snapshots and arbitrarily backdated insertions need later lifecycle/
 epoch/backfill handling; this module establishes no continuous-source receipt.
 
-Any invalid native row rejects the whole batch without continuation. Positive
-durations over86400 seconds are rejected without clamping or changing identity.
+Invalid numeric fields, including native page zero, remain bounded pending-review
+descriptors: exact integer text and type flags, with arbitrary TEXT/BLOB omitted.
+They grant no event, receipt or right to discard the source. Unsafe scan keys
+reject the whole batch without continuation. Positive durations over86400 seconds
+are rejected without clamping or changing identity. Later durable state must
+preserve review and cannot advance an acknowledged checkpoint across it.
 Safe earlier/later dates use SQLite UTC conversion, avoiding host timezone and
 32-bit `os.date` limits. Close failure suppresses all collected results. Loading
 the module has no DB access; the normal plugin still invokes only diagnostics.

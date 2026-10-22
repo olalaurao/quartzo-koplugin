@@ -30,8 +30,12 @@ scan. Rowid is only a transient tie-breaker within a source scan, never event
 identity, persisted state or an acknowledged watermark. Each read revalidates
 schema and closes its short snapshot. Reopen inclusive time overlap for replay;
 any canonical checkpoint still requires later trusted per-event receipts.
-Malformed rows reject the complete batch without a candidate continuation;
-there is no filter silently losing invalid durations/pages or source history.
+Malformed numeric payloads become bounded pending-review descriptors, retaining
+exact integer text and type flags without copying arbitrary corrupt text/blob.
+They never become canonical events. An unrepresentable time/rowid scan key
+still rejects the complete batch without a continuation; no filter silently
+loses invalid durations/pages or source history. The transient scan can reach
+valid neighbors, but no acknowledged checkpoint may cross unresolved review.
 
 The new module is packaged but has no menu/startup/lifecycle caller. Existing
 diagnostics remain manual. No device install, Wi-Fi/network, outbox/state,
@@ -49,6 +53,24 @@ An initial row-value query required90,034 VM steps to resume the last ten of
 covered by a strict1,500-instruction synthetic bound and native result fixtures;
 no new index is introduced. Earlier local fixture passes are preserved separately.
 Full seven-topic goal remains ACTIVE in topic2; PhaseD is not started.
+
+Follow-up source audit: exact9dd7fa3 CI39719457802 passed253 cases without
+skips (104 plugin,34 transport,115 wire) with actual official native SQLite
+and matching17,233-byte package hash. However, an additional host-only check
+of a fresh copy of the existing private PW3 backup stopped with the intended
+`invalid_statistics_event`: ten native rows have page zero. It did not run code
+on the PW3 or open the mounted source DB. The failed host check is preserved;
+it is not relabeled as complete history extraction or physical acceptance.
+
+The ratified contract rejects page zero. Keep that boundary, preserve those
+rows for review, and collect valid neighbors without fabricating a page or
+changing the upstream contract. This concrete counterexample justifies the
+pending-review result; it is not a new persistence/quarantine writer. Later
+PhaseD must retain unresolved review and cannot infer an ACK from next_scan.
+New fixtures cover page-zero boundary progression, no copying a1MiB corrupt
+TEXT value, lossless invalid signed64 integer text and unsafe scan-key rejection.
+Updated collector local42 PASS/21 native-Linux skips (63 total,7.874s);
+updated full/native suite and complete private-copy comparison remain pending.
 
 ## 2026-10-22 — Actual PW3 read-only/normal-reading Gate 2 PASS
 

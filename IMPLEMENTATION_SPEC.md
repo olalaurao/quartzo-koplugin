@@ -14,7 +14,13 @@ overlap; any acknowledged source position still requires trusted receipts in
 later phases. Arbitrarily backdated mutations/DB maintenance require the later
 lifecycle/epoch/backfill policy, not an inferred continuous-source guarantee.
 
-Malformed raw fields reject the whole batch without a continuation. Never hide
+Invalid numeric payloads remain bounded pending-review descriptors, retaining
+exact integer text/type flags without arbitrary TEXT/BLOB. Unsafe scan keys
+reject the whole batch without continuation. Native page zero is observed in
+ten private-backup rows and remains outside the ratified canonical contract;
+do not fabricate a page, discard the row or infer an ACK. Transient scanning
+may reach valid neighbors, but later durable state must retain unresolved
+review and cannot advance an acknowledged checkpoint across it. Never hide
 invalid rows via `total_pages > 0`/duration filters or clamp values. Missing or
 invalid MD5 and missing book metadata do not discard a valid native event: the
 ratified native tuple, not file identity, owns raw evidence. Such rows establish
