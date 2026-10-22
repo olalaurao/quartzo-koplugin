@@ -1,5 +1,11 @@
 # Quartzo ↔ KOReader — Product & Delivery Plan
 
+2026-10-22 Gate3 PASS at1cfd3ec:262 native/fixture CI cases without skips;
+complete private-backup host comparison accounted for5,717 valid events and
+ten retained page-zero review positions over58 bounded batches. No new PW3
+runtime/receipt/production proof is inferred. PhaseD durable state/outbox and
+its physical crash/restart gate are next. The full goal remains open; see STATUS.
+
 2026-10-22 PhaseC candidate0.0.3: bounded native extraction and book/digest
 enumeration reuse the Statistics snapshot owner and existing wire codec.
 Indexed transient same-second pagination preserves native event IDs; malformed

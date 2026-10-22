@@ -1,5 +1,39 @@
 # Implementation Status
 
+## 2026-10-22 — Gate 3 deterministic extraction accepted
+
+Exact `1cfd3ecdf9c6979b786bf7f2cc0e7dfd57c348f2` CI39719998012 passed262
+cases without skips:113 plugin (including34 actual official KOReader native
+SQLite cases),34 transport and115 wire. The18,810-byte Linux/Windows package
+hash matches0b7dcfd0d43acdf78da39f45b39024f1bf8eb4d217fe9af445325cbaefe64fb4.
+Updated final Windows plugin suite:79 PASS/34 explicit native-Linux skips
+(113 total,9.515s). No fixture or contract was weakened to handle page zero.
+
+A fresh private offline copy of the existing PW3 backup was fully traversed in
+58 batches, maximum100 source positions each. Independent Python native-ID and
+canonical-byte reconstruction matched all5,717 valid events. Ten page-zero rows
+remain bounded pending review; all5,727 positions are accounted for. Original
+private backup bytes stayed unchanged. No host SQLite call opened the mounted
+device DB, no new code executed on PW3, no event line/private metadata/date was
+published, and synthetic context grants no production identity or receipt.
+The earlier9dd first host-copy failure remains distinct preserved evidence.
+
+[Source-bound Gate3 evidence](docs/evidence/statistics-extraction-host-2026-10-22.json)
+establishes the specified fixture/native replay gate: same snapshot/same bytes,
+same-second progress, overlap IDs, title invariance, distinct devices/epochs,
+missing metadata, corruption isolation, duration conflicts and reflow. It is
+not physical0.0.3, full performance, continuous-source or release acceptance.
+The development0.0.2 installed on PW3 is untouched and its Gate2 proof remains
+source-specific. PR4 still requires exact final evidence-head checks before the
+standing-authorized merge; no release/production installation is included.
+
+PhaseC/Gate3 PASS. PhaseD is next: plugin-owned durable state/outbox must retain
+selected canonical bytes and unresolved review, preserve device/DB-generation
+identity, recover interruptions and gate pruning/checkpoints on trusted receipt
+positions. Prefer existing native primitives; no second canonical Reading store,
+JSON/hash/date provider or new background service. Full goal remains ACTIVE,
+topic2/7; later ingestion/provenance/Readwise/effects/UI/release remain open.
+
 ## 2026-10-22 — Gate 2 merged; bounded Phase C candidate
 
 PR3 merged as `92dfa8a27106c4a239783b79322f1a407030ca6c` after exact

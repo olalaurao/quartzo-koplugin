@@ -1,6 +1,6 @@
 # Quartzo ↔ KOReader — Implementation Specification
 
-2026-10-22 PhaseC candidate0.0.3 (takes precedence over historical SQL below):
+2026-10-22 PhaseC0.0.3 accepted fixture/native Gate3 (historical SQL superseded):
 Reuse the existing Statistics read-only/schema/snapshot owner and wire codec.
 Book enumeration is keyset-bounded; event collection defaults50/max100 rows,
 with one bounded lookahead and at most two native time-index seeks per batch.
@@ -35,8 +35,10 @@ unknown; no event-day, duration-policy or automation projection is fabricated.
 The packaged collector takes an explicit codec/device/epoch/observation and has
 no startup/menu/lifecycle caller. Existing tools codec is still the sole owner;
 production composition may relocate it with its consumers, never copy it. No
-state/outbox/ACK/network/production effect is enabled. Deterministic fixture and
-native CI acceptance are pending; actual installed0.0.2 Gate2 evidence remains
+state/outbox/ACK/network/production effect is enabled. Exact1cfd3ec passed262
+native/fixture CI cases without skips; a full private-backup host comparison
+accounted for5,717 valid events plus ten page-zero pending-review positions.
+Gate3 is PASS; PhaseD is next. Actual installed0.0.2 Gate2 evidence remains
 source-specific. This is not a new PW3 or release acceptance report.
 
 
