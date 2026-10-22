@@ -1,0 +1,11 @@
+{
+  "items": [{
+    "name": "Quartzo offline outbox diagnostic",
+    "items": [{
+      "name": "Run synthetic offline outbox test",
+      "action": "sh /mnt/us/extensions/quartzo-outbox-probe/run.sh",
+      "exitmenu": true,
+      "status": false
+    }]
+  }]
+}

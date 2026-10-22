@@ -1,5 +1,27 @@
 # Implementation Status
 
+## 2026-10-22 — Offline outbox physical block preparation (not installed)
+
+The user cannot operate either device now. Preparing a finite synthetic KUAL
+probe using the SAME outbox, codec and paired consumer, with no source/Statistics
+access, networking, pairing, receipt issuance or production registration. Six
+owned native child processes stop via SIGKILL before/after stage, backup and
+restore commits; parent-death termination and bounded waits prevent an orphan
+worker. Positive paired receipt/prune remains a separate Android/PW3 proof.
+
+The existing source-bound single-use bundle/launcher owner is reused. Collection
+checks native/source fingerprints and independently examines only bounded private
+copies of synthetic diagnostic SQLite files. Matching reports never attest a
+physical run or close Gate4. Official standalone Linux LuaJIT/LFS are added to the
+same hash-pinned test archive allowlist; no runtime dependency is shipped.
+
+Local first focused bundle attempt failed two fixture checks (missing-parent
+exception expectation and unclosed Python test connection). Corrected only those
+fixtures; five bundle cases now PASS, standalone Linux case explicitly skipped on
+Windows. Exact-head native CI is still required. No new artifact is installed or
+device execution requested. Runtime0.0.5 remains unchanged; full goal ACTIVE,
+topic2/7, Gate4 OPEN, later topics/DoD incomplete.
+
 Final test-harness hygiene: killed children now place their synthetic fixtures
 inside the parent's owned temporary root, so normal parent cleanup also removes
 the child's leftover fixture files without running child finally/SQLite close.

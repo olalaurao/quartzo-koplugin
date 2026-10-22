@@ -7,6 +7,7 @@ import re
 import secrets
 import shutil
 import subprocess
+from dataclasses import dataclass
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 NAME = "quartzo-wire-probe"
@@ -25,6 +26,18 @@ SOURCE_MAP = {
 METADATA = {"bundle-manifest.json", "public-session.json"}
 RUNTIME = {"run.lock", "launcher-status.txt", "device-observation.json", "device-observation.json.tmp"}
 NATIVE = {"dkjson": "common/dkjson.lua", "sha2": "ffi/sha2.lua"}
+
+
+@dataclass(frozen=True)
+class ProbeDefinition:
+    """The two explicit offline probes share this existing artifact owner."""
+    name: str
+    sources: dict
+    native: dict
+    runtime_directories: frozenset = frozenset()
+
+
+WIRE = ProbeDefinition(NAME, SOURCE_MAP, NATIVE)
 
 
 def sha(data):
@@ -73,31 +86,31 @@ def encoded(value):
     return json.dumps(value, sort_keys=True, separators=(",", ":")).encode("utf-8")
 
 
-def read_sources(revision):
+def read_sources(revision, definition=WIRE):
     if not hexadecimal(revision, 40):
         raise ValueError("Exact committed probe source required")
     resolved = subprocess.run(["git", "rev-parse", revision + "^{commit}"], cwd=ROOT, capture_output=True, check=True).stdout.decode().strip()
     if resolved != revision:
         raise ValueError("Probe commit mismatch")
     values = {}
-    for name, source in SOURCE_MAP.items():
+    for name, source in definition.sources.items():
         value = subprocess.run(["git", "show", revision + ":" + source], cwd=ROOT, capture_output=True, check=True).stdout
         if name == "run.sh":
             if value.count(b"quartzo-transport-probe") != 1:
                 raise ValueError("Unsupported launcher template")
-            value = value.replace(b"quartzo-transport-probe", NAME.encode("ascii"))
+            value = value.replace(b"quartzo-transport-probe", definition.name.encode("ascii"))
         if len(value) > 65536 or b"\r" in value:
             raise ValueError("Unsupported probe source bytes")
         values[name] = value
     return values
 
 
-def prepare(output, revision):
+def prepare(output, revision, definition=WIRE):
     output = pathlib.Path(output).absolute()
     plain_root(output.parent)
     if output.exists() or output.is_symlink() or output.is_junction():
         raise ValueError("Fresh probe bundle required")
-    values = read_sources(revision)
+    values = read_sources(revision, definition)
     manifest = dict(probe_version=1, run_id=secrets.token_hex(16), koreader_baseline=BASELINE,
                     source_commit=revision, files={name: sha(value) for name, value in values.items()})
     manifest_bytes = encoded(manifest)
@@ -106,15 +119,16 @@ def prepare(output, revision):
     for name, value in {**values, "bundle-manifest.json": manifest_bytes, "public-session.json": encoded(session)}.items():
         with (output / name).open("xb") as stream:
             stream.write(value)
-    verify_bundle(output)
+    verify_bundle(output, definition=definition)
     return manifest
 
 
-def verify_bundle(directory, allow_runtime=False):
+def verify_bundle(directory, allow_runtime=False, definition=WIRE):
     directory = plain_root(directory)
-    expected = set(SOURCE_MAP) | METADATA
+    expected = set(definition.sources) | METADATA
     actual = {entry.name for entry in directory.iterdir()}
-    if not expected <= actual or actual - expected - (RUNTIME if allow_runtime else set()):
+    runtime = RUNTIME | definition.runtime_directories
+    if not expected <= actual or actual - expected - (runtime if allow_runtime else set()):
         raise ValueError("Unexpected probe bundle entry")
     for name in actual:
         path = directory / name
@@ -123,6 +137,9 @@ def verify_bundle(directory, allow_runtime=False):
         if name == "run.lock":
             if not path.is_dir() or any(path.iterdir()):
                 raise ValueError("Unsupported launcher lock")
+        elif name in definition.runtime_directories:
+            if not path.is_dir():
+                raise ValueError("Owned diagnostic directory required")
         elif not path.is_file():
             raise ValueError("Regular probe file required")
     manifest_bytes = read(directory / "bundle-manifest.json", 8192)
@@ -130,9 +147,9 @@ def verify_bundle(directory, allow_runtime=False):
     if (set(manifest) != {"probe_version", "run_id", "koreader_baseline", "source_commit", "files"}
         or type(manifest["probe_version"]) is not int or manifest["probe_version"] != 1
         or not hexadecimal(manifest["run_id"], 32) or manifest["koreader_baseline"] != BASELINE
-        or not isinstance(manifest["files"], dict) or set(manifest["files"]) != set(SOURCE_MAP)):
+        or not isinstance(manifest["files"], dict) or set(manifest["files"]) != set(definition.sources)):
         raise ValueError("Unsupported probe manifest")
-    sources = read_sources(manifest["source_commit"])
+    sources = read_sources(manifest["source_commit"], definition)
     for name, source in sources.items():
         value = read(directory / name, 65536)
         if value != source or sha(value) != manifest["files"][name]:
@@ -143,47 +160,47 @@ def verify_bundle(directory, allow_runtime=False):
     return manifest, sha(manifest_bytes)
 
 
-def native_snapshot(root):
+def native_snapshot(root, definition=WIRE):
     root = plain_root(root)
     if read(root / "koreader/git-rev", 64).decode().strip() != BASELINE:
         raise ValueError("Mounted KOReader baseline differs")
     runtime = root / "koreader/luajit"
     if runtime.is_symlink() or runtime.is_junction() or not runtime.is_file():
         raise ValueError("KOReader runtime missing")
-    values = {key: sha(read(root / "koreader" / name, 1048576)) for key, name in NATIVE.items()}
+    values = {key: sha(read(root / "koreader" / name, 2097152)) for key, name in definition.native.items()}
     return values
 
 
-def install(bundle, root):
+def install(bundle, root, definition=WIRE):
     bundle, root = plain_root(bundle), plain_root(root)
-    manifest, manifest_digest = verify_bundle(bundle)
-    native = native_snapshot(root)
+    manifest, manifest_digest = verify_bundle(bundle, definition=definition)
+    native = native_snapshot(root, definition)
     extensions = plain_root(root / "extensions")
     if extensions.parent != root or shutil.disk_usage(root).free < 4 * 1024 * 1024:
         raise ValueError("Mounted test target unavailable or too little space")
-    target = extensions / NAME
+    target = extensions / definition.name
     if target.exists() or target.is_symlink() or target.is_junction():
         raise ValueError("Existing diagnostic is preserved")
     target.mkdir(exist_ok=False)
-    for name in set(SOURCE_MAP) | METADATA:
+    for name in set(definition.sources) | METADATA:
         with (target / name).open("xb") as stream:
             stream.write(read(bundle / name, 65536))
-    if verify_bundle(target) != (manifest, manifest_digest) or native_snapshot(root) != native:
+    if verify_bundle(target, definition=definition) != (manifest, manifest_digest) or native_snapshot(root, definition) != native:
         raise ValueError("Installed probe or runtime changed")
     return dict(probe_version=1, run_id=manifest["run_id"], manifest_digest=manifest_digest,
                 source_commit=manifest["source_commit"], koreader_version=BASELINE,
                 native_source_sha256=native, canonical_ack=False, production_changed=False)
 
 
-def collect(bundle, root, observation):
-    manifest, manifest_digest = verify_bundle(bundle)
+def collection_inputs(bundle, root, observation, definition=WIRE):
+    manifest, manifest_digest = verify_bundle(bundle, definition=definition)
     root = plain_root(root)
-    target = root / "extensions" / NAME
-    if verify_bundle(target, allow_runtime=True) != (manifest, manifest_digest):
+    target = root / "extensions" / definition.name
+    if verify_bundle(target, allow_runtime=True, definition=definition) != (manifest, manifest_digest):
         raise ValueError("Installed probe differs from prepared source")
     expected = dict(probe_version=1, run_id=manifest["run_id"], manifest_digest=manifest_digest,
                     source_commit=manifest["source_commit"], koreader_version=BASELINE,
-                    native_source_sha256=native_snapshot(root), canonical_ack=False, production_changed=False)
+                    native_source_sha256=native_snapshot(root, definition), canonical_ack=False, production_changed=False)
     if encoded(parse(read(observation, 4096))) != encoded(expected):
         raise ValueError("Installation observation no longer matches")
     if read(target / "launcher-status.txt", 64).strip() != b"completed" or not (target / "run.lock").is_dir():
@@ -191,6 +208,11 @@ def collect(bundle, root, observation):
     if (target / "device-observation.json.tmp").exists():
         raise ValueError("Unfinished device report remains")
     device = parse(read(target / "device-observation.json", 8192))
+    return manifest, manifest_digest, expected, device, target
+
+
+def collect(bundle, root, observation, definition=WIRE):
+    manifest, manifest_digest, expected, device, target = collection_inputs(bundle, root, observation, definition)
     required = {"probe_version": 1, "phase": "passed", "source_data": "synthetic", "uses_synthetic_clock": True,
         "canonical_ack": False, "canonical_persistence_proven": False, "statistics_accessed": False,
         "source_cursor_changed": False, "network_accessed": False, "wifi_changed": False,
@@ -217,7 +239,7 @@ def collect(bundle, root, observation):
                     ("lua_version", "jit_version", "jit_arch", "json_version", "koreader_version", "cpu_seconds")})
 
 
-def main():
+def main(definition=WIRE, collector=collect):
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
     prepare_parser = commands.add_parser("prepare")
@@ -233,13 +255,13 @@ def main():
     args = parser.parse_args()
     try:
         if args.command == "prepare":
-            prepare(args.output, args.source_commit)
+            prepare(args.output, args.source_commit, definition)
         else:
             destination = args.observation if args.command == "install" else args.output
             plain_root(destination.absolute().parent)
             if destination.exists() or destination.is_symlink() or destination.is_junction():
                 raise ValueError("Fresh host observation path required")
-            report = install(args.bundle, args.kindle_root) if args.command == "install" else collect(args.bundle, args.kindle_root, args.observation)
+            report = install(args.bundle, args.kindle_root, definition) if args.command == "install" else collector(args.bundle, args.kindle_root, args.observation, definition)
             with destination.open("xb") as stream:
                 stream.write(encoded(report))
         print("Offline diagnostic operation completed; no canonical ACK or physical attestation inferred")
