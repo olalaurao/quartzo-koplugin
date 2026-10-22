@@ -32,6 +32,10 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y --no-install-recommends lua5.1 lua-sec lua-socket
           lua5.1 -e 'assert(_VERSION == "Lua 5.1"); assert(require("ssl")._VERSION == "1.3.2"); assert(require("ssl.https")._VERSION == "1.3.2")'
+      - name: Plugin bootstrap and exact package (no physical install proof)
+        run: |
+          python -m unittest discover -s tools/plugin -p 'test_*.py' -v
+          python tools/plugin/package.py --output "$RUNNER_TEMP/quartzo-bootstrap.zip"
       - name: Lua 5.1, TLS, bundle and process tests (no Kindle proof)
         run: |
           python -m unittest discover -s tools/transport_probe -p 'test_*.py' -v

@@ -3,3 +3,5 @@
 IMPLEMENTATION_SPEC.md diff
 # Pinned upstream bytes and generated reference fingerprints must survive checkout.
 tools/reading_wire/** text eol=lf
+quartzo.koplugin/** text eol=lf
+tools/plugin/** text eol=lf

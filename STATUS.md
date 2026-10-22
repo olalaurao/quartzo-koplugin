@@ -1,5 +1,36 @@
 # Implementation Status
 
+## 2026-10-21 — Phase A bootstrap implemented; physical Gate 1 pending
+
+Branch `feature/reading-plugin-bootstrap` adds only `_meta.lua`/`main.lua`, a
+Quartzo Tools entry and versioned local diagnostics. The pinned KOReader
+PluginLoader supplies metadata; canonical DataStorage supplies reserved own
+config/state paths without reading or writing them. No Statistics, network,
+Reader import, outbox, lifecycle trigger or sync activation is added.
+
+Local bootstrap tests passed on both Lua 5.1 and LuaJIT: six behavior cases,
+including load without a document, canonical path/menu registration and inert
+diagnostics with filesystem/process/network dependencies unavailable. One
+package case passed exact two-file allowlist, byte reproducibility and refusal
+to overwrite an existing archive. CI now executes these seven cases and builds
+the exact package alongside the existing transport/wire suites. These local
+tests are not a PW3 install/start/menu/remove proof; Gate 1 remains OPEN.
+
+Foundation sources remain Quartzo `2261cf8f` and KOReader `e331f441`, based on
+actual physical host `0e026599`/APK `7d3b6735`/Kindle `47aa17f`. Reader stable
+tags satisfy sequencing; Companion main remains `10e840ab`, with no new lock or
+contract changes. The user's standing authorization now permits merging PRs
+within this goal after **all exact-head checks** pass. It does not publish a
+release or install into production. PR67 still awaits its final CI, PR1's
+exact-head CI passed; neither is claimed merged here.
+
+Next: final CI/package verification, source-bound offline PW3 install/start/menu
+and removal/restart acceptance as documented in `tools/plugin/README.md`. Only
+after Gate 1 passes may Phase B implement bounded read-only Statistics access.
+No device installation has happened in this Phase A checkpoint. Full seven-topic
+goal remains ACTIVE and incomplete; data-loss risk is limited by the bootstrap's
+absence of data access, not asserted as a substitute for physical acceptance.
+
 ## 2026-10-21 — Paired PW3/profile trial passed; Gate 0 foundation accepted
 
 The user executed exact47aa17f through KUAL against the verified ARM64 profile

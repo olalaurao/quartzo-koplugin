@@ -1,15 +1,20 @@
 # Quartzo KOReader Plugin
 
-Planned KOReader plugin for synchronizing reading activity from KOReader into Quartzo.
+KOReader plugin in development for synchronizing reading activity into Quartzo.
 
-> **Status:** G03 and the finite G04 transport spike accepted with source-bound PW3/profile-Android receipts and canonical bytes. Gate 0 foundation criteria are met; plugin bootstrap/install-remove and read-only Statistics/schema implementation are next. No production plugin is installed and no ingestion/effect is enabled. See STATUS for the exact proof boundaries.
+> **Status:** Gate 0 foundation criteria are met. The minimal Phase A bootstrap is implemented and host-tested; physical install/start/menu/remove Gate 1 remains open. Statistics access, ingestion and effects are inactive. See STATUS for source-bound evidence and remaining gates.
+
+The bootstrap package and offline physical acceptance steps are documented in
+[tools/plugin](tools/plugin/README.md). The plugin's Quartzo Tools entry currently
+shows its version and inactive integration status.
 
 Independent Gate 0B client preparation and real-Lua-5.1 host logic tests are in
 [tools/transport_probe](tools/transport_probe/README.md). This is diagnostic-only,
 with a temporary host TLS fixture, a single-use KUAL diagnostic launcher and
 explicit fresh-folder bundle installation/collection. The [physical PW3 diagnostic](docs/evidence/transport-probe-pw3-2026-10-16.json)
-passed TLS/auth/error/retry/replay on KOReader v2026.07.1; canonical ACK and full
-G04 acceptance remain open. Temporary files were manually removed and their
+passed TLS/auth/error/retry/replay on KOReader v2026.07.1. A later independently
+collected normal-pairing trial passed the finite G04 spike; production outbox
+acknowledgement remains separate. Temporary files were manually removed and their
 absence verified with Kindle mounted, as recorded in STATUS. This is not the production plugin.
 
 ## Goal
@@ -68,7 +73,9 @@ Read these before implementation:
 
 Quartzo currently centers normal content persistence on its vault/Google Drive architecture rather than exposing an assumed always-on ingestion API.
 
-So the project deliberately does **not** hard-code a transport yet. Before general plugin work, Gate 0 must establish:
+Gate 0 established the canonical owners and a finite app-hosted HTTPS route with
+independently approved exact peer identity. Before general synchronization it
+must retain proof of:
 
 1. the canonical persisted owner of Reading Activity inside Quartzo;
 2. the authenticated Kindle → Quartzo transport;
