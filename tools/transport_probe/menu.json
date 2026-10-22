@@ -1,0 +1,11 @@
+{
+  "items": [{
+    "name": "Quartzo transport diagnostic",
+    "items": [{
+      "name": "Run synthetic TLS test (Wi-Fi already on)",
+      "action": "sh /mnt/us/extensions/quartzo-transport-probe/run.sh",
+      "exitmenu": true,
+      "status": false
+    }]
+  }]
+}

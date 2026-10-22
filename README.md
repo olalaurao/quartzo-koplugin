@@ -2,7 +2,15 @@
 
 Planned KOReader plugin for synchronizing reading activity from KOReader into Quartzo.
 
-> **Status:** planning complete; implementation intentionally deferred until the current `olalaurao/reader` Readwise Reader plugin reaches the desired stable V1/tag, unless that sequencing is explicitly changed.
+> **Status:** G03 and the finite G04 transport spike accepted with source-bound PW3/profile-Android receipts and canonical bytes. Gate 0 foundation criteria are met; plugin bootstrap/install-remove and read-only Statistics/schema implementation are next. No production plugin is installed and no ingestion/effect is enabled. See STATUS for the exact proof boundaries.
+
+Independent Gate 0B client preparation and real-Lua-5.1 host logic tests are in
+[tools/transport_probe](tools/transport_probe/README.md). This is diagnostic-only,
+with a temporary host TLS fixture, a single-use KUAL diagnostic launcher and
+explicit fresh-folder bundle installation/collection. The [physical PW3 diagnostic](docs/evidence/transport-probe-pw3-2026-10-16.json)
+passed TLS/auth/error/retry/replay on KOReader v2026.07.1; canonical ACK and full
+G04 acceptance remain open. Temporary files were manually removed and their
+absence verified with Kindle mounted, as recorded in STATUS. This is not the production plugin.
 
 ## Goal
 
@@ -31,7 +39,9 @@ The plugin is intended to work with ordinary KOReader documents as well as files
 - Kindle Paperwhite 3 / 7th generation
 - Firmware 5.16.2.1.1
 - KUAL
-- KOReader 2025.04
+- KOReader v2026.07.1 (`kindlepw2`), physically documented Reader baseline; confirm current installation before new tests
+
+The 2026-10-16 integrated scope adds gated one-way status evidence and opt-in promotion only for proven Reader-origin KOReader reading, through the upstream Resource owner. Reader-only remains external, ordinary unmatched events remain preserved, and no staging ACK or automatic effect is enabled. See the precedence reconciliation in `IMPLEMENTATION_SPEC.md`.
 
 ## Project documents
 

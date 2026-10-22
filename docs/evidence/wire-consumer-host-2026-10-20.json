@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "sourceCommit": "8ef0851f55d9a486fd615040c099426b86668b79",
+  "sourceTree": "a8b6926906920ac29923ea3e4f6cab99216c6d35",
+  "sourceSha256": {
+    "tools/reading_wire/codec.lua": "e4fcbe04b31d8925bd2ce929f9d52b1c3dc89f59d283a14c0375d46f1f3ffb93",
+    "tools/reading_wire/koreader_deps.lua": "ba20d6619e0572e2b5860be4059f17d065b3f4414cb5f3a76cbc9a195e128418",
+    "tools/reading_wire/test_codec.py": "604e309ce78c50688d6abd6d5a7e746b4a5f5eb609b69d0393dfafb34f6c493a",
+    "tools/reading_wire/test_native_provider.py": "754c7abbc64c35a60e873657211a1fa553ff33c16532ce5475b52b3fe7beadf1",
+    "tools/reading_wire/UPSTREAM.lock.json": "b0ab24bb97c8e2967ccc7d2156dbb1d86177e830c197f1b7aacea30fe57ab43d",
+    "tools/reading_wire/REFERENCE_RUNTIME.lock.json": "b275af60be3834ab13fb4a4ba62890fd9fbcffc663b2ca3f984958347be0d080",
+    "tools/reading_wire/prepare_reference_runtime.py": "e0094b29ee7d421f9daf7c893af8de882ecf7b86888dc72cdbc4e7b9c800b24c",
+    "tools/reading_wire/verify_upstream.py": "44f728f11581597d79f330f29a8660c668347e5e7fd746519f894aa99e2a5e32",
+    "tools/reading_wire/dart_reference.dart": "c24c1c41ea79c33d9a94256c6ef353dd3e0bb8447569b49cb16bed1c6a798be7",
+    "tools/reading_wire/dart_reference.json": "8f3fde39cc0d86d3ddc22ddcef6b8158b553c6ecddb06f10304854b65054aabb",
+    "tools/reading_wire/dart_reference.provenance.json": "7f606255ad9a2dbcb9e16e498f133046cd41b9febb6847b0387b464863d50a9d"
+  },
+  "upstream": {
+    "repository": "olalaurao/aplicativo",
+    "sourceCommit": "e7a661d4ed6d572cdbf722f4e697fea461005b69",
+    "verifiedFiles": 6
+  },
+  "ci": {
+    "url": "https://github.com/olalaurao/quartzo-koplugin/actions/runs/39372532998",
+    "headSha": "8ef0851f55d9a486fd615040c099426b86668b79",
+    "conclusion": "success",
+    "diagnosticTests": {
+      "passed": 34,
+      "skipped": 0,
+      "seconds": 12.289
+    },
+    "wireTests": {
+      "passed": 38,
+      "skipped": 0,
+      "seconds": 1.263
+    }
+  },
+  "cleanWindowsCheckout": {
+    "wirePassed": 38,
+    "skipped": 0,
+    "seconds": 1.383
+  },
+  "coverage": {
+    "upstreamNegativeCases": 12,
+    "actualDartReferenceCases": 5,
+    "injectedProviderLua51Cases": 18,
+    "actualLibraryLuaJIT21Cases": 18,
+    "providerBoundaryCases": 2
+  },
+  "proof": {
+    "syntheticInputs": true,
+    "actualHostLuaLibraries": true,
+    "installedPW3LibraryIdentity": false,
+    "armRuntime": false,
+    "newPhysicalRun": false,
+    "realDrive": false,
+    "realObsidian": false,
+    "canonicalAck": false,
+    "sourceCursorEnabled": false,
+    "productionInstalled": false
+  }
+}

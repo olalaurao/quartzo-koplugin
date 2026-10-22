@@ -1,0 +1,11 @@
+{
+  "items": [{
+    "name": "Quartzo wire diagnostic",
+    "items": [{
+      "name": "Run synthetic offline wire test",
+      "action": "sh /mnt/us/extensions/quartzo-wire-probe/run.sh",
+      "exitmenu": true,
+      "status": false
+    }]
+  }]
+}

@@ -1,8 +1,32 @@
 # Quartzo ↔ KOReader — Product & Delivery Plan
 
+Current execution checkpoint: the new exact47aa17f/profile7d3b6735 PW3/Android
+trial passed independent per-event receipt, canonical-byte and replay collection.
+Its normal completion, credential revocation and full diagnostic cleanup were
+verified. The prior two physical failures remain preserved. The upstream G04
+audit passes the finite transport spike; G03 is separately PASS. Gate0A/0B/0C
+foundation criteria are met. Next implement PhaseA bootstrap/install-remove,
+then PhaseB bounded read-only Statistics/schema probe. This does not enable
+ingestion,outbox/cursor,Resource effects or later production/release behavior.
+
+Current G04 work now includes finite source receipt composition through the
+existing codec/carrier, conditioned on an independently approved exact pairing
+document from the canonical Quartzo receiver. It adds no production plugin,
+Statistics access or outbox/cursor. Finite actual approval/native interoperability
+and source-bound physical receipt acceptance are recorded in STATUS. Reusable
+production enrollment/import and later runtime gates remain separate.
+
+2026-10-20 checkpoint: actual exact-source PW3/Android finite canonical wire
+diagnostic passed independent byte/report collection (three shards, three
+synthetic events / 120 seconds; zero transport errors; credential revoked).
+Owned device diagnostics and active private session material were removed.
+See the current STATUS evidence. This supersedes earlier pending diagnostic
+execution notes only; canonical ACK/cloud races/production lifecycle and later
+gates remain open. No production activation follows this diagnostic.
+
 > **Repository:** `olalaurao/quartzo-koplugin`  
-> **Status:** planned / intentionally deferred  
-> **Primary target:** Kindle Paperwhite 3 / 7th gen (PW3), firmware 5.16.2.1.1, KUAL, KOReader 2025.04  
+> **Status:** Gate 0 reconciliation in progress; production phases blocked
+> **Primary target:** Kindle Paperwhite 3 / 7th gen (PW3), firmware 5.16.2.1.1, KUAL, KOReader v2026.07.1 (`kindlepw2`)
 > **Implementation sequence dependency:** finish and stabilize `olalaurao/reader` V1 first  
 > **Canonical execution spec:** `IMPLEMENTATION_SPEC.md`  
 > **Progress ledger:** `STATUS.md`  
@@ -10,7 +34,38 @@
 
 ---
 
+## 2026-10-16 adopted scope
+
+The current execution reconciliation is in `IMPLEMENTATION_SPEC.md` and `STATUS.md`. KOReader v2026.07.1 `kindlepw2` is the physically documented Reader baseline; 2025.04 references below record the original research only. USB inspection confirmed v2026.07.1, SimpleUI 2.7.5, Extra 1.15.0 and Reader 1.3.0-rc.1. The isolated synthetic KUAL TLS/auth/error/retry/replay diagnostic subsequently passed on the actual PW3 with nine requests in about five seconds; canonical persistence/ACK and full production transport are still unproved. See the source-specific sanitized physical report and cleanup limitation in STATUS.
+
+The integrated product now includes gated one-way status evidence and opt-in promotion of verified Reader-origin KOReader reading through the upstream Resource owner. Ordinary files stay unmatched without a proven link. Reader-only catalog/progress never creates Resource or minutes. Bidirectional writeback remains excluded. Upstream PR65 ratified the canonical-store/identity/status/transport contracts at e7a661d4 after its necessary checks; Companion adopted that exact pin and authorized guarded-owner PR86 merged as 34d1244 with green main CI. Official preflight passed; a subsequently approved pairing-mode fix merged as 5ba99fd with its own green main CI/official Preflight. Corrected artifact staging is complete, while actual live sandbox acceptance remains separate. Actual-owner synthetic exchange and source-specific Android/PW3 diagnostics do not pass 0A/0B/0C or authorize production phases. No durable staging ACK, title-only identity or shared MD5 row collapse.
+
+Gate 0C also has a pinned pure Lua wire consumer under `tools/reading_wire/`, with canonical byte/native identity validation and untrusted response projections. It is outside the production plugin. A separate exact-source offline KUAL diagnostic passed on the actual PW3 ARM runtime, verifying installed native JSON/SHA source identities and contract cases. Authenticated receipt verification, production lifecycle and device/outbox acknowledgement remain open as recorded in STATUS.
+
+Actual official 5ba99fd acceptance failed with zero-byte synthetic Drive uploads.
+The separately authorized PR89/90 fixes then merged as 5b69a6e/8c51589, with green
+normal main CIs and official exact-main Preflights. Only the paired Manual sandbox
+received the verified final artifact. Actual canonical reconciliation preserved
+good Reading originals and explicit original-byte repair restored their remote
+copies; independent downloads matched. Fresh opaque Reading/binary creation,
+ordinary update and restart/quiet replay also passed. These are partial actual
+byte/recovery observations. A separate actual reviewed-adoption UI case then
+published one 83-byte opaque fixture and independently verified all six unique
+files/hashes. Actual multi-client cloud races, authenticated receiver delivery
+and durable source ACK still gate production.
+See STATUS and the source-bound Companion evidence; no later phase is activated.
+
 # 1. Mission
+
+Gate 0B diagnostic tooling may be prepared and tested independently of open
+G01–G03, as allowed by the adopted integrated gate matrix, provided it makes no
+production write or canonical ACK claim. `tools/transport_probe/` currently
+contains the bounded client/adapter, ephemeral TLS fixture host, single-use KUAL
+diagnostic launcher, explicit bundle installer/collector, real-Lua-5.1 logic
+tests and real loopback TLS tests. It is not a production Kindle plugin or
+physical transport proof. Production phases still
+require Gate 0A/0B/0C. The event/wire contract is ratified at upstream e7a661d4;
+the chosen route still requires G04 physical authenticated receipt acceptance.
 
 Build a KOReader plugin that synchronizes reading activity from KOReader into Quartzo without turning the Kindle into a second Quartzo implementation and without creating a parallel source of truth.
 
@@ -728,7 +783,7 @@ Use short-lived connection and bounded timeout.
 
 Pass when:
 
-- target DB opens on KOReader 2025.04;
+- target DB opens read-only on KOReader v2026.07.1 (`kindlepw2`);
 - schema is exactly understood;
 - data counts are plausible;
 - reading normally while the probe exists still works;
@@ -1261,7 +1316,7 @@ Primary support target for V1:
 
 - Kindle Paperwhite 3 / 7th generation;
 - firmware 5.16.2.1.1;
-- KOReader 2025.04.
+- KOReader v2026.07.1 (`kindlepw2`).
 
 The code should avoid unnecessary target-specific hacks, but V1 is not blocked on every newer KOReader release.
 

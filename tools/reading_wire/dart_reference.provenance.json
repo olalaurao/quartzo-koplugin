@@ -1,0 +1,14 @@
+{
+  "upstreamRepository": "olalaurao/aplicativo",
+  "sourceCommit": "e7a661d4ed6d572cdbf722f4e697fea461005b69",
+  "modelPath": "lib/models/reading_activity_event.dart",
+  "modelGitBlobSha": "f057a15f01b717ec6b1d452905d914f2f6faee08",
+  "generatorSha256": "c24c1c41ea79c33d9a94256c6ef353dd3e0bb8447569b49cb16bed1c6a798be7",
+  "fixtureSha256": "8f3fde39cc0d86d3ddc22ddcef6b8158b553c6ecddb06f10304854b65054aabb",
+  "proof": {
+    "actualDartModel": true,
+    "syntheticInputs": true,
+    "kindleRuntime": false,
+    "canonicalAck": false
+  }
+}

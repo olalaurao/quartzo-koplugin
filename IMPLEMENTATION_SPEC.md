@@ -1,16 +1,93 @@
 # Quartzo ↔ KOReader — Implementation Specification
 
+The new exact47aa17f/profile7d3b6735 paired PW3/Android trial passed independent
+receipt/canonical-byte/replay collection and verified normal completion,
+revocation,package removal and full manual cleanup. The upstream G04 finite
+transport exit audit and separate G03 audit establish Gate0A/0B/0C foundation
+exit. PhaseA bootstrap/install-remove and PhaseB read-only Statistics/schema
+probe are the next implementations; production ingestion is not enabled.
+Both prior failed trials remain separately preserved, including the certificate
+rejection and original-process LOW_MEMORY exit. No TLS/auth/receipt check or raw
+wire schema was relaxed to obtain this new source-bound physical PASS.
+
+Current physical preparation uses the same single-use bundle/launcher with
+`paired_sequence.lua` and the existing approved-pairing consumer. Six requests
+over three Dart-generated batches deliberately discard one receipt and verify
+five per-event lookups. The actual normal Android receiver issues the document;
+the checked host UID/source channel delivers it over USB. Host keys/OpenSSL
+provisioning is removed. The collector independently reconstructs request and
+event bindings and compares the complete exported canonical byte inventory.
+This remains synthetic/unregistered; actual source-bound PW3/Android execution
+passed the finite gate, while no Statistics/outbox/cursor or production feature is enabled.
+The earlier untrusted-claim sequence remains a host reference, not the current
+physical source. The successful bad10518/6cfdba8 native host join has a separate
+exact-source report and does not silently certify this new orchestration.
+
+The next G04 candidate `tools/reading_wire/paired_exchange.lua` composes the
+existing pure codec and shared pinned TLS carrier only after exact private
+pairing bytes have an independently approved out-of-band fingerprint. It binds
+the normal Quartzo receiver role, endpoint/pin/token, scope/device/epoch and
+finite window; opaque per-session/request receipts expose only completely
+validated committed/duplicate positions. Raw parsers/delivery tables cannot
+grant that acceptance. The canonical UTC parser is reused for pairing windows,
+without a second date engine, crypto receipt protocol, ledger or retry loop.
+This remains unregistered tooling. Source approval/import, actual normal-issuer
+interoperability/native combined-path and fresh device proof remain required;
+synthetic injected-SDK tests do not close G04 or permit G08 ingestion/cursors.
+
+Current G04 preparation adds an opt-in exact-leaf DER SHA-256 gate to the
+existing shared isolated LuaSec/LuaSocket carrier, before HTTP credentials are
+sent. Its opaque process-local delivery capability binds bytes and connection
+context only. It grants no canonical receiver role, durable event ACK, source
+cursor or production registration. Native host acceptance is explicitly
+required separately from injected-SDK tests and from new-source physical PW3
+proof; see `tools/reading_wire/README.md` and current STATUS. Upstream G03 store
+exit was separately audited PASS at Quartzo1db4c13b, using implementation
+ad5986fa's four successful workflows and the original source-bound physical,
+cloud conflict and canonical replay evidence. G04 and later gates stay open.
+Exact ac1ebd2 passed Linux CI39525626234 with all four actual native TLS/pin/
+timeout cases executed,93 wire and34 transport tests without skips. This
+establishes host-carrier acceptance only; it does not satisfy the remaining
+canonical pairing/receipt/lifecycle or new-source device requirements.
+
+2026-10-20 checkpoint: actual exact-source PW3/Android finite canonical wire
+diagnostic passed independent byte/report collection (three shards, three
+synthetic events / 120 seconds; zero transport errors; credential revoked).
+Owned device diagnostics and active private session material were removed.
+See the current STATUS evidence. This supersedes earlier pending diagnostic
+execution notes only; canonical ACK/cloud races/production lifecycle and later
+gates remain open. No production activation follows this diagnostic.
+
 > **Canonical execution specification**  
 > **Repository:** `olalaurao/quartzo-koplugin`  
-> **Target V1 device:** Kindle Paperwhite 3 / 7th gen (PW3), firmware 5.16.2.1.1, KUAL, KOReader 2025.04  
+> **Target V1 device:** Kindle Paperwhite 3 / 7th gen (PW3), firmware 5.16.2.1.1, KUAL, KOReader v2026.07.1 (`kindlepw2`)
 > **Product roadmap:** `PLAN.md`  
 > **Progress ledger:** `STATUS.md`  
-> **Implementation state:** NOT STARTED — planning only  
-> **Last verified planning pass:** 2026-09-22
+> **Implementation state:** Gate 0 reconciliation in progress — production plugin not started
+> **Last reconciled:** 2026-10-21 (historical planning pass: 2026-09-22)
 
 This file is the implementation source of truth once implementation begins. If code and this specification disagree, either the code is wrong or this file must be deliberately updated in the same change, with the reason recorded in `STATUS.md`.
 
 ---
+
+## 2026-10-16 reconciliation (takes precedence over the historical proposals below)
+
+The user adopted the integrated Quartzo Reading Integration requirements. Upstream `olalaurao/aplicativo` PR65 merged as `e7a661d4ed6d572cdbf722f4e697fea461005b69` after its necessary checks, ratifying the active spec `docs/specs/reading-integration.md` and contracts `reading_identity`, `reading_evidence_status`, `reading_activity` including the versioned transport envelope. Companion adopted that exact upstream through its official lock process; authorized PR86 merged as `34d1244ec718cbd100f0f124ed76816dbde9008d`, with identical tested tree and green main CI. Its official exact-main Release Preflight passed. Separately authorized PR88 corrected pairing-mode preservation as 5ba99fd. Authorized PR89/90 subsequently merged as 5b69a6e/8c51589 with green main CIs and exact-main official Preflights. The verified final artifact is installed only in the existing paired Manual sandbox; actual byte repair, new create/update and restart/quiet-replay acceptance have narrow source-bound evidence. Complete cross-client cloud and canonical ACK acceptance remain open. Ratification is distinct from deployment, live interoperability and canonical ACK; Gate 0 is not PASS. STATUS records exact source/build/device proof boundaries.
+
+- Physical documented baseline is KOReader **v2026.07.1**, **kindlepw2**, PW3/G090KB, firmware 5.16.2.1.1, functional jailbreak/KUAL, confirmed by the user and Reader migration guide. 2025.04 remains historical evidence. Confirm installed version before new tests; no firmware/KUAL/jailbreak updates.
+- Actual official 5ba99fd Obsidian/Drive acceptance failed with three zero-byte synthetic uploads despite original hash properties. Authorized PR89 fixed actual renderer multipart/readback; authorized PR90 fixed reviewed adoption/pending feedback and existing canonical guards. Both merged, final official Preflight 39425583160 passed at 8c515898ab919a4b9e214ff84563cd36c6d4c243, and only the sandbox was upgraded. Actual full reconciliation preserved both good Reading originals; explicit Keep local repaired remote copies, and independent downloads verified exact bytes. New opaque Reading/binary creation, ordinary update, actual restart and zero-work replay also passed. Reviewed adoption also passed through the actual UI with an 83-byte fixture and six independently verified remote/local files; actual multi-client cloud races and source ACK remain separate; Gate 0A/0B/0C and production phases remain open. STATUS records sources and proof limits.
+- Reader stable sequencing is satisfied by its stable v1.0.0/v1.2.0 tags and documented acceptance. This does not validate this plugin's transport or Statistics access.
+- Reader-only remains external. Only proven Reader-origin KOReader reading can qualify for opt-in Resource promotion through the upstream canonical owner; ordinary USB/unmatched events never auto-create. Reader-only progress creates neither Resource nor minutes.
+- One-way validated status evidence is now in scope: upstream may reconcile existing linked Resource status with explicit finished/abandoned or reliable progress, preserving manual/terminal intent. Bidirectional status/progress writeback, highlights and another Reader API client remain excluded.
+- Ratified event ID is SHA-256 of compact UTF-8 JSON tuple `[domain,device_id,source_epoch,book_row_id,page,started_at_unix_seconds]`. MD5/title is not the native event key. Duration corrections for the same tuple are conflict, not new events. This supersedes the historical duration/MD5 example below. No production Lua codec has been implemented yet.
+- Ratified canonical destination is immutable bounded vault JSONL shards under `sessions/reading_activity_v1/`, separate from Activity History. Existing vault/sync owners remain responsible. Android local persistence and actual-owner synthetic byte exchange have source-specific evidence; live Drive/Companion and canonical source acknowledgement still need proof.
+- Gate 0A: PASS with ratified canonical domain/G03 ownership; 0B: PASS with actual PW3 HTTPS/auth/error/retry and normal-pairing receipt proof; 0C: PASS with ratified wire/native-ID/duplicate/error fixtures and verified finite receipt boundary. Next is PhaseA bootstrap/install-remove and PhaseB bounded read-only Statistics/schema. No ingestion,outbox/cursor,effect or release is enabled; staging never grants durable ACK or cursor advance. The G04 audit preserves the exact source limits and the separate G08/G16 requirements.
+- The pure `tools/reading_wire/codec.lua` consumer now pins the ratified upstream revision and validates canonical request/response binding, bounded native entries and untrusted claims in Lua 5.1. It is not loaded by the production plugin or TLS diagnostic. The explicit `koreader_deps.lua` adapter targets existing dkjson/ffi-sha2 APIs, probes preserved object/array/null shape and known hashes, and fails without a fallback. Host LuaJIT tests execute the same contract suite through pinned real library source. The separate exact-source offline KUAL probe subsequently passed on the actual PW3 ARM runtime at 1af5a67 with installed native source hashes verified; the user confirmed manual execution. STATUS and the source-bound physical report record counts and narrow proof limits. Physical production performance/lifecycle, authenticated delivery and durable acknowledgement still require proof. No decoded claim grants ACK, durable receipt or source-cursor authority. This is Gate 0C compatibility work, not permission to start later production phases.
+- A separate `quartzo-wire-probe` KUAL diagnostic may test those native providers/codec offline with synthetic fixtures before production gates close. Its exact-commit package and bounded installed-source/report checks must pass first; it can create only its fresh owned extension and diagnostic output, never replace an existing folder or load production Statistics/Reader/device/UI code. It reuses the tested single-use process deadline, performs no network/Wi-Fi operation and exposes no ACK/cursor authority. Host matching observations alone cannot prove physical execution; source-specific PW3 acceptance additionally requires the real mounted target and manual execution observation. See `tools/reading_wire/README.md` and STATUS.
+- `tools/reading_wire/exchange.lua` prepares one explicit canonical-wire diagnostic attempt through the existing shared LuaSec carrier, with request/time checks before network and complete response/time binding afterward. `client.wire_transport` is fixed to the canonical receiver route and bounded header/body inputs under the existing dedicated-test-certificate/private-HTTPS policy. It creates no listener, production transport, automatic retry, credential/outbox owner or ACK/cursor grant. Host injected-HTTPS tests and a syntactically committed claim do not prove native TLS/canonical persistence. Existing physical reports stay source-specific; a combined source-to-canonical diagnostic still needs exact-source package, actual native receiver and new device execution evidence.
+- The separate `sequence.lua` / `sequence_kindle.lua` diagnostic now owns a finite ten-attempt synthetic sequence through that same codec/carrier: rejected test CA, 401, 429 plus one-second pause, 503, deliberately discarded successful response, immutable retry and mixed/native-conflict neighbors. It captures exact input bytes before callbacks, requires fresh nonces and checks per-position claims/revisions against actual-Dart fixtures. Its source-pinned private bundle/collector excludes phone TLS private keys, preserves partial artifacts and compares exported canonical bytes and credential-revocation observations. Even matching reports retain false canonical ACK/physical-attestation fields; the deliberately discarded body is not a claimed random network failure. No combined physical execution or production source/outbox integration is inferred.
+- Both diagnostics share the existing TLS client certificate-rejection classifier: only an absent HTTP status with explicit verification-failure text qualifies. The wrong-CA attempt sends an invalid bearer. Offline, generic TLS and certificate-file errors stop without a trust PASS; native error details are never copied into reports. New source requires its own CI/package/device proof.
+- Proposed 30s promotion, session gaps and performance budgets remain unvalidated. No implicit Wi-Fi activation, SQLite writes, template edits or automatic effects.
 
 # 0. Mission
 
@@ -25,7 +102,7 @@ The plugin must be:
 - offline-safe;
 - retry-safe;
 - idempotent end-to-end;
-- compatible first with the user's PW3 / KOReader 2025.04;
+- compatible first with the user's PW3 / KOReader v2026.07.1 (`kindlepw2`);
 - architecturally subordinate to Quartzo's canonical persistence rules.
 
 The plugin must not become:
@@ -88,7 +165,7 @@ This sequencing may be changed only by an explicit user request.
 - Serial family: G090KB.
 - Firmware: 5.16.2.1.1 (4097470002).
 - Jailbreak/KUAL functional.
-- KOReader target: 2025.04.
+- KOReader target: v2026.07.1 (`kindlepw2`); current installation must be rechecked before physical tests.
 
 ## 3.2 KOReader Statistics DB
 

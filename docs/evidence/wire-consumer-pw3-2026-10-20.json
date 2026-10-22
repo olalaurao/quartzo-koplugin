@@ -1,0 +1,104 @@
+{
+  "evidence_version": 1,
+  "observed_at_utc": "2026-10-20T05:29:07.401586+00:00",
+  "proof": "source_bound_physical_pw3_offline_codec_compatibility",
+  "source_commit": "1af5a67e97ff3d0f071c9ba9f9cd136b8fc19ef7",
+  "source_tree": "5b519af45d17da6096651e79b69e8dc337e82957",
+  "source_ci": {
+    "run": 39374012219,
+    "conclusion": "success",
+    "diagnostic_tests_passed": 34,
+    "wire_tests_passed": 51,
+    "skipped": 0
+  },
+  "target": {
+    "model": "Kindle Paperwhite 3",
+    "koreader_version": "v2026.07.1",
+    "package": "kindlepw2"
+  },
+  "observations": {
+    "actual_mounted_target": true,
+    "fresh_owned_installation_verified": true,
+    "manual_kual_execution_confirmed_by_user": true,
+    "launcher_completed": true,
+    "strict_collector_passed": true,
+    "exact_source_and_installed_native_hashes_revalidated": true
+  },
+  "physical_codec_compatibility_passed": true,
+  "collector_physical_execution_attested": false,
+  "physical_acceptance_basis": "Separate user confirmation of requested KUAL execution on the known mounted PW3 plus source-bound installation and strict correlated ARM/native observations; the collector alone does not attest origin.",
+  "runtime": {
+    "cpu_seconds": 0.169715,
+    "jit_arch": "arm",
+    "jit_version": "LuaJIT 2.1.1783773675",
+    "json_version": "dkjson 2.10",
+    "koreader_version": "v2026.07.1",
+    "lua_version": "Lua 5.1"
+  },
+  "cpu_seconds_meaning": "Device os.clock CPU observation only, not wall duration, memory, battery or a production performance budget.",
+  "checks": {
+    "golden_checks": 3,
+    "negative_cases": 12,
+    "native_reference_cases": 5,
+    "conflicting_positions": 3,
+    "isolated_entries": 3,
+    "expired_request_rejected": true,
+    "uses_synthetic_clock": true
+  },
+  "source_data": "synthetic",
+  "run_id": "4b1b2c3a78c0121ca62030063a6555fa",
+  "manifest_digest": "13aecdad806c595466cb8cef6d63ed69046ce9b3fafe6fb9504dbd9c86e63724",
+  "device_report_sha256": "156f51b2976d9d72e60d00db94dedee1301c7481ff81d0d1186d92c3b07294eb",
+  "collected_report_sha256": "f1caf606dc68cf2d69f6b02aad5837de0526ee20e39891827cd746af5486ce88",
+  "bundled_source_sha256": {
+    "codec.lua": "e4fcbe04b31d8925bd2ce929f9d52b1c3dc89f59d283a14c0375d46f1f3ffb93",
+    "config.xml": "b8d62e4b7288bff9f2b86bb0b1775a0ed1af8a5e46079803d1d5fa6148d595e0",
+    "dart-reference.json": "8f3fde39cc0d86d3ddc22ddcef6b8158b553c6ecddb06f10304854b65054aabb",
+    "kindle.lua": "366160de537013fecb0a0a32d125d5ef3fe52c3203ad6869b7cb7af65faf060b",
+    "koreader_deps.lua": "ba20d6619e0572e2b5860be4059f17d065b3f4414cb5f3a76cbc9a195e128418",
+    "menu.json": "73d941a62999e25c7b4a82e74f634b97e5d1a1d4d4eafcd986017f45b6b5cbe2",
+    "probe.lua": "18f90efcffd86dcc100de7f408a0297f0eb525c36e4e3827aef17b6663409d33",
+    "run.sh": "7cc4513fbc045bd0416b7559ae2ecd7499b49bd139adc3ee32193f1f2a24740c",
+    "wire-vectors.json": "26518d6044e65cb633353e8210974187b05e04ecdedac8ea6e2bc720cc6ade8f"
+  },
+  "native_source_sha256": {
+    "dkjson": "52f30be905216796ccb1e97da6135f3f5cfaaf6359544e66046e40f516a36b94",
+    "sha2": "62d2e0885931a1f14db87e61cb3d74936bb5b1e19eb2b4994ab04c03d78f9ed6"
+  },
+  "proof_limits": {
+    "canonical_ack": false,
+    "canonical_persistence_proven": false,
+    "source_cursor_changed": false,
+    "statistics_accessed": false,
+    "network_accessed": false,
+    "wifi_changed": false,
+    "real_drive_tested": false,
+    "real_obsidian_tested": false,
+    "production_plugin_installed": false,
+    "production_changed": false,
+    "reboot_tested": false,
+    "power_loss_tested": false,
+    "full_gate_0_passed": false
+  },
+  "diagnostic_cleanup": {
+    "owned_diagnostic_removed": true,
+    "absence_verified": true,
+    "nonrecursive_only": true,
+    "archived_files": 13,
+    "archive_sha256": {
+      "bundle-manifest.json": "13aecdad806c595466cb8cef6d63ed69046ce9b3fafe6fb9504dbd9c86e63724",
+      "codec.lua": "e4fcbe04b31d8925bd2ce929f9d52b1c3dc89f59d283a14c0375d46f1f3ffb93",
+      "config.xml": "b8d62e4b7288bff9f2b86bb0b1775a0ed1af8a5e46079803d1d5fa6148d595e0",
+      "dart-reference.json": "8f3fde39cc0d86d3ddc22ddcef6b8158b553c6ecddb06f10304854b65054aabb",
+      "device-observation.json": "156f51b2976d9d72e60d00db94dedee1301c7481ff81d0d1186d92c3b07294eb",
+      "kindle.lua": "366160de537013fecb0a0a32d125d5ef3fe52c3203ad6869b7cb7af65faf060b",
+      "koreader_deps.lua": "ba20d6619e0572e2b5860be4059f17d065b3f4414cb5f3a76cbc9a195e128418",
+      "launcher-status.txt": "d3be030801b90ea8057d3997d9845c7f850cc7b784450645d5ec2811cc927d7a",
+      "menu.json": "73d941a62999e25c7b4a82e74f634b97e5d1a1d4d4eafcd986017f45b6b5cbe2",
+      "probe.lua": "18f90efcffd86dcc100de7f408a0297f0eb525c36e4e3827aef17b6663409d33",
+      "public-session.json": "a38bb0339eeb212ef2203386528d871b75a15e1b31feb66415880ada56ec93d4",
+      "run.sh": "7cc4513fbc045bd0416b7559ae2ecd7499b49bd139adc3ee32193f1f2a24740c",
+      "wire-vectors.json": "26518d6044e65cb633353e8210974187b05e04ecdedac8ea6e2bc720cc6ade8f"
+    }
+  }
+}

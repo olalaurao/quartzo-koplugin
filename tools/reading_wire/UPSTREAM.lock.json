@@ -1,0 +1,36 @@
+{
+  "repository": "olalaurao/aplicativo",
+  "sourceCommit": "e7a661d4ed6d572cdbf722f4e697fea461005b69",
+  "files": {
+    "contract.json": {
+      "path": "contracts/quartzo/reading_activity/contract.json",
+      "sha256": "908249e4088d2beaebf0e27a46adcd3ec3cf4e118d014922e8703e7c461668fa",
+      "gitBlobSha": "9cff6d59e6e505bda512ed7ae4e2b7d1aa01eee4"
+    },
+    "event.schema.json": {
+      "path": "contracts/quartzo/reading_activity/event.schema.json",
+      "sha256": "621f0bea326a6f83ad48f1a92b89cf6490149ea41242f6078c2e59d511bdeb90",
+      "gitBlobSha": "9651e5bfefe37d4e4d9c334c36d5f9318f33f9b3"
+    },
+    "vectors.json": {
+      "path": "contracts/quartzo/reading_activity/vectors.json",
+      "sha256": "c802c19af168f0491d0b2e316cde72e1bab4b19c59549642b0179c60be3cd55f",
+      "gitBlobSha": "5285dd23470cb86679645c7350e8df27cc2b9d49"
+    },
+    "transport.contract.json": {
+      "path": "contracts/quartzo/reading_activity/transport.contract.json",
+      "sha256": "663604e87df382638a602d2438d7bdcb8e31eaf7b388741cf59e8ba72455989d",
+      "gitBlobSha": "0f6e3fb4d5584d006ac84a5417c2d33953a3bcfa"
+    },
+    "transport.schema.json": {
+      "path": "contracts/quartzo/reading_activity/transport.schema.json",
+      "sha256": "076784c3dea7b29f5dc24eca3dfc738497776e1e3499130a299ecec03092ac1e",
+      "gitBlobSha": "8b0fa656e9d5b25ab25bf654de9d27158302cca9"
+    },
+    "transport_vectors.json": {
+      "path": "contracts/quartzo/reading_activity/transport_vectors.json",
+      "sha256": "26518d6044e65cb633353e8210974187b05e04ecdedac8ea6e2bc720cc6ade8f",
+      "gitBlobSha": "2460da31791bbd2311cea6471ff836b94c616405"
+    }
+  }
+}

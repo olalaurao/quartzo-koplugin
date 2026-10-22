@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "scope": "host-only diagnostic certificate-rejection regression",
+  "source_commit": "b18e6f07bd2b4a5e6e48c96692a10faad7412aef",
+  "ci_run": 39432342451,
+  "ci_conclusion": "success",
+  "wire_suite": {
+    "passed": 82,
+    "skipped": 0,
+    "seconds": 1.492
+  },
+  "transport_suite": {
+    "passed": 34,
+    "skipped": 0,
+    "seconds": 9.699
+  },
+  "pinned_upstream_files_verified": 6,
+  "regression_reproduced_before_fix": true,
+  "unrelated_failure_classes_rejected": 5,
+  "wrong_ca_uses_invalid_bearer": true,
+  "source_files": {
+    "tools/reading_wire/codec.lua": {
+      "git_blob_sha": "b8384e96f8ab4defa57fda57c2c8cab7645efdb4",
+      "source_sha256": "e4fcbe04b31d8925bd2ce929f9d52b1c3dc89f59d283a14c0375d46f1f3ffb93",
+      "bundle_name": "codec.lua",
+      "prepared_sha256": "e4fcbe04b31d8925bd2ce929f9d52b1c3dc89f59d283a14c0375d46f1f3ffb93"
+    },
+    "tools/reading_wire/koreader_deps.lua": {
+      "git_blob_sha": "38a60b98fa4f43497a020ad33bc487419118915c",
+      "source_sha256": "ba20d6619e0572e2b5860be4059f17d065b3f4414cb5f3a76cbc9a195e128418",
+      "bundle_name": "koreader_deps.lua",
+      "prepared_sha256": "ba20d6619e0572e2b5860be4059f17d065b3f4414cb5f3a76cbc9a195e128418"
+    },
+    "tools/reading_wire/exchange.lua": {
+      "git_blob_sha": "7ce12364129333edffc3d3bec6df328b8207d923",
+      "source_sha256": "6396998cac3ab4739c00fc76467240232bad4286686a668b99f824b15a8f3d04",
+      "bundle_name": "exchange.lua",
+      "prepared_sha256": "6396998cac3ab4739c00fc76467240232bad4286686a668b99f824b15a8f3d04"
+    },
+    "tools/reading_wire/sequence.lua": {
+      "git_blob_sha": "a3162733582b7709e2a190a37446d8d149323ac3",
+      "source_sha256": "b4ec347c440e410ac6953a31d1d09dba7ddd105aceea7681d88e8d380964fdbf",
+      "bundle_name": "sequence.lua",
+      "prepared_sha256": "b4ec347c440e410ac6953a31d1d09dba7ddd105aceea7681d88e8d380964fdbf"
+    },
+    "tools/transport_probe/client.lua": {
+      "git_blob_sha": "31be3ea902f66779d58e56ff63d347bdf3f05ad2",
+      "source_sha256": "a22b7beda2c04b371c168883dfbb618b301e08fb2acb385da39892c3da57ef6f",
+      "bundle_name": "client.lua",
+      "prepared_sha256": "a22b7beda2c04b371c168883dfbb618b301e08fb2acb385da39892c3da57ef6f"
+    },
+    "tools/reading_wire/sequence_kindle.lua": {
+      "git_blob_sha": "6327f3a3386832f87ab84497718a3d76bc2de603",
+      "source_sha256": "aed3f7a279f3f5f4bb7ef626526709c9cec5ff19733a130b6e115ee4dec8edba",
+      "bundle_name": "kindle.lua",
+      "prepared_sha256": "aed3f7a279f3f5f4bb7ef626526709c9cec5ff19733a130b6e115ee4dec8edba"
+    },
+    "tools/transport_probe/run.sh": {
+      "git_blob_sha": "21c0e909601136a9ebd485f4a997d18237bdfc88",
+      "source_sha256": "dd42d3d3820135149626f099a4583376c009c013ec5763a845fe43d7ba8baf22",
+      "bundle_name": "run.sh",
+      "prepared_sha256": "4d9120cfff1af9edeecc2c794b49d85fecfa33b3513d3a7aa8d5bbc778b1ea39"
+    },
+    "tools/reading_wire/sequence_menu.json": {
+      "git_blob_sha": "b7e8211b949427e29ebe05685fd4880fd7360349",
+      "source_sha256": "8e58ad9f74ef41239fb511bc0b7079a9c9e365622a748024bb094681c5259dca",
+      "bundle_name": "menu.json",
+      "prepared_sha256": "8e58ad9f74ef41239fb511bc0b7079a9c9e365622a748024bb094681c5259dca"
+    },
+    "tools/reading_wire/sequence_config.xml": {
+      "git_blob_sha": "c9fb0ece8234b42a60eac4ac4297a565b6b149c3",
+      "source_sha256": "81a05eda75103b69503ea45919a7cef73679220481a7e618778220d6c5d5f9ee",
+      "bundle_name": "config.xml",
+      "prepared_sha256": "81a05eda75103b69503ea45919a7cef73679220481a7e618778220d6c5d5f9ee"
+    }
+  },
+  "physical_execution_attested": false,
+  "canonical_ack": false,
+  "source_cursor_changed": false,
+  "new_device_deployment": false,
+  "cloud_delivery_proven": false
+}

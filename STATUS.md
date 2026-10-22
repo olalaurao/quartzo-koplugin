@@ -1,5 +1,700 @@
 # Implementation Status
 
+## 2026-10-21 — Paired PW3/profile trial passed; Gate 0 foundation accepted
+
+The user executed exact47aa17f through KUAL against the verified ARM64 profile
+APK7d3b6735/current Quartzo host0e026599 and reconnected USB. The independent
+collector passed six requests/five verified per-event receipts/one deliberately
+discarded response, three exact canonical shards, three unique synthetic events
+and120 native seconds. The normal Android current-target receiver issued its
+actual fresh TLS identity/bearer; checked UID/USB delivery supplied independent
+pairing approval. It completed normally and revoked the credential. Listener
+closure, production metadata preservation, isolated package removal and all four
+user-performed folder removals were independently verified. Both earlier failed
+trials remain failed; this new source-bound trial has separate evidence.
+
+Upstream `docs/reading-integration/wire-paired-canonical-physical-2026-10-21.json`
+has SHA25661579af0104c60bfd0f059c75e845a3bf3bf2533680a9b3433adddd1a34c417b.
+Its companion G04 exit audit passes the finite authenticated transport spike
+from cumulative exact-source physical/native/owner proofs. Embedded diagnostic
+ACK/cursor/cloud/memory-budget flags stay false. Prior physical401/429/503
+evidence keeps its original source; it is not relabeled as a new pinned-factory
+fault run. Full production failures/reboot/performance remain later gates.
+
+Gate0A (ratified canonical domain/G03),0B (actual authenticated PW3 transport)
+and0C (ratified versioned protocol/fixtures and verified receipt boundary) meet
+their foundation exit criteria. The next implementation is PhaseA plugin
+bootstrap/install-remove safety, then PhaseB bounded read-only Statistics/schema
+probe. There is still no installed production plugin,Statistics ingestion,
+outbox/cursor,promotion or effect. No active diagnostic remains.
+
+Exact app0e026599 passed all four workflows including2807 Windows tests/37skips
+and2836 hosted/eight skips; both analyses passed with14 existing infos. Exact
+47aa17f CI39626633996 passed111 wire/34 transport without skips. Raw/wire and
+Companion lock remain unchanged. Foundation PRs still require their own merge
+authorization/checks; no merge,release or production installation is inferred.
+
+## 2026-10-21 — Certificate candidate passes both host backends; devices deferred
+
+Quartzo c6ec01a1 hosted39623152396 passed its actual native certificate and
+paired-receipt steps on system OpenSSL and official KOReader v2026.07.1 bundled
+LibreSSL4.3.2. Its completed hosted job119301522068 subsequently passed2836 full
+tests/eight explicit skips, with actual logs preserved. The bounded correction
+changes the same self-signed peer to CA:true/pathLen:0 with keyCertSign usage;
+exact peer DER pinning and independently approved finite pairing remain required.
+No new CA/key/chain, issuer API, OS trust enrollment or verification bypass is
+added. This host result does not supersede either failed physical attempt.
+
+Quartzo's clean7d3b6735 profile/AOT ARM64 probe built in336.5s and passed exact
+package/AOT/source20/archive verification after using standard ABI splitting.
+APK SHA256205a551d9d8d810baa1315a52ea3c7e931035c59ce49c542d7585356ef96f270;
+no installation or memory acceptance is claimed after the Android LOW_MEMORY exit.
+The user will disconnect the phone and cannot run more KUAL work now. No session
+or installation is started. Runtime source remains7555814; G03 stays PASS, G04
+and production phases remain open. Exact55d5a10 docs CI39623786358 passed34
+transport and111 wire tests without skips; runtime bytes are unchanged7555814.
+Resume only with rechecked source/CI and a newly verified APK/source
+and a new finite session when the user can operate both devices.
+
+## 2026-10-21 — Second paired PW3 execution identifies certificate rejection
+
+Exact7555814 passed native CI39616194464:111 wire and34 transport tests without
+skips. Its new fixed error category then exposed the actual PW3 attempt1
+failure: reading_certificate_rejected, zero receipt lookups. No per-event ACK
+or G04 success follows. Independent mounted inspection found this LuaSec linked
+to libssl.so.60/libcrypto.so.57 (LibreSSL4.3.2), whereas earlier system-native
+host tests use OpenSSL. Quartzo is adding the same existing certificate/pairing
+tests against the official v2026.07.1 Linux runtime's exact bundled backend;
+no certificate/pin check or profile is relaxed on this evidence alone.
+
+The original Android probe PID exited with LOW_MEMORY. Standard stop/export
+could not observe completion or credential revocation. A separately labeled
+read-only post-exit forensic export, after source/UID/production checks, showed
+zero canonical JSONL files and no completed observation. The PID/listener were
+absent, and the isolated package was uninstalled with unchanged production
+metadata. Nonsecret failure evidence was preserved separately. The user again
+removed the exact extension and three temporary folders manually; all four
+absence checks passed. No current device session remains. This is FAILED;
+certificate interoperability and bounded Android memory remain unresolved.
+
+## 2026-10-21 — Paired physical attempt FAILED; no events or ACK
+
+Exact Kindle7d0b75a with isolated Android runtime c4b84707 and host566792c8
+was installed through verified Git/source/UID/USB channels. The user executed
+the KUAL command and reconnected the PW3. Its actual LuaJIT2.1 ARM,
+dkjson2.10 and LuaSec1.3.2 report failed on attempt1 before any receipt lookup.
+Android independently reported zero events/seconds/queued actions. Stop/export
+verified listener closure, credential revocation and unchanged production app
+metadata. The isolated Android package was removed only after UID/APK checks;
+nonsecret failure evidence was preserved. This is FAILED, not a G04 PASS.
+
+The original fixed generic sequence error does not identify the transport
+failure. The pending small correction preserves only allowlisted existing
+carrier error categories through the paired consumer and diagnostic report;
+raw SDK messages, paths, certificates and credentials remain redacted. No
+authentication, receipt or certificate check is relaxed. Diagnosis and a new
+physical execution remain required; no cause is inferred from the host PASS.
+
+The automatic approval review rejected removal of the owned Kindle extension
+and three temporary folders with only "blocked by policy". No alternate delete
+was attempted. The user removed those four exact folders manually; subsequent
+read-only absence checks confirmed all four were gone.
+The listener is closed and its credential revoked. Statistics, sidecars,
+production data and Wi-Fi settings were not modified.
+
+The bounded-error correction passed12 paired consumer,five sequence and four
+driver cases. Full local wire suite:107 PASS/four explicit native-TLS skips
+(111 total,18.212s), with all six upstream files verified unchanged. A first
+test invocation lacked the existing pinned Lupa path; rerunning with the
+already-installed pinned dependencies passed. No new dependency was installed.
+
+Separately exact7d0b75a passed native Linux39610734802:110 wire and34 transport
+tests without skips. Exact app c4b84707 passed hosted39610424132:five configured
+certificate tests plus one native paired case,124 native/five skips,95 docs,
+30 shared and2836 full/eight skips. These host proofs do not override the actual
+device failure. G03 stays PASS; G04 and the full seven-item goal stay open.
+
+## 2026-10-21 — Paired KUAL preparation and independent receipt collection
+
+The existing single-use extension/launcher now packages paired_sequence.lua
+and the existing approved paired consumer. Six fresh-nonce requests cover the
+same three actual-Dart batches, one discarded receipt and five verified receipt
+lookups. Host-generated keys/tokens are removed upstream: the isolated normal
+app receiver issues its exact private handoff, the checked APK/source/UID
+channel collects it and the USB bundle approves those exact bytes. The native
+event lines/IDs/shards are unchanged; only transport binding is replaced.
+The collector independently recomputes request SHA/batch/nonce/window and
+acknowledged line/native/event/revision bindings, checks complete exported bytes
+and deduplicated native-ID/time totals. Reports remain observations, not cursor,
+hardware or canonical receipt authority. There is no production plugin, new
+transport stack, data store, retry scheduler, Statistics or Wi-Fi action.
+
+Focused actual host LuaJIT/provider tests: four paired-sequence, four complete
+driver and eight final collector cases PASS. Full wire after migration:
+**105 PASS/four explicit native TLS skips** (109 total,19.137s), before the final
+additional collector case. TLS/IO are explicitly injected for these driver
+tests. The legacy host response fixture now uses its supplied current time so
+the new live-window driver does not rely on a frozen request timestamp. Exact
+source CI and actual paired PW3/Android execution are pending. No new bundle
+or device session was prepared or installed; historical reports retain sources.
+
+## 2026-10-20 — Actual normal-app/native paired receipt join PASS
+
+[Source-bound host proof](docs/evidence/wire-paired-canonical-host-2026-10-20.json)
+matches the Quartzo copy byte-for-byte. Quartzo bad10518 hosted39534498768 ran
+five configured certificate tests plus one required actual LuaJIT2.1/LuaSec1.3.2/
+LuaSocket paired receipt case without skips. The normal canonical app issuer,
+original pinned JSON/SHA and this exact6cfdba8 consumer recognized only the valid
+event beside malformed input twice with fresh nonces; the app independently
+verified one exact canonical event/shard/30 seconds and queued work after replay.
+Remaining app checks:122 native PASS/five skips,95 architecture/docs,30 shared,
+2834 full PASS/eight explicit skips. Source-specific KOReader6cfdba8 CI39533385767
+passed105 wire/34 transport with no skips. The report fingerprints both code
+sets and logs and explicitly excludes later physical-tool work, real Google
+authorization, production import/stable pairing, outbox/cursor and device proof.
+G03 is PASS; G04 and all dependent production/product/release gates stay open.
+
+## 2026-10-20 — Finite approved-pairing receipt composition (host logic)
+
+`paired_exchange.lua` now composes the existing pure codec and shared pinned
+carrier only after the exact private pairing bytes match an independently
+approved out-of-band fingerprint and canonical receiver role/window. The
+document matches Quartzo0bf80ed0's normal current-target session handoff; no
+network discovery/import, caller-role boolean, new cryptographic receipt,
+credential/Statistics/outbox store, retry loop or production registration was
+added. The codec reuses its existing canonical UTC parser for the finite
+pairing window and backward-clock checks rather than another date engine.
+
+Opaque session/request-bound receipts expose copies only of fully validated
+committed/duplicate positions with exact line/native digest, event ID and
+revision. Raw parsed claims, forged/cloned handles, another session/request,
+staged/errors, missing TLS delivery, expiry/backward time and close cannot grant
+acceptance. Existing pure codec/exchange false-ACK behavior is preserved.
+This is a gated source receipt consumer, not durable outbox/cursor persistence.
+
+Initial focused execution exposed a missing object-constructor provider in the
+injected test fixture (four tests passed, five failed, ten failed assertions);
+that fixture now supplies the same API as the existing native dependency
+adapter. The final **twelve actual-Lua focused cases PASS** (0.089s), including
+401/429/503/redirect, expiry after I/O and unchanged parser authority. Full wire
+suite: **101 PASS/four explicit native-TLS skips** (105 total,5.886s), with
+actual pinned JSON/SHA libraries through host LuaJIT. Shared transport regression:
+**32 PASS/two POSIX skips** (34 total,13.753s).
+Exact6cfdba8e6e5d9e9d4b59be209621e0ea7fc8e0f8 then passed
+[Linux39533385767](https://github.com/olalaurao/quartzo-koplugin/actions/runs/39533385767):
+**105 wire/34 transport tests, no skips**, including the four real native carrier
+cases and twelve injected-SDK paired-consumer cases. The combined paired path
+still uses injected TLS here. Quartzo's next required native host test pins this
+exact source and composes its normal canonical receiver with actual native
+LuaJIT/LuaSec, original JSON/SHA libraries and independent persisted-byte/replay
+checks; its execution remains separate and pending at this checkpoint.
+
+The test's locally computed synthetic approval is not actual user-approved
+source import. Normal-issuer/native combined interoperability and fresh PW3/
+Android execution remain required for G04, as does real source approval/import.
+No new physical session was prepared, no source cursor/Statistics file changed,
+and G08 production ingestion remains blocked. Complexity review retained only
+composition through existing owners; no later product/effect gate was bypassed.
+
+## 2026-10-20 — Native exact-leaf and timeout acceptance passed
+
+Exact **ac1ebd2a9a9df3d1d8c81144cedc892462ab0dc0** passed
+[Linux CI39525626234](https://github.com/olalaurao/quartzo-koplugin/actions/runs/39525626234):
+**93 wire PASS /34 transport PASS, no skips**, plus six pinned upstream files.
+All four native Lua5.1/LuaSec1.3.2/LuaSocket tests executed: actual TLS1.2
+delivery with exact CA/leaf identity and bound bytes, wrong leaf despite a
+trusted CA with zero application bytes, wrong CA with zero application bytes,
+and receive timeout with no delivery. The positive peer may receive synthetic
+credentials in the timeout test; no durable receipt is inferred.
+[Source-bound host evidence](docs/evidence/wire-leaf-pin-host-2026-10-20.json)
+records seven exact Git-blob fingerprints and the independently fetched CI-log
+digest. The earlier callback regression/failing CI is preserved. Final local
+focused seven actual-Lua tests passed; four native TLS tests explicitly skip
+without the Linux environment. Existing transport local32PASS/two POSIX skips
+and full wire local89PASS/three then-applicable native skips were recorded at
+the preceding source. New source physical PW3 acceptance remains absent.
+
+This completes only the isolated host trust preparation. G04 still requires
+canonical receiver-role/pairing/certificate provisioning, lifecycle and trusted
+durable per-event acknowledgement, followed by exact-source physical proof.
+No new device session was prepared or installed. Canonical ACK/cursor remains
+false; real Statistics/outbox/effects and production registration remain gated.
+Upstream G03 PASS is separate from this G04 preparation and full goal completion.
+
+## 2026-10-20 — Exact leaf pin preparation; G03 store exit audited upstream
+
+Upstream Quartzo1db4c13b records G03 PASS against the integrated store exit,
+including implementation ad5986fa's four successful workflows. This closes
+that store gate only; G04 authenticated transport/durable source ACK and every
+later gate remain required. Historical reports retain original proof limits.
+
+The existing shared diagnostic carrier now has an explicit opt-in pinned mode:
+native LuaSec1.3.2 TLS1.2/explicit CA, then exact leaf DER SHA-256 before any
+HTTP credential/body write. It uses the exported native TLS factory with the
+existing LuaSocket HTTP driver because LuaSec rejects caller create hooks.
+One exact private endpoint/connection, bounded response, fixed sanitized
+errors and idempotent cleanup fail closed. A private process-local capability
+can bind a verified HTTP200's exact bytes/token/context; it carries no canonical
+receiver role, accepted events, durable receipt or cursor authority. Existing
+codec/exchange ACK remains false, and existing diagnostic behavior is preserved.
+
+Missing API tests reproduced fourteen errors across seven cases before the
+implementation; final focused seven passed. Full local wire suite: **89 PASS /
+three explicit native-TLS platform skips** (92 total, 5.722s), including actual
+Lua5.1 and pinned native-provider references. New Linux CI requires actual
+Lua5.1/LuaSec1.3.2/LuaSocket loopback acceptance: positive bound delivery,
+trusted-CA/wrong-pin with zero HTTP bytes, and wrong-CA with zero HTTP bytes.
+That native run is pending at this checkpoint. This code is not installed on
+the PW3; old physical proof is not inherited. Production pairing/receiver role,
+credential/revocation/cancellation lifecycle and durable per-event receipt
+composition remain the next G04 work. No Statistics/outbox, Wi-Fi, contract,
+production install or release change occurred.
+
+The existing transport regression first found one genuine compatibility
+failure: the refactor captured the legacy HTTPS callback too early. Restoring
+legacy per-request resolution (while keeping the new pinned factory captured)
+fixed it without changing the assertion. Final transport regression: **32 PASS /
+two POSIX platform skips** (34 total,10.920s). The initial failure remains in
+the private log; it was not a native pin acceptance result.
+
+Exact implementation3ed1fa7f5351f3f13c457c086bfae31906024c50 passed
+[Linux CI39525466459](https://github.com/olalaurao/quartzo-koplugin/actions/runs/39525466459):
+**92 wire PASS /34 transport PASS, no skips**. All three actual native
+LuaSec/LuaSocket cases executed: bound TLS1.2 delivery, trusted CA/wrong leaf
+with zero application bytes, and wrong CA with zero application bytes. The
+first f916afb CI reproduced the same legacy callback regression and failed;
+it was fixed at3ed1fa7, not retried unchanged. A fourth native case now requires
+the configured receive timeout to return no delivery; its CI is pending.
+
+## 2026-10-20 — Actual physical-shard cloud path and canonical Quartzo consumption passed
+
+[Combined source-bound evidence](docs/evidence/wire-cloud-canonical-bridge-2026-10-20.json) has byte-identical copies across all three repositories (SHA2568428ade8d85a74e51ee0681e1970fe697888e69cdc82e761093a888089bed8f5). The exact three synthetic shards collected from the physical Android run passed actual official Companion10e840ab SDK/OAuth/HTTP upload, independent fresh-peer download and separate remote byte checks (three unique files /1356bytes). Source and rehydrated-peer replay performed zero sync work; both peers were synced and the original six sandbox hashes plus Manual/pairing remained unchanged. These are separate adapters/coordinators/local roots/state in one renderer, not separate OS-process restart proof. The dedicated child is under the selected sandbox's excluded diagnostics tree; no production target was selected.
+
+The explicit live-input Flutter consumer then passed on **clean committed Quartzo2921191f5c5d1bb7490bb93c80da5f4b35a3efbb**: actual existing ReadingActivityLocalStore discovery, whole observed verification and batch parsing of those actual downloaded bytes yielded **three native facts / three unique events /120 synthetic seconds**, unchanged on replay. Exact file hashes/native IDs were checked, the temporary queue stayed empty, disposable index and owned scratch were removed, and success was published only after queue close/cleanup. Seven exact source fingerprints and both raw observation digests bind the result. The initial input-free test was explicitly skipped, never counted as cloud acceptance. Source artifacts and downloaded history remain preserved. The earlier cloud-only report's semantic-pending field is a historical phase and was not rewritten.
+
+This adds actual cross-client byte/semantic/replay acceptance without canonical source ACK, cursor movement, real Statistics access, Resource effects, production ingestion or complete G03/G04/release claims. The earlier physical source boundaries remain unchanged; the new cloud consumer is source-bound separately. Remaining work is the explicit G03 exit audit and G04 current binding/default-root, production certificate/pairing/lifecycle and trusted per-event ACK composition, followed by gated ingestion/effects and later product/release phases.
+
+
+## 2026-10-20 — Actual cloud races, authorized Companion refresh and receiver target composition
+
+Companion source-bound evidence now includes actual independent six-file peer recovery after explicit canonical OAuth renewal, a real two-client mutable CAS (one412, preserved losing baseline/edits/conflict bytes), and concurrent canonical Reading creation (two exact remote IDs, both quarantined without a synchronized baseline). Clients were independent adapters/coordinators/local roots in one renderer; no separate-process/global exclusive-create or source ACK proof is inferred. Those observations retain official8c source boundaries and preserve the original401 failure.
+
+Separately authorized PR92 passed all six checks and merged10e840ab09fe98fe2365c3a30a34be4c0eef6b4d. Exact-main official Preflight39488284446 passed; verified artifact main.js SHA256ad9e604339363e6e8d5bdfa5d6700e364f822d9c6242498396119eb3003c09e3 was installed only in the existing paired Manual sandbox. Actual renderer reload, one real Google401 induced with a synthetic invalid credential, canonical OAuth renewal, same-parent recovery and all six downloaded/host-verified hashes passed. This is not a waited-out issued-token expiry proof. Normal mainCI39488225722 passed Linux/Windows, macOS cancelled without steps; all six approved PR92 checks and official preflight remain successful. Companion docs236e17d passed all three OS checks39490847254. No production install/release occurred.
+
+Quartzo candidate35af64a0 adds a final transient current-target capability from the existing SyncManager, required by normal receiver construction and checked around credential/store waits. Account generation/folder/root/owner-instance/queue/lifecycle changes suppress replies, including same-target roundtrips; existing diagnostic fixtures are explicit. Local target17PASS/three native-platform skips, expanded241PASS/twelve skips, strict analysis/preflight/whitespace PASS; new hosted/native CI is pending. Explicit configured vaultPath is currently required; default named-root composition, production pairing/certificate/lifecycle and trusted durable per-event source ACK still need implementation/proof. No Lua runtime/contract, cursor/outbox, Statistics access, Wi-Fi behavior or physical source claim changed. Full G03/G04/G08 and later gates remain open. Source-bound Companion evidence is in its docs/reading-integration/live-*.json; prior physical reports remain unchanged.
+
+
+## 2026-10-20 — Actual PW3 to Android canonical wire diagnostic
+
+[Source-bound physical evidence](docs/evidence/wire-canonical-physical-2026-10-20.json).
+
+The user executed the installed finite KUAL sequence and reconnected the actual
+PW3. Exact Kindle source `b18e6f07bd2b4a5e6e48c96692a10faad7412aef` ran on
+KOReader v2026.07.1 / ARM LuaJIT. The isolated Android APK source remains
+`314973aefde1b3fc5ca02a1872fedc1f82dab480`; all seventeen runtime fingerprints
+matched current source. Installation used host `559c6eb3`; corrected binary
+collection used host `442160a8`.
+
+The independent correlated collector passed: ten client attempts, five checked
+responses and one deliberately discarded response; nine actual HTTP requests
+(401/429/503 once each, six 200), zero transport errors, three exact canonical
+shards, three unique synthetic events / 120 seconds / six queued revisions.
+Credential revocation, listener closure and unchanged production metadata were
+observed. The owned diagnostic package and KUAL extension were removed only
+after source/UID/hash checks and nonsecret evidence archival; active private
+keys/input/bundle/temporary exports were removed. Kindle native source snapshots
+remained unchanged. No Statistics access or automatic Wi-Fi change occurred.
+
+Initial fresh-install directory and host TAR newline conversion defects were
+fixed and retained as failed preparation/collection observations, never relabeled
+as physical success. Twelve scoped host cases pass, including actual shell
+noclobber and corrupted/truncated/hidden TAR rejection. Binary `exec-out` export
+preserved all 19 archive entries / nine files; exact shard bytes were checked
+against the generated canonical fixture.
+
+This is actual finite synthetic transport and local owner evidence. Diagnostic
+reports retain false physical self-attestation; the separate human/USB/ADB
+observations establish the physical execution. It does not grant canonical ACK,
+cloud delivery, production extraction/outbox, global stability, power-loss or
+completed G03/G04. Actual cross-client Drive races and durable per-event source
+acknowledgement remain required before production ingestion.
+
+## 2026-10-20 — Certificate rejection diagnostic now fails on unrelated errors
+
+- Review before any new native deployment found that the finite sequence treated
+  every missing HTTP status as certificate rejection and supplied its valid test
+  bearer during that step. New actual-Lua/driver regressions reproduced the
+  issue: twelve focused tests produced nine failing assertions, including four
+  generic failure classes incorrectly reaching `wire_claims_checked` and the
+  valid credential assertion. These were diagnostic correctness defects, not
+  evidence of a new physical run or an observed credential disclosure.
+- The existing shared TLS client now owns `certificate_rejected`, reused by both
+  diagnostic sequences. Only no-status `certificate verify failed` / `unknown ca`
+  text qualifies; generic TLS, timeout, offline and certificate-file errors stop
+  the run without exposing details. The wrong-CA attempt sends a deliberately
+  invalid bearer even if the peer unexpectedly accepts trust. The native driver
+  carries the same classifier and tests preserve actual carrier failure reasons
+  instead of rewriting every failure as a certificate error.
+- Final focused **12 PASS** (0.824s); complete wire/provider/sequence/driver/bundle
+  **82 PASS** (9.143s); existing transport **32 PASS / two POSIX skips** (17.437s).
+  Positive string/table/case variants and five unrelated failure classes are
+  covered. Whitespace passed. Exact committed **b18e6f07bd2b4a5e6e48c96692a10faad7412aef**
+  passed [Linux CI 39432342451](https://github.com/olalaurao/quartzo-koplugin/actions/runs/39432342451):
+  **82 wire PASS** (1.492s), **34 transport PASS** (9.699s), no skips, and the
+  six-file upstream verifier. [Source-bound host evidence](docs/evidence/wire-certificate-rejection-host-2026-10-20.json)
+  fingerprints all nine exact source/prepared package files. Fresh private
+  input/package and actual device proof remain required; no new deployment or
+  physical result is claimed. Prior
+  5250eee/1af5a67 physical/host reports retain their original source boundaries.
+
+- The sibling actual native TLS compound fixture also passed at Quartzo
+  **1457f02d565085264899d36532c7288f04035e11**, hosted **39433387042**: 75 native
+  cases / four skips and 2781 full cases / five skips. The compound case executed
+  in both runs, combining rejected peer/401/429/503/discard with exact three-shard
+  replay and credential revocation. Both reported three pre-publication HTTP
+  requests and **zero transport errors**, with no later increase. The collector's
+  strict zero-error requirement is unchanged and now agrees with actual host
+  observations; actual Android/PW3 counts and source-bound byte collection remain
+  unproved. No fresh expiring session was started while physical execution
+  availability was unknown.
+
+## 2026-10-20 — Official Companion byte recovery and restart acceptance
+
+The user-authorized Companion PR89/90 merges completed as `5b69a6e` and
+`8c515898ab919a4b9e214ff84563cd36c6d4c243`, tree-identical to their approved
+heads. Normal main CI and both exact-main official preflights passed. Final
+Preflight **39425583160** produced the verified sandbox-only artifact with
+`main.js` SHA-256 `ffb75be60cbcf9e3e8c6c042d2fedec921b463fbbc0822fac3b2a2f551c8160c`.
+No release/tag or production installation occurred; older pending-approval and
+old-artifact statements below are historical checkpoints.
+
+Actual Obsidian 1.14.4 retained Manual/pairing after reload. Full reconciliation
+detected both zero-byte remote Reading copies despite their original hash
+properties, preserved the good local originals and reported one synced / two
+conflicts / zero errors / two pending. Explicit Sync Center Keep local repair
+restored both originals. Independent actual downloads verified the exact
+382-byte native Dart shard and 43-byte opaque future-schema shard. The ordinary
+mutable control pulled its empty remote version normally, with its original
+backup preserved outside the vault.
+
+A subsequent actual canonical sync created a 90-byte opaque Reading shard and
+32-byte binary control (NUL/Unicode), and updated the mutable control to its
+original 38 bytes: three synced / zero conflicts, errors or pending. Independent
+inventory/download verified all five exact hashes and unique identities. A real
+sandbox renderer restart restored Manual/pairing and zero pending; explicit full
+reconciliation then reported **zero synced / zero conflicts / zero errors /
+zero pending**. These are partial actual byte/recovery/replay acceptance, not
+complete G03/G04 or distributed/canonical ACK proof. Evidence is in Companion
+`docs/reading-integration/live-official-byte-recovery-2026-10-20.json` and private
+source-bound sandbox observations.
+
+The actual reviewed-adoption UI branch then passed: the plugin was temporarily
+unloaded only in the sandbox to seed an 83-byte opaque file without a watcher
+creation intent. After normal reload, Manual sync reported one adoption-required
+path, zero files synced and no errors/conflicts. Review adoption / Adopt file showed
+the exact paired test target and completed one applied / zero failed. Separate
+inventory/download verified all six unique files and hashes, with zero pending/
+conflicts. Plugin enablement configuration remained byte-identical; baselines
+were never edited manually. Quartzo/Companion multi-client cloud exchange/races,
+source-bound Android/PW3 wire session, durable acknowledgement
+and production extraction/outbox still require their own evidence. No cursor,
+Resource effect, Readwise migration or later product phase is activated. The
+latest read-only device check again sees one authorized Android phone and
+KOReader v2026.07.1 at D:, without a new listener or installation.
+
+
+## 2026-10-20 — Native wire sequence host CI and exact package smoke
+
+- Exact source **5250eee37da0b645a240ac82dba1ec118abc4737** passed
+  [Linux CI 39399156981](https://github.com/olalaurao/quartzo-koplugin/actions/runs/39399156981):
+  **80 wire/provider/sequence/driver/bundle PASS** (1.925s), **34 existing transport
+  PASS** (11.110s), no skips, and the six-file upstream verifier. No runtime source
+  or test changed afterward. [Sanitized source-bound host evidence](docs/evidence/wire-native-sequence-host-2026-10-20.json)
+  records exact Git source hashes and strict false physical/ACK/cloud/cursor flags.
+- Actual private package preparation and verification passed using all thirteen
+  allow-listed source/runtime inputs from that exact source and the fresh actual
+  Dart/OpenSSL loopback session. Phone input and both private keys were excluded.
+  The sibling Android-mode parser accepted that same actual private input and
+  verified its scoped bearer/TLS context. The fixture was not installed anywhere;
+  there is no phone listener or enrolled secure record. Its synthetic credential
+  expires after thirty minutes. Package smoke does not establish any hardware or
+  canonical persistence evidence.
+- Read-only current mount still reports KOReader **v2026.07.1** at D:, while ADB
+  lists no connected authorized phone. The exact next physical step remains a
+  fresh source-bound isolated phone provision/start, actual KUAL execution and
+  independent phone/device collection. Preserve the earlier exact-source physical
+  reports; do not extend them to this new driver. Companion PR89/90 remain open
+  with all checks green and their separately requested merge permissions pending.
+
+## 2026-10-20 — Finite native wire diagnostic and byte-correlating collection
+
+- Added a separate finite diagnostic sequence/KOReader driver, outside production.
+  It uses the existing pinned codec/exchange/shared LuaSec carrier, captures exact
+  fixture inputs before callbacks and requires a fresh nonce/window for each of
+  ten attempts. Cases: rejected test CA, 401, explicit 429 pause, 503, deliberately
+  discarded successful reply, immutable retry and mixed/native-conflict neighbors.
+  The deliberately discarded body is not labeled random physical network loss.
+  Decoded replies remain untrusted; no cursor/outbox/ACK owner was added.
+- Three-batch fixtures were generated by actual Quartzo Dart source
+  `93a0ddeeb25cc0e54cef4ca5bd3d0199706ba3a3`, with model/generator Git blobs and
+  output hash recorded separately. That source passed Linux hosted CI
+  [39396718562](https://github.com/olalaurao/aplicativo/actions/runs/39396718562):
+  **2781 full-suite PASS / five skips**, **75 native-step PASS / four skips**,
+  including exact native TLS fixture storage/replay: three shards / three unique
+  events / 120 seconds / six existing-queue delivery revisions. Contracts stay
+  pinned to ratified e7a661d4; diagnostic inputs do not modify a wire/raw version.
+- Added exact-source private bundle preparation, fresh owned installation and
+  collection correlated with an isolated phone export. Shared existing bounded
+  path/JSON/native-snapshot helpers reject links, unknown entries and replacement.
+  Only public test certificates/client input/synthetic fixture can leave the
+  private session; phone TLS private keys never enter the bundle. Collection
+  checks native/source/run identity, ten distinct request nonces, three unchanged
+  batch identities, actual owner counters, closed-session credential revocation
+  and all three exported canonical files byte-for-byte. Partial artifacts remain
+  preserved. Even matching synthetic ARM-looking reports retain false physical
+  attestation/canonical ACK/cloud-delivery fields.
+- Final local wire/provider/sequence/driver/bundle suite: **80 PASS** (14.503s).
+  Existing transport regression: **32 PASS / two POSIX skips** (21.008s); the
+  six-file pinned upstream verifier and Python syntax checks also passed. Exact
+  committed-source Linux CI and package smoke follow this checkpoint.
+  No real combined native session was deployed or executed. The phone was absent
+  from ADB; the Obsidian sandbox remains Manual with three adoption-required
+  items and old official assets while Companion PR89/90 approvals remain pending.
+  Next validate the final source/CI, then perform a fresh source-bound isolated
+  phone session/actual KUAL run and independent collection. Production extraction,
+  source cursor, Resource effects and all later gated features remain disabled.
+
+## 2026-10-20 — Explicit canonical-wire diagnostic exchange preparation
+
+- While the specific Companion PR89/90 merge/preflight approvals remain pending, independent G04 diagnostic work now composes the actual pinned Lua codec with one explicit request/response exchange. `tools/reading_wire/exchange.lua` validates exact request scope/nonce/time before network and exact ordered response binding against a fresh clock after network. It returns only the existing `untrusted_claims/canonical_ack=false` projection; HTTP success never becomes a source-cursor grant. Unauthorized/retryable statuses remain distinct and provider errors are fixed/redacted. No hidden retry, credential lookup, queue, persistence or production entry point is added.
+- `client.wire_transport` reuses the transport diagnostic's shared LuaSec implementation, retaining explicit private IPv4 HTTPS, dedicated peer trust, TLS1.2, no redirects and timeout. It adds only the fixed canonical receiver route, captured endpoint/trust/binding, bounded 43-character bearer header and pinned wire byte limits. The old false-ACK diagnostic API/sequence is preserved. Twelve new real-Lua/actual-codec tests with injected HTTPS pass, including changed scope/expiry during I/O, per-position binding, 401/429/5xx/redirect, header injection, bounds and error redaction.
+- Initial full codec/provider/probe regression **61 PASS** (2.666s) included the first ten new cases; the final two boundary cases then passed in the **12-case exchange suite** and final full **63 PASS** (2.300s). Existing transport host suite **32 PASS / two POSIX-only skips** (11.709s) on Windows; these skips require Linux CI, not a fake process PASS. The six pinned upstream files verify locally. Committed-source replay/CI follows before any deployment.
+- This is preparation for the combined physical source-to-canonical diagnostic, not that proof. No combined Android listener or KUAL launcher is installed, no new device run happened, and no real/production credential is enrolled. Prior actual PW3 TLS evidence remains bound to its old exact source; it cannot certify the refactored carrier. The separate offline codec/native evidence uses unchanged sources and retains its original narrow scope. Canonical durable acknowledgement, production certificate/pairing lifecycle, live cloud recovery and Gate0/G03/G04 remain open.
+- Exact committed **fff215e8cee8caba0c247abfc0527d52073503bf** passed [Linux host CI 39391724618](https://github.com/olalaurao/quartzo-koplugin/actions/runs/39391724618): both complete transport and wire/provider/probe suites pass, including the Linux-only process cases and all twelve new exchange cases. The six pinned upstream files also verify byte-for-byte against GitHub. A committed-source Windows replay passed 32 transport cases with its two explicit POSIX skips (9.466s). No source or test changed after those runs. ADB currently reports no connected authorized device; preparing code does not substitute for the later Android/PW3 native round trip.
+
+## 2026-10-20 — Live Companion/Drive byte acceptance failed; corrected owners in review
+
+- The user completed official 5ba99fd sandbox pairing; native inspection confirmed Obsidian **1.14.4**, Manual preserved and a newly created isolated Drive test vault. Three synthetic fixtures were seeded after the empty pairing. Actual Sync now left three adoption-required paths, while its UI hid paths, offered no adoption action and incorrectly claimed complete sync. Scoped DevTools then invoked the existing coordinator's explicit adoption API for those exact fixtures, under local target/hash guards. Actual downloads returned empty bytes; separate Drive v2 size/MD5 confirmed all three remote files were **zero bytes** despite original hash properties. [Sanitized actual failure evidence](https://github.com/olalaurao/quartzo-obsidian-companion/blob/a0a7c68c4272fa8683e550921b5655273450651d/docs/reading-integration/live-drive-media-failure-2026-10-20.json) contains no account, folder or file IDs or private content. This is a failed acceptance, not a cloud PASS. Local originals and corrupt synthetic cloud copies remain preserved for reviewed recovery.
+- Existing-owner [Companion PR89](https://github.com/olalaurao/quartzo-obsidian-companion/pull/89) fixes the SDK renderer branch silently omitting Buffer media, sends byte-preserving multipart through the same SDK/OAuth pipeline and independently verifies create/update bytes before success. Its final **a0a7c68c4272fa8683e550921b5655273450651d** passed all six Linux/Windows/macOS checks, including fourteen real-SDK Node/renderer cases. Exact-source build/smoke and 51 authenticated upstream contract checks passed. Specific merge/preflight authorization is pending; no candidate installation or release occurred.
+- Dependent [Companion PR90](https://github.com/olalaurao/quartzo-obsidian-companion/pull/90), final **a66915be2a0cac92e84c03008b4e90c3dab29ba9**, adds actual UI review/confirmation, exact paths and fresh pending/error feedback. The same adoption coordinator now holds its existing mutex/progress, verifies actual remote bytes despite hash claims, rejects target/local changes and preserves unknown-baseline retry after conflict-artifact failure/restart. Local full **1022 PASS / two optional skips**, final **55 scoped PASS**, type/full lint/architecture/docs/build/smoke pass. Hosted checks and official installed-artifact/live replay remain separate; it is not a physical UI PASS.
+- PR90 subsequently passed all six final checks at a66915b: [PR CI 39389274003](https://github.com/olalaurao/quartzo-obsidian-companion/actions/runs/39389274003) and [push CI 39388663625](https://github.com/olalaurao/quartzo-obsidian-companion/actions/runs/39388663625). Linux/macOS full **1022 PASS / three skips**, contracts **397**, sync **390 PASS / three skips**; Windows sync **391 PASS / two skips**. Separate merge/final-preflight authorization is pending. This plugin's documentation handoff a864289 passed [host CI 39389393775](https://github.com/olalaurao/quartzo-koplugin/actions/runs/39389393775).
+- This handoff changes only plugin documentation. The actual PW3 offline codec proof remains source-bound and valid, while Gate 0A/0B/0C, durable source acknowledgement and the full integrated goal remain open. No production extractor/outbox, cursor, Resource effects, Statistics/sidecar writes, Wi-Fi changes or real vault/template migration is authorized by these narrow observations. Next obtain the reviewed official artifact, verify its installed digest, explicitly repair the owned sandbox copies and finish actual multi-client byte/race/restart proof before source-to-canonical acknowledgement.
+
+## 2026-10-20 — Corrected Companion main and official live sandbox preparation
+
+- Separately authorized Companion PR88 preserves the current Manual/Automatic preference in all three pairing completion paths. Its nine actual-plugin regressions reproduced three Manual failures before correction; final local full suite **989 PASS / two opt-in skips**, type/lint/architecture/docs/build/smoke PASS. All six final checks passed at b1b8e69. It merged as **5ba99fd02c87df072103390a377f611f7f452ff4**, tree-identical to that tested head.
+- [Normal main CI 39376029232](https://github.com/olalaurao/quartzo-obsidian-companion/actions/runs/39376029232) passed Linux/Windows/macOS; authorized official [Release Preflight 39376273277](https://github.com/olalaurao/quartzo-obsidian-companion/actions/runs/39376273277) passed on that exact SHA, including production OAuth validation, tests/build/architecture/smoke/package/upload. Preflight full **988 PASS / three skips**, contracts **397 PASS**, sync **365 PASS / three skips**. Corrected official bundle SHA-256 is `8ecc4889893505264c2fe4dd1b55db60704e76fc1c030cbdf70bf835710a793b` (1174631 bytes); extracted assets matched packaged checksums and manifest/styles matched exact committed blobs.
+- The corrected official plugin is staged only in a fresh **empty** local sandbox, disabled, Manual/unpaired. Verified synthetic fixtures remain outside until canonical new-test-folder pairing completes. The earlier 34d1244 artifact is historical and is not used for corrected live acceptance. The user has been asked to open/enable the sandbox, authorize Google through the official UI and explicitly create/pair a new test folder, then confirm Manual remained selected. No native Obsidian/cloud PASS, production install, tag/release, canonical ACK or downstream effect is claimed. Evidence/runbook follow-up stays in draft Companion PR87; production gates remain open.
+
+## 2026-10-20 — Actual PW3 offline codec compatibility PASS
+
+- The user confirmed the requested safe-disconnect/KUAL/run/reconnect sequence. On the known actual mounted PW3, the single-use launcher reports completed and the strict collector accepts the exact **1af5a67e97ff3d0f071c9ba9f9cd136b8fc19ef7** bundle, manifest/run correlation, unchanged installed native source hashes and all report fields. [Source-bound physical evidence](docs/evidence/wire-consumer-pw3-2026-10-20.json) preserves the distinction between the collector's `physical_execution_attested=false` and this separate acceptance based on actual target plus human execution confirmation.
+- Actual runtime: **KOReader v2026.07.1 / Lua 5.1 / LuaJIT 2.1.1783773675 ARM / dkjson 2.10**. All **three golden checks, 12 negative mutations, five actual-Dart references, three conflicting positions, three isolated entries and expired-window rejection PASS**. Observed CPU time is 0.169715 seconds from `os.clock`, not elapsed wall duration or an approved performance budget. Device report SHA-256 is `156f51b2976d9d72e60d00db94dedee1301c7481ff81d0d1186d92c3b07294eb`; an exact private host copy is preserved.
+- Canonical persistence/ACK, cursor, Statistics, network and Wi-Fi flags remain false. This proves the native-library/codec compatibility slice of Gate 0C, not authenticated receiver delivery, offline/reboot/outbox, actual extraction, cloud/Obsidian or complete Gate 0. After collection, all 13 diagnostic files were archived and byte-verified on the host. Only the exact resolved diagnostic files and empty lock/folder were removed nonrecursively, with content checks before removal; mounted target absence was verified. No production activation or library change occurred. Prior preparation-only statements below are historical and superseded for this source-specific compatibility result.
+- Documentation handoff `da4d84327942e027b75d9e61034c32c6cf89ea69` also passed [CI 39374929570](https://github.com/olalaurao/quartzo-koplugin/actions/runs/39374929570). Companion evidence/runbook-only PR87 passed all final Linux/Windows/macOS checks at cc66822; it remains draft/unmerged and adds no live cloud proof. Review of the preflighted Companion main exposed pairing handlers silently enabling Automatic despite the documented Manual preference; all three regressions were reproduced and corrected in existing-owner PR88, which passed six final checks and merged with separate user authorization as 5ba99fd02c87df072103390a377f611f7f452ff4. Its normal main CI/new official preflight and corrected fresh sandbox preparation follow before live acceptance.
+
+## 2026-10-20 — Companion main merge and installed offline diagnostic
+
+- After the user's explicit conditional authorization, all six final PR86 checks were revalidated at `c09980e89c5b391d0c69be1f28872ef2f0f9d049`. [PR86](https://github.com/olalaurao/quartzo-obsidian-companion/pull/86) merged as **34d1244ec718cbd100f0f124ed76816dbde9008d** at 05:20:10 UTC. Its tree `a735fe91a1402c2781f660ffaa890557c114b8c7` exactly matches the tested PR head. [Normal main CI 39374344480](https://github.com/olalaurao/quartzo-obsidian-companion/actions/runs/39374344480) then passed Linux, Windows and macOS. The authorized official [Release Preflight 39374550229](https://github.com/olalaurao/quartzo-obsidian-companion/actions/runs/39374550229) passed on that exact main SHA, including OAuth build validation, all tests/build/smoke/package and artifact upload. Linux full: **979 PASS / three skips**, contracts **397 PASS**, sync **365 PASS / three skips**; Windows main sync **366 PASS / two skips**. Official artifact assets/checksums were verified and staged only in a fresh local sandbox, disabled, Manual and unpaired. No real Obsidian/Drive test has run. No tag, release or production installation was created.
+- Offline diagnostic source **1af5a67e97ff3d0f071c9ba9f9cd136b8fc19ef7** passed [CI 39374012219](https://github.com/olalaurao/quartzo-koplugin/actions/runs/39374012219): **34 diagnostic tests PASS** (11.551s), **51 wire/provider/probe tests PASS** (1.646s), no skips. The final local wire run passed 51 tests in 2.332s, including the actual Windows junction guard.
+- A bundle of the nine exact committed source/fixture files plus two public metadata files was prepared and verified. Installation succeeded only into fresh **D:\extensions\quartzo-wire-probe**, with current v2026.07.1 and both native source hashes rechecked before/after. Private host installation observation binds commit, manifest and run ID; production code, Statistics, sidecars and Wi-Fi were unchanged. The manual KUAL offline run and resulting ARM report are pending; installation is not physical execution PASS. Preserve the owned diagnostic for collection.
+- Gate 0A/0B/0C and the full integrated goal remain open for live Drive/Obsidian, authenticated durable source acknowledgement, production extraction/outbox and subsequent identity/effect/UI/Readwise/release requirements. Earlier draft/authorization statements below describe their historical checkpoints, superseded by this actual merge.
+
+## 2026-10-20 — Offline native codec probe preparation
+
+- Added a separate single-use KUAL codec diagnostic under `tools/reading_wire/`: pure `probe.lua`, bounded native entry point, menu/config and exact-Git-source prepare/install/collect tool. It exercises three golden checks, all 12 upstream negative mutations, five actual-Dart references, three native-conflict positions, three mixed entries and expiry rejection with an explicit synthetic clock. It records LuaJIT/ARM/library metadata and source hashes, with false canonical ACK/persistence/cursor/network/Statistics/Wi-Fi fields. No production plugin, HTTP client, credential, native event extractor or outbox is installed by this code.
+- Packaging reads the nine approved source files from an exact full commit SHA, not mutable working-tree files. The shell launcher derives from the existing tested single-use/watchdog source with only the fixed owned directory name replaced. Installation requires the current mounted baseline, two bounded native source files, plain KUAL directories and at least 4 MiB free, and creates only a fresh `extensions/quartzo-wire-probe`. Existing folders, links/junctions, changed/extra files and unavailable storage reject without overwrite/deletion. Collection checks exact committed/deployed bytes, nonce/manifest, actual native source hashes, all counts/strict types, completed launcher and actual ARM metadata. Matching synthetic reports never self-attest hardware execution or canonical durability.
+- Local updated wire suite: **51 PASS** (2.44s), including the existing 38 contract/provider cases, five actual-library harness/driver cases and eight packaging/install/collection cases. The driver test maps only the explicit bundle/native-code paths and suppresses real host process exit; x64 remains x64, not a PW3 result. Package tests use owned synthetic mounts and an actual Windows junction, preserve native/Statistics sentinels, reject low disk/changed libraries/malformed or ACK-claiming reports and refuse existing targets. No physical codec result is claimed.
+- Read-only mounted preflight now succeeds: KOReader **v2026.07.1**, **1980514304 bytes free**; installed dkjson SHA-256 `52f30be905216796ccb1e97da6135f3f5cfaaf6359544e66046e40f516a36b94` and SHA source `62d2e0885931a1f14db87e61cb3d74936bb5b1e19eb2b4994ab04c03d78f9ed6` exactly match the published host references. This narrows provider-source compatibility but proves no ARM execution. No device file was written by this preflight. Final clean-source package smoke/CI precede actual fresh installation and the manual KUAL run.
+- All five Quartzo PR66 checks are now approved at ab2dc7a3; it remains draft. Companion PR86 remains draft at c09980e8, with merge authorization still pending. Gate 0A/0B/0C and the full goal remain open for the actual device run, real Drive/Obsidian, authenticated durable receipt/source acknowledgement, production extraction and the remaining integrated requirements.
+
+## 2026-10-20 — Explicit KOReader dependency adapter
+
+- Final source **8ef0851f55d9a486fd615040c099426b86668b79** passed [CI 39372532998](https://github.com/olalaurao/quartzo-koplugin/actions/runs/39372532998): **34 diagnostic PASS** (12.289s), **38 wire/provider PASS** (1.263s), no skips. Exact fresh Windows checkout replay: **38 PASS** (1.383s), clean afterward. The [source-bound host report](docs/evidence/wire-consumer-host-2026-10-20.json) verifies eleven exact Git/checkout fingerprints, adopted upstream pin and all actual/injected provider counts; installed PW3/ARM, new physical execution, Drive/Obsidian, canonical ACK and source-cursor/production fields remain false. This evidence handoff does not change the tested runtime sources.
+- Pure consumer source **7c321e67d520b5923bafafe8efa7553d0775a660** passed [hosted CI 39371825791](https://github.com/olalaurao/quartzo-koplugin/actions/runs/39371825791): **34 existing diagnostic tests PASS** (11.27s) and **18 wire tests PASS** (0.98s), no skips. A fresh detached Windows checkout at that exact commit also passed all 18 wire cases and the six-file upstream hash verification. The existing source-specific physical f080644a diagnostic evidence remains unchanged.
+- Added an explicit `koreader_deps.lua` adapter for existing `dkjson` and `ffi/sha2` APIs. It preserves object/array/null identity, checks the interoperable integer and known SHA result, rejects decoder leftovers, and fails closed on missing/shape-losing providers without forwarding errors or adding a fallback. It loads no module until explicitly invoked and remains outside the production/deployed diagnostic path.
+- Captured published reference identities from the official KOReader-base dependency recipe/blob: dkjson 2.10 and SHA module blob 201f52ea674b23248afb60e1328905f57afb3a89. The reference lock records exact SHA-256 and MIT licenses; a bounded preparer obtains the exact public sources in a fresh host directory, with no arbitrary archive extraction, replacement/deletion or token lookup. These are published API references, not proof of the installed PW3 library version. The KOReader v2026.07.1 tag lookup was unavailable and the later device read was not ready; neither overrides the previously observed device baseline or authorizes guessing a new one.
+- New combined local suite: **38 PASS** (1.29s): the original 18 Lua 5.1 cases with explicit test providers, all 18 repeated through actual pinned JSON/SHA libraries in host LuaJIT 2.1, and two dependency boundary cases. No native-provider case silently skips if reference setup is missing. The same scoped/native conflict, canonical bytes, extreme calendar/integers/Unicode and untrusted-claim assertions pass through both implementations. This is host proof only; installed-library identity, ARM execution, actual KOReader lifecycle and device performance remain untested for this adapter. Final committed-source CI/replay follows; no new physical result is claimed.
+- Gate 0A/0B/0C remain open. Next prepare a minimal synthetic on-device provider/codec probe with no network, Statistics/sidecar access or canonical ACK, and execute only after the device baseline and owned deployment are verified. The guarded Companion PR86 still awaits its separately requested merge authorization; no merge, release, vault/account mutation, production extractor/outbox or source-cursor activation followed the absence of an answer.
+
+## 2026-10-20 — Pinned pure Lua wire consumer (Gate 0C, not production)
+
+- Added `tools/reading_wire/codec.lua`, outside the plugin and deployed TLS diagnostic. It consumes the ratified transport contract: exact request bytes/batch identity, explicit binding/nonce/UTC window and byte/count caps; independent native line inspection; quarantine of every same-ID/different-payload position; response scope/request/batch/position/line/native binding and canonical encoding. Decoded results are `untrusted_claims` with `canonical_ack=false`; no accepted-event, outbox/cursor, persistence, network, credential, Statistics/sidecar or Wi-Fi operation exists.
+- Imported **six exact upstream files** directly from `olalaurao/aplicativo@e7a661d4ed6d572cdbf722f4e697fea461005b69`. `tools/reading_wire/UPSTREAM.lock.json` records paths, SHA-256 and Git blob hashes; the verifier passed both locally and against that exact GitHub revision. No upstream contract was edited. LF attributes preserve these fingerprints across checkout. The existing CI now executes this consumer with the already pinned Lupa 2.8 test VM.
+- Final local wire suite: **18 PASS**, executing actual Lua 5.1 with explicit Python JSON/SHA providers. It includes the exact upstream request/response goldens and all **12 negative mutations**, raw/escaped byte limits, count/window/scope/replay-binding checks, malformed/unsupported/foreign valid-neighbor isolation, native conflict quarantine, Unicode/calendar/safe-integer cases and sanitized initialization/provider failures. Five additional synthetic reference cases were generated by the actual upstream Dart model; their exact native bytes/digests agree through year 1, pre-epoch, leap calendar and year 9999/microseconds. Generator, fixture and upstream model provenance are recorded alongside the consumer.
+- Initial tests failed because Python callbacks arrive in Lua as callable userdata; the harness now wraps those providers as Lua functions, retaining the codec's strict function dependency check. Later native regressions found an actual Unicode-whitespace discrepancy and a Python wrapper-identity assertion error. The consumer now matches Dart's Unicode blank-string rule and the test compares the Lua null sentinel in Lua; the corrected final suite passes. Earlier failures remain private logs, not PASS.
+- Existing transport diagnostic regression: **32 PASS / two POSIX-only skips** on Windows (34 cases, 21.04s). Host TLS/request/retry/launcher/bundle behavior is unchanged. Hosted CI, a clean-checkout replay and actual KOReader JSON/SHA provider integration still require verification for this new source. The JSON provider must preserve object/array/null types; native providers are neither guessed nor silently substituted. A new USB read observed a not-ready device, so no current PW3 execution is claimed. Reader code and production device/vault/account state remain unchanged.
+- Gate 0A/0B/0C remain open. This pure compatibility layer is required protocol work, not a replacement for authenticated durable receipt verification or production source acknowledgements. Next validate the final consumer source/CI and native provider boundary while the guarded Companion merge authorization and real Drive/Obsidian acceptance remain pending. Do not install a production extractor/outbox, advance a source cursor or enable Resource effects from these observations.
+
+## 2026-10-20 — Upstream ratification and guarded Companion adoption
+
+- The user authorized Quartzo PR65 only after its necessary checks. [PR65](https://github.com/olalaurao/aplicativo/pull/65) merged as **e7a661d4ed6d572cdbf722f4e697fea461005b69**, identical in tree to tested 2a2cd49b. Final hosted full suite **2765 PASS / five skipped** and Windows **2745 PASS / 25 skipped** passed with Analyze, Agent Gate and Dial Focus. The previous Windows deep-path failure was fixed and rerun before merge; it remains failed historical evidence. Normal main arm64 build passed in 811.5s and was archived, never installed. Earlier actual Android v6 evidence remains specific to f2be1dba.
+- Companion adopted the merged contracts through its official lock/sync path; **51 files verify byte-for-byte**. Guarded immutable lifecycle, actual remote identity/version and explicit original-byte repair are implemented through its existing owners in draft [PR86](https://github.com/olalaurao/quartzo-obsidian-companion/pull/86). Runtime e2b1664 passed local **980 tests / one skipped** and both Linux/Windows/macOS CI runs; isolated build/smoke/packaging passed without installation or OAuth build credentials. It is not merged, released or production interoperability proof.
+- A [four-stage source-fingerprinted exchange](https://github.com/olalaurao/quartzo-obsidian-companion/blob/c09980e89c5b391d0c69be1f28872ef2f0f9d049/docs/reading-integration/cross-client-exchange-2026-10-20.json) passed on clean Quartzo db89ac55 / Companion 084c279e. The actual local owners preserve native shard bytes/IDs across restarts and explicit repair, retain remote-absence evidence and transport future-schema opaque bytes without ingestion. Remote transport is synthetic. No live Drive/Obsidian, power-loss or canonical ACK is certified.
+- This handoff updates documentation only. Plugin runtime remains f080644a; Reader, Statistics/sidecars, accounts/templates, real vaults and device/Wi-Fi state were not changed. Gate 0A/0B/0C remain open for canonical admission/ACK, real multi-client Drive/Companion and production device transport/rollback. Ratified contracts unblock compatible consumer work; they do not permit production extraction/outbox or Resource effects before those proofs. Next validate the guarded owners in an isolated real Drive/Obsidian exercise, then complete authenticated source-to-canonical acknowledgement.
+
+## 2026-10-19 — Actual upstream secure admission v6 Android PASS
+
+- Clean upstream `f2be1dba0d3039205918b1a71c065448a38ee741` passed the actual [Android secure-admission v6 probe](https://github.com/olalaurao/aplicativo/blob/2313cb32218f88fca1e5025547193bb1a925bb92/docs/reading-integration/android-secure-admission-probe-2026-10-19.json). The existing secure-settings owner registered/read/revoked scoped credentials through the real Android plugin, recovered metadata after actual process termination and removed the final credentials. Each phase used a fresh runtime-only bearer; expiry used an explicitly injected synthetic clock. Private/external mixed malformed/valid/native-conflicting/foreign-device inputs produced exact per-position replies and bound revisions, preserved rejected/old bytes, and recovered three auxiliary queue rows/replayed to five. Receiver cases took 1944ms; four primary synthetic events/120 seconds remain separate.
+- Independently rechecked all 17 source fingerprints, clean tree, APK/kernel markers, archive digest, public/private report parity, distinct UID/process, credential/package removal and unchanged production metadata. The isolated APK built in 195.7s; the [normal main APK](https://github.com/olalaurao/aplicativo/blob/2313cb32218f88fca1e5025547193bb1a925bb92/docs/reading-integration/android-main-build-f2be1dba-2026-10-19.json) built in 262.3s and was never installed. Its kernel excludes the receiver and diagnostic module/revision. [Exact-source CI 39338709647](https://github.com/olalaurao/aplicativo/actions/runs/39338709647): **2734 full-suite PASS / five skipped**, **59 native-step PASS / four skipped**, 95 docs/architecture cases, 14 decoder cases and repository-policy analysis. An earlier added host fixture failed because its SDK directory lookup was unregistered; corrected only the headless fixture, preserving native/reply assertions. The earlier failed CI/build remains recorded upstream.
+- This certifies local secure-plugin/receiver/persistence behavior, not a Kindle-to-receiver network session, live Drive/Companion, hardware power loss, production certificate/pairing lifecycle or source-cursor ACK. Canonical Windows checks are still queued; the runner was observed online/busy. This plugin handoff is documentation only. Runtime f080644a, Reader/Companion code/lock, Statistics/sidecars, real vault/accounts/templates and Wi-Fi remain unchanged. Upstream ratification/adoption and Gate 0A/0B/0C remain open; production extractor/outbox/receiver and effects are disabled.
+
+## 2026-10-19 — Actual upstream combined publication v5 Android PASS
+
+- After the user reconnected/unlocked the phone, clean upstream `91d575385c3f2e222857d716ea7d4d03cd4c3c3e` passed the actual [v5 Android probe](https://github.com/olalaurao/aplicativo/blob/5db905ec958a76a3b711bb5b7891d96c635f66a4/docs/reading-integration/android-verified-publication-probe-2026-10-19.json). All 12 source fingerprints, archived APK digest, clean tree and byte-identical evidence copy were independently checked. Private/external combined publication, exact fact bindings, native-conflict preflight with unchanged bytes/queue, same-input retry and two-to-four auxiliary queue recovery after actual process termination passed. Combined phase-two cases took 1232ms; four primary synthetic events/120 seconds remain separate.
+- Distinct Android UID/process, owned-package removal and unchanged production metadata passed. This certifies only exact-source local persistence, not cloud delivery, hardware power loss, authenticated canonical ACK or Kindle-to-receiver transport. The newer upstream credential/admissible-reply draft is outside this physical proof. This handoff changes documentation only; plugin runtime f080644a, Reader/Companion code/lock, real vault/accounts/templates, Statistics/sidecars and Wi-Fi remain unchanged. Production extractor/outbox/receiver and Resource effects remain gated.
+
+## 2026-10-19 — Combined upstream publication validated on Linux; Android v5 ready
+
+- Upstream `818040c6c682aaa3b059789e18dc93518bca3bd4` composes bounded observed-ledger/native-ID verification, planned input checks, publication, file/ancestor synchronization and captured queue insertion under one existing kernel lease. Final immutable local fact bindings are library-constructed; they are not authentication or source ACK. Host affected suite: **73 PASS / nine native skips**, scoped analysis no issues. [Exact-source CI](https://github.com/olalaurao/aplicativo/actions/runs/39259109713): **2691 full-suite PASS / four skipped**, **30 native-step PASS / three skipped**, including all five new Linux native cases, 95 docs/architecture cases and repository-policy analysis. No second raw store/index, canonical table, endpoint or production registration was added.
+- Diagnostic source `91d575385c3f2e222857d716ea7d4d03cd4c3c3e` prepares separate private/external combined-publication fixtures with exact fact bindings, native-conflict preflight, queue preservation and replay after actual process stop. [Its CI](https://github.com/olalaurao/aplicativo/actions/runs/39260867421) passed **2691 / four skipped**, 30 native-step cases/three skips and **13 decoder cases**, including old-v4 rejection. The clean isolated arm64 APK built in **157.2s**; source/kernel/APK fingerprints and compiled v5/API markers were independently checked ([build-only metadata](https://github.com/olalaurao/aplicativo/blob/cd818035a2f9d6390c3c83451ebeb05ad79a310e/docs/reading-integration/android-verified-publication-build-2026-10-19.json)). No installation or fresh physical execution was attempted: ADB showed no authorized device, and connection/unlock is pending. Earlier actual Android v4 evidence remains bound to 1a7e828b and does not certify this composition.
+- This plugin handoff remains documentation-only; runtime f080644a and Reader/Companion code/lock, real vault/accounts/templates, Statistics/sidecars and Wi-Fi are unchanged. Canonical receipt issuance/authentication, per-entry ingress, real Drive/Companion and release gates remain open. No production extractor/outbox/receiver, Resource effects, analytics or SimpleUI is enabled.
+
+## 2026-10-19 — Actual upstream native v4 PASS and owner validation
+
+- Exact clean upstream `1a7e828b134a8b64fc5d2c274942f627caf2214b` passed [CI 39245787862](https://github.com/olalaurao/aplicativo/actions/runs/39245787862): **2629 full-suite PASS / three skipped**, 15 native Linux cases/two skips, 95 docs/architecture cases and 12 decoder cases. Its isolated Android APK built in 626.5s, then actual SM-A546E/API36 execution [passed both v4 phases](https://github.com/olalaurao/aplicativo/blob/7401e13d229cf5c6159bedb3ca15fe472a25782a/docs/reading-integration/android-directory-sync-probe-2026-10-19.json). Native root/ancestor/leaf symlink rejection, private/external file and ancestor synchronization, exact-byte rejection, queue replay and actual process-stop lease release passed. Twelve source hashes/APK digest were independently rechecked; the test package was removed and production metadata remained unchanged. This resolves the then-pending result below, without turning older failed reports into PASS.
+- Separate upstream owner source `7401e13d229cf5c6159bedb3ca15fe472a25782a` passed [CI 39249561223](https://github.com/olalaurao/aplicativo/actions/runs/39249561223): **2645 full-suite PASS / three skipped**, including Linux contained-alias/attachment cases. Generic reading writes and conditional repair reuse the existing kernel lease/no-replace owner; generic deletion/relocation and attachment aliases reject. Its clean normal Android arm64 main APK built in 207.3s ([metadata](https://github.com/olalaurao/aplicativo/blob/cbca1dc0a8b890c7720d9f7e2e1608380875b3ab/docs/reading-integration/android-main-build-2026-10-19.json)); it was archived and never installed. The older physical proof is not extended to this later owner source.
+- Subsequent upstream Drive guard source `05cdea144f62383b611069923b2a22b58ad20554` passed [CI 39255195061](https://github.com/olalaurao/aplicativo/actions/runs/39255195061): **2676 full-suite PASS / three skipped**, native Linux, docs/architecture, schemas/vectors and decoder checks. Four unsafe reading-ID mutations and five vault-retarget races were reproduced using actual service code with synthetic HTTP, then blocked by actual-identity/ancestry checks, captured target checks and per-request ETags; permanent cleanup is conditional. Serial adapter/verifier checks: 75 PASS; scoped analysis: no issues. Its normal main arm64 APK built in 224.9s ([metadata](https://github.com/olalaurao/aplicativo/blob/65984d76d3a5075ddaa370f9b2ff710b4bdc5ec6/docs/reading-integration/android-main-build-05cdea14-2026-10-19.json)), was independently fingerprinted/archived and never installed. This adds no live Drive or newer physical proof.
+- Canonical receipt issuance/authentication, whole native consistency, live Drive/Companion, production ingestion and release gates remain open. Next combine complete bounded native verification, file/ancestor synchronization and captured queue insertion under the existing owner lease before authenticated receipt construction. This plugin change updates documentation; runtime remains f080644a. No Reader/Companion lock, Statistics/sidecar, real vault/template/account or Wi-Fi change, production extractor/outbox/receiver or Resource effect is introduced.
+
+## 2026-10-19 — Actual ARM64 failure isolated and corrected upstream
+
+- Corrected queue-revision diagnostic source 9744d247 passed [CI 39176286526](https://github.com/olalaurao/aplicativo/actions/runs/39176286526): **2628 full-suite PASS / three skipped**, 14 native Linux cases/two skips and 95 docs/architecture cases. Its APK built in 1013.7s; the first installation was rejected for low phone storage before any probe code ran. The user freed space, then clean-source execution failed with `native_open_failed` during external synchronization. The [incomplete report](https://github.com/olalaurao/aplicativo/blob/1a7e828b134a8b64fc5d2c274942f627caf2214b/docs/reading-integration/android-directory-sync-external-incomplete-2026-10-19.json) verifies owned-package removal and unchanged production metadata. Neither installation failure nor partial execution is an overall synchronization/restart PASS.
+- Upstream `1a7e828b134a8b64fc5d2c274942f627caf2214b` fixes a real Linux ABI mistake: ARM64 NOFOLLOW/DIRECTORY are 32768/16384, while x64 uses 131072/65536. The old ARM64 values accidentally selected LARGEFILE/DIRECT. Independently checked installed Android NDK headers and the [Bionic UAPI source](https://android.googlesource.com/platform/bionic/+/cf02614a4bef8fe336cae8796df5cb6eeb368a6d/libc/kernel/uapi/asm-arm64/asm/fcntl.h), then corrected traversal and private lease opening with unsupported-ABI rejection. Host header/native suite: three PASS/seven POSIX skips; scoped native/probe analysis: no issues; 12 v4 decoder cases PASS, including old-v3 rejection.
+- Fresh diagnostic v4 adds required native root/ancestor/leaf symlink rejection in private owned fixtures alongside private/external file/ancestor synchronization and actual process-stop queue replay. [Fresh CI](https://github.com/olalaurao/aplicativo/actions/runs/39245787862) has passed independent schemas/vectors, decoder, native Linux, docs/architecture and repository-policy analysis; full suite and fresh APK/physical result are pending. A private clean source checkpoint keeps this physical test separate from the ongoing upstream mutable-owner guard draft. Old physical evidence is not extended to corrected ARM64 flags.
+- This plugin change is documentation only. Runtime f080644a, Reader/Companion code/lock, Statistics/sidecars, real vault/accounts/templates and Wi-Fi remain unchanged. G03/G04/0A/0B/0C remain open; no production extractor/outbox/receiver, effect grant or canonical ACK is enabled.
+
+## 2026-10-18 — Upstream native publication synchronization candidate
+
+- Upstream `a267f38bc2a49048515b7bca006906ca5fcc5f33` adds an explicit existing-owner file/ancestor operation: Linux/Android x64/arm64 descriptor-relative no-follow traversal, exact opened-byte checks around fsync, bottom-up ancestor fsync to an existing root and complete descriptor cleanup. Unsupported platforms/filesystems fail without global/admin/ordinary-flush fallback. Optional unregistered `commitWithPublicationSync` sequences it before captured queue insertion. Its transient flag is not a canonical receipt; weak commit remains distinguishable.
+- Windows host affected-owner/recovery/store/read/inventory/verification/full architecture: **216 PASS / 11 skipped** (2m20s), four existing owner analyzer infos/no errors or warnings, preflight/whitespace and **11 diagnostic decoder cases PASS**. The [exact-source CI](https://github.com/olalaurao/aplicativo/actions/runs/39174108852) **PASSED: 2628 full-suite tests / three skipped**, including **14 native Linux cases / two skipped**, 95 architecture/docs cases and repository-policy analysis (17 baseline infos). The clean Android diagnostic v3 APK built in 379.6s but actual execution failed with `StateError` during private synchronization. Its [incomplete observation](https://github.com/olalaurao/aplicativo/blob/405caf5a28d5953c992086950c7b97bf0d3a44d2/docs/reading-integration/android-directory-sync-incomplete-2026-10-18.json) verifies owned-package removal and unchanged production metadata. Diagnostic-only source 405caf5a adds finer fixed stages and allowlisted failure codes; scoped analysis/11 decoder cases pass and a new APK is building. No new physical synchronization PASS is claimed; old v2 reports retain their original scope.
+- This is documentation-only in the plugin; no Lua codec/extractor/outbox/receiver, Reader/Companion lock, Statistics/sidecar, credential, real vault/template or Wi-Fi change. G03/G04/0A/0B/0C remain open. Existing-root anchoring, actual hardware/SQLite power loss, global native consistency/all-writer cooperation, live Drive/Companion and authenticated canonical ACK still require proof. Do not start production ingestion from this observation flag.
+- Diagnostic 405caf5a subsequently passed [CI 39175557827](https://github.com/olalaurao/aplicativo/actions/runs/39175557827), **2628 full-suite PASS / three skipped**, and its actual APK reproduced the failure at `publication_sync_private_wrong_bytes` with fixed code `failure_changed_queue`; cleanup/production metadata checks again passed. This isolated the incorrect diagnostic assumption: the queue persists one immutable revision per successful attempt, so two commits leave two rows. Corrected app source `9744d247c02bb17934652dff8f3ccc3a3f3a837d` expects two rows before restart/four after phase-two replay and compares complete serialized pending actions across wrong-byte rejection. Windows **three PASS / four native skips**, scoped analysis and 11 decoder cases pass; its actual Linux native CI step/docs/analysis have passed, while full CI and a fresh APK/physical result remain pending. Production runtime/queue semantics are unchanged; neither incomplete physical attempt becomes a PASS.
+
+## 2026-10-18 — Upstream immutable lifecycle guards (no plugin runtime change)
+
+- Upstream app `ce7348e0e12cde93e023656a8da89e7b4201d5e1` preserves established-baseline remote absence and queued local deletion as scoped conflicts, without erasing facts or automatic republication. Generic file-conflict deletion cannot purge immutable reading history. Explicit repair and outbound Drive writes require the filename's original byte digest, using immutable input copies before asynchronous waits. Opaque future-schema bytes remain transportable; no event parser or canonical ACK is added to byte transport.
+- Bulk orphan cleanup now requires zero selected failures and an empty authoritative scoped conflict queue, preserving failed/unselected snapshots. Actual Drive-adapter tests use a synthetic HTTP client and retain the ETag/unknown-property controls. Four lifecycle failures and two mutable-input races were reproduced before correction; the upload assertion was corrected to decode actual multipart base64 before its final reproduction. Final host regression: **253 PASS / one skipped** (6m30s), including 1000/10000-file measurements, complete architecture and affected sync/shard/queue/conflict tests. Scoped analysis of seven Dart files has four existing owner style infos/no errors or warnings; preflight/whitespace pass.
+- [Exact-source CI 39171279304](https://github.com/olalaurao/aplicativo/actions/runs/39171279304) and a clean normal Android main build are in progress. The earlier 544c55c0 physical report is not extended to this later code. This plugin handoff is documentation only; Reader/Companion code/lock, Statistics/sidecars, real vault/accounts/templates/settings and Wi-Fi are unchanged. Prior documentation source 5b8af61 passed [diagnostic CI 39168883300](https://github.com/olalaurao/quartzo-koplugin/actions/runs/39168883300).
+- G03/G04/0A/0B/0C and production ingestion remain open. Next close file-ID relocation/remaining mutable-owner paths, directory/power-loss/global/live Drive/Companion durability and authenticated canonical receipts before production extraction/outbox/receiver. No Lua event codec, native extraction, Resource effects, automation or release ZIP is introduced by these mobile guards.
+- **Subsequent source validation: PASS.** Exact ce7348e0 passed CI 39171279304 with **2614 full-suite tests / one skipped** (7m03s), **95 architecture/docs**, **11 decoder cases**, independent schema/vector/digest checks and 17 baseline analyzer infos/no errors or warnings. Its normal Android arm64 `lib/main.dart` debug APK built in **592.5s**. AAPT/package/version, nine source hashes and APK digest/size are bound in the [sanitized build metadata](https://github.com/olalaurao/aplicativo/blob/a0703a3a41e99f5e6c1283ac14300bfde60b838f/docs/reading-integration/android-main-build-2026-10-18.json). No installation or new physical/Drive/Companion/power-loss/ACK claim follows. Earlier physical probe APK/report were preserved. This evidence-only follow-up changes no plugin/app runtime.
+
+## 2026-10-18 — Upstream leased staging recovery (production gates open)
+
+- Upstream app `4ab474f33987e322647b61197db38caa9a7c9552` adds explicit bounded staging recovery through the existing ObsidianService/SyncQueueService owners. Empty private app-support sentinels coordinate native Windows sharing exclusion/Linux-Android flock, outside the synced vault. Complete preflight precedes canonical publication, captured-scope queue insertion and no-replace preservation of original bytes/path provenance. Invalid stages are preserved for review; unknown/legacy artifacts, conflicts and retarget/cancellation remain blocked. No source cursor or production ACK is advanced.
+- The first Android attempt on 4ab474f3 is **INCOMPLETE**, because its long phase-2 log report was truncated. App collector follow-up `544c55c0a2a7f381c2a40212395daa664b627362` uses a bounded private observation file with short phase/revision/length/SHA-256 marker. That clean source then **PASSED on actual SM-A546E/API36**: held kernel lease released by real process stop, distinct relaunch, private/external recovery, invalid-stage preservation and replay. All 12 source hashes/APK digest were independently checked; the isolated package was removed and production metadata was unchanged. See the [exact sanitized report](https://github.com/olalaurao/aplicativo/blob/814ea46f/docs/reading-integration/android-staging-recovery-probe-2026-10-18.json). Recovery-only cases took 2048ms, publication-only 1643ms; 120 seconds is synthetic main-ledger input, not user reading.
+- Clean 544c55c0 passed [Hosted Docs Validation 39166649398](https://github.com/olalaurao/aplicativo/actions/runs/39166649398): **2588 full-suite PASS / one skipped**, **95 architecture/docs PASS**, **11 decoder cases PASS**, independent schemas/goldens PASS and analysis with 17 baseline infos/no errors or warnings. Evidence reconciliation passed 95 local architecture/docs cases. Earlier 4ab474f3 independently passed 2588/one skipped; its incomplete physical result is never relabeled.
+- This handoff changes no plugin runtime, Reader/Companion code/lock, Statistics/sidecar, credentials, real vault, settings or Wi-Fi. Local process recovery does not prove global/directory/power-loss/live Drive/Companion durability or canonical authenticated ACK. G03/G04/0A/0B/0C remain open. Next complete those upstream persistence/receipt and actual cross-client proofs before production extraction/outbox/receiver; the existing synthetic PW3 TLS diagnostic remains a separate source-specific proof.
+- Subsequent upstream `60b3aa22ba0ba60fddbdea82d36ef8fe0ce16938` fixes a separately reproduced sync failure: ordinary reconciliation had overwritten a valid baselined shard after a remote-only edit. Exact canonical reading paths now preserve differing opaque byte hashes as existing scoped conflicts in queue/inventory paths. **216 local regression/architecture PASS / one skipped**, including local/remote changes with/without queued replay and opaque future-schema transport; analysis has only three existing infos/no errors or warnings. [Latest-source CI](https://github.com/olalaurao/aplicativo/actions/runs/39168062908) is still running. The earlier Android report does not certify this later SyncManager change. Deletion/explicit conflict resolution and live cross-client proof remain open; no Lua runtime or Companion lock change follows.
+- **Subsequent CI resolution: PASS** for exact 60b3aa22 in that run: **2593 full-suite tests / one skipped** (7m10s), **95 architecture/docs**, **11 decoder cases**, independent four-schema/12-wire-vector/digest checks, and analysis with 17 baseline infos/no errors or warnings. This confirms the upstream automated sync regression, without claiming actual Drive/Companion or new physical runtime proof. This plugin's documentation handoff 984c39a separately passed [diagnostic CI 39168391873](https://github.com/olalaurao/quartzo-koplugin/actions/runs/39168391873).
+
+## 2026-10-17 — Upstream native immutable publication (production gates open)
+
+- **Subsequent Android resolution: PASS** after the user's manual unlock and independent Awake/showing=false observation. Exact clean app source `b539db4d880a5c1fa7b04ed9a6ab86260bbba6d4` passed native publication in private storage and its own external directory, independent owner conflict/retry/owned-temp cleanup and all earlier file/queue/discovery/verification checks around actual process stop/relaunch. The package was removed and production metadata remained unchanged. The [source-specific sanitized report](https://github.com/olalaurao/aplicativo/blob/585041c9e98b21d417bcf6a4a6640c19170128b5/docs/reading-integration/android-native-publication-probe-2026-10-17.json) binds 12 independently rechecked source hashes and the APK digest. Native publication-only cases after restart took 683ms; input duration is 120 synthetic seconds, not user reading. This proves no global/cloud/power-loss/ACK guarantee and does not relabel the earlier first failure.
+- The same b539db4d source passed [Hosted Docs Validation 39034702991](https://github.com/olalaurao/aplicativo/actions/runs/39034702991): **2572 full-suite PASS / one skipped**, **95 architecture/docs PASS**, independent schema/goldens PASS and analysis with 17 baseline infos, no errors/warnings. App evidence/spec/ADR reconciliation passed 95 local architecture/docs tests. This plugin's previous documentation handoff 15b9a58 passed [diagnostic CI 39034728093](https://github.com/olalaurao/quartzo-koplugin/actions/runs/39034728093); no plugin runtime changed in either handoff.
+- Upstream app source `146e3fb53d39f897c687dc6980b4c508f2609aa2` replaces the immutable file owner's check/ordinary rename with exclusive UUID sibling staging and native no-replace publication. Windows uses MoveFileExW without replacement/copy permission; Linux/Android require renameat2 RENAME_NOREPLACE. Unsupported primitives/filesystems fail closed, with no unsafe fallback. Native error codes are advisory; post-failure source/destination observation followed by owner path/scope revalidation and exact bytes preserves collisions. Mutable writes retain their behavior.
+- Upstream Windows regression **209 PASS**, including real independent OS-process races, Unicode/long paths, killed staging, local store/read/verification, queue and all architecture tests. Two additional SyncManager/in-memory Drive native-shard cases **PASS**; scoped analysis has only four pre-existing owner infos and no errors/warnings/new findings. Native source 146e3fb5 passed [hosted CI 39033713458](https://github.com/olalaurao/aplicativo/actions/runs/39033713458): **2572 full-suite PASS / one skipped**, **95 architecture/docs PASS**, independent four-schema/goldens PASS and analysis with 17 baseline infos, no errors/warnings. These Linux cases include actual native process races; successful Android private/external proof remains pending.
+- The clean-source isolated Android APK built successfully, but its first physical attempt **FAILED** to report phase 1 in 90 seconds. Owned logs stopped at Vulkan/Impeller startup; subsequent inspection found a locked/Dozing phone. No native syscall outcome or physical PASS is inferred. The probe package was removed/absence independently verified; a before/after production-metadata comparison was not retained for that failed attempt. Upstream runner follow-up rejects known locked/asleep states before install, preserves scoped failure logs/cleanup observations and requires manual unlock without changing device settings. Its real locked-device rejection/absence check and syntax passed. A fresh successful physical run is still required.
+- Per-file no-replace is not global ledger stability, orphan-staging recovery, directory-fsync/power-loss/Drive/Companion durability or a canonical ACK. G03/G04/0A/0B/0C and production ingestion remain open. No production plugin/Reader/Companion/Statistics/sidecar/settings/Wi-Fi change is made by this documentation handoff.
+
+## 2026-10-17 — Upstream wire contract candidate (no plugin runtime change)
+
+- Corrected upstream wire source `f0b4f98ec366916799a64e80afdae22cc122b16a` passed [hosted CI 39031054949](https://github.com/olalaurao/aplicativo/actions/runs/39031054949): **2564 full-suite PASS / one skipped**, **95 architecture/docs PASS**, independent four-schema/goldens PASS, analysis with 17 baseline infos and no warnings/errors. Earlier bb32e96e run39030194441 **FAILED** with 2563 PASS / one skipped / one failure: the strict Companion manifest test omitted the new transport-version key. Corrected exactly the expected key and 1.0.0 assertion without weakening the set check. Local full affected Companion-contract file plus wire suite: **60 PASS**. The earlier failure remains a failure; this success certifies only the named corrected source.
+- Upstream app `bb32e96e42027ec3a411fd96268fbd49e2056483` adds separate `readingTransportContractVersion: 1.0.0`: current opaque pairing/vault/device/epoch binding, five-minute explicit UTC freshness, immutable line/batch digest, attempt-specific nonce and exact ordered per-event response matching. Invalid/unsupported lines remain isolated; same-ID divergent native facts quarantine matching positions. Staging/errors cannot carry canonical revisions, and parsed claims have no durable ACK/cursor authority. Raw event/shard versions are unchanged.
+- Upstream local validation: **242 protocol/contracts/shards/architecture PASS**, supplementary **40 protocol PASS**, clean scoped model/test analysis, preflight and independent Python checks of four schemas/12 shared negative wire vectors plus event/shard/batch/native SHA-256 goldens. Initial source ddf73b69 omitted the ignored public requirements file; bb32e96e includes it plus a narrow ignore exception. Its hosted manifest-test failure is recorded above; only the subsequent f0b4f98e run certifies the corrected wire source.
+- This is only the candidate wire/parser boundary. Authenticated production receiver, credential/revocation/replay lifecycle, canonical receipt issuer and actual per-event outbox acknowledgements remain unimplemented. Lua parity and Companion semantic/lock adoption must follow upstream ratification/merge. Production 0A/0B/0C and G08 remain open; no plugin extractor/outbox/transport is enabled by adding schemas.
+- Kindle runtime source remains f080644a with its already-recorded narrow physical TLS diagnostic and verified manual cleanup. No Lua/device/Reader/Companion/Statistics/settings/Wi-Fi file or setting was changed. Validation here is document/diff inspection only; no new device execution is claimed. Exact next dependency remains canonical cross-process/Drive/Companion durability and authenticated receipt semantics; the protocol candidate makes those boundaries explicit without granting them.
+
+## 2026-10-16 — Manual diagnostic cleanup verified complete
+
+- The user confirmed removing the three owned diagnostic folders in Explorer. Read-only verification at **2026-10-17T00:31:31.2109438Z** confirmed all three absent: the isolated Kindle extension and private host session/bundle. D: was mounted, and KOReader still reported **v2026.07.1**, so the missing extension was not inferred from an unavailable volume.
+- Updated the [physical evidence cleanup flags](docs/evidence/transport-probe-pw3-2026-10-16.json) to verified removed, preserving the two automatic-review rejections as history and recording manual removal separately. No further deletion command was attempted. The listener was already closed. **Diagnostic cleanup: COMPLETE**; the successful physical result and source hashes are unchanged.
+- Validation: direct filesystem/version inspection and JSON/source-fingerprint integrity check; no runtime source changed, so the existing 34-test host CI and physical proof retain their original source boundary. Full G04/canonical persistence/ACK, Drive/Companion and device recovery gates remain open. Next finish those canonical contracts/proofs before production ingestion; temporary-file cleanup is no longer a blocker.
+
+## 2026-10-16 — Physical PW3 synthetic TLS diagnostic PASS; full G04 open
+
+- The user confirmed executing the installed KUAL diagnostic and reconnecting USB. The actual device observation and independently collected host observation agree on correlation `ba83c75346161f6b671c72b1c6a2406c`; the collector revalidated every installed bundle file against the clean-source manifest. **Physical synthetic TLS diagnostic: PASS** on the user-confirmed PW3, observed KOReader **v2026.07.1**, Lua **5.1**, LuaSec **1.3.2**. Runtime source: `f080644a7dbf9a16e7f9b94759ae0b42525fa9d8`; later commits so far are evidence-only.
+- Actual device elapsed time **5.019867897 seconds**, **nine attempts**. Wrong CA rejected for a certificate reason; invalid and expired credentials returned 401; first 429 and 503 were observed and each retried once; replay returned the exact false-ACK receipt. Host: one unauthorized, one expired, one rate fault, one server fault, four successful responses, one unique fixed synthetic payload, TLSv1.2 and **zero server errors**. No canonical event was ingested or acknowledged.
+- [Sanitized physical evidence](docs/evidence/transport-probe-pw3-2026-10-16.json) preserves source hashes, both original observations and separate human execution attestation. The automatic collector's physical-attestation false flag is retained verbatim: matching files alone never attest a device. The outer human attestation plus actual correlated observations supplies this narrow physical proof. No endpoint, token, private key, serial, book data or private runtime path is published.
+- The ephemeral server stopped and its listener is closed. Installed Statistics public source still hashes to `da6db5e381bcfdaf05053d23bf75781166cc713b14076a65fcd2c527067fd088`; the harness never opened its database/sidecars. Reader/SimpleUI/settings were not modified. Wi-Fi was manually controlled by the user, never by the harness.
+- **Cleanup PENDING, not PASS:** automatic approval review rejected both the guarded recursive cleanup and the safer individual-known-file/empty-directory cleanup with `blocked by policy`, without a more specific reason. Neither command ran. Diagnostic extension and private host session/bundle remain; the user was given the three exact owned paths for manual Explorer removal. Evidence flags stay false until absence is verified. No alternate execution engine or deletion method was used to bypass the rejection.
+- Host source CI remains [38985034983](https://github.com/olalaurao/quartzo-koplugin/actions/runs/38985034983), **34 PASS**; evidence-only c5dc8dc also passed [38985333038](https://github.com/olalaurao/quartzo-koplugin/actions/runs/38985333038). This physical diagnostic closes only the bounded synthetic TLS/auth/error/retry/replay spike. **Full G04 / production 0B remains open**: canonical destination/Drive/Companion durability, authenticated canonical request/per-event ACK contract, revocation and device offline/reboot/cancellation recovery still require implementation/proof. No selected production backend, native extractor/outbox/receiver, Resource effect or plugin ZIP was introduced.
+- Exact next step: verify the requested manual cleanup; then finish the upstream canonical durability/identity/ownership contracts and versioned request/ACK semantics before preparing any production receiver or native extraction. Preserve the successful diagnostic as evidence rather than treating its receipt as a cursor permission.
+
+## 2026-10-16 — Clean-source diagnostic installed; physical KUAL run pending
+
+- Harness source `f080644a7dbf9a16e7f9b94759ae0b42525fa9d8` passed [Linux CI 38985034983](https://github.com/olalaurao/quartzo-koplugin/actions/runs/38985034983): **34 PASS**, no skipped cases, in 12.260 seconds. Both actual POSIX single-use/watchdog tests passed and the unrelated process remained alive. Windows separately passed 32 cases and skipped those two platform-specific cases; shell syntax passed. These are host checks, not PW3 execution.
+- Reconfirmed mounted D: / KOReader v2026.07.1 and absence of the diagnostic target. Started one explicit ephemeral LAN TLS fixture with a 30-minute bound, generated fresh synthetic-only credentials/certificates in private OS-temp storage, and installed/verified exactly **11 files** in the new `extensions/quartzo-transport-probe` folder. No existing extension, KOReader/Reader/SimpleUI/Statistics/settings file was overwritten; no firewall or Wi-Fi setting changed. Host private keys were not copied. Runtime source was clean at f080644a; later evidence-only changes do not alter the deployed byte manifest.
+- Public correlation ID: `ba83c75346161f6b671c72b1c6a2406c`. Endpoint, token, expiry config and host private runtime paths are intentionally omitted. The live listener stops after the expected sequence, private stop request or expiry; credentials are diagnostic-only and short-lived.
+- **Physical result: PENDING.** The user has been given the exact manual USB-disconnect / Wi-Fi-on / KUAL diagnostic / USB-reconnect step. Installation through USB does not prove launch, certificate verification or requests from Kindle. Collect only after actual execution/reconnection and match the clean-source manifests plus both reports. Failure/expiry requires a fresh session and explicit owned-folder cleanup; never loosen validation or overwrite an existing target.
+- Upstream evidence-only 6e2a208c also passed [Hosted Docs Validation 38984197734](https://github.com/olalaurao/aplicativo/actions/runs/38984197734): **2524 PASS / one skipped**. A later local upstream handoff run passed **144 architecture tests**. The implemented runtime remains 754a2d57; no production ingestion/effect is enabled. All full G04/canonical durability/Drive/Companion exit requirements remain open.
+
+## 2026-10-16 — Single-use physical diagnostic preparation
+
+- Added a separate KUAL extension harness (`device.lua`, `kindle.lua`, `run.sh`, menu/config), not a `.koplugin`. It loads only minimal KOReader module setup/native JSON/socket/TLS, never production Reader/UI/Statistics. An atomic single-use directory guard prevents repeated execution; the watchdog bounds the disposable process to 120 seconds plus two seconds for termination and checks process-start identity before targeting it. Native stdout/stderr are discarded; results contain fixed codes only. Wi-Fi remains entirely manual.
+- `bundle.py` prepares private bundles only in fresh OS-temp paths outside Git, copies an exact allowlist without private keys, verifies bytes, and installs only a new `extensions/quartzo-transport-probe` directory after checking mounted v2026.07.1/luajit. Existing targets are never overwritten or recursively deleted. Collection requires exact matching manifests, run IDs, baseline versions, all nine attempts, TLS/counter parity and false effect flags. Even a matched fixture keeps physical attestation false until actual KUAL execution is separately confirmed; it never becomes canonical ACK/persistence proof.
+- Extended host validation: **32 PASS / two Linux-only process tests skipped** on Windows, including seven real-Lua harness cases and seven bundle/collection cases. Existing Reader/settings sentinel bytes were preserved in the owned fake mount. Git Bash shell syntax check passed. The two added POSIX tests exercise actual single-use/deadline process behavior and unrelated-process preservation on Linux; fresh source CI is required. No Kindle deployment/execution has occurred at this preparation checkpoint; all bundle/install/collection tests use owned synthetic host directories.
+- The CLI fixture now closes on the expected complete request sequence, explicit private stop marker or expiry. No firewall/network setting is changed. Exact next step: clean-source Linux CI, then a fresh short-lived host session and isolated new-folder installation while D: is mounted; human safely disconnects USB, manually enables Wi-Fi and runs the KUAL diagnostic, then reconnects for correlated collection. If unreachable/expired, record failure and use a new session; never relax TLS or return a durable ACK.
+- Production G04/0B remains open: a synthetic transport diagnostic cannot establish native extraction, canonical durability/ACK, Drive recovery, Companion adoption, revocation lifecycle or production transport selection. G08 and later dependent runtime phases remain blocked. Reader, Companion, SimpleUI/Extra, Statistics and production app/vault are unchanged.
+
+## 2026-10-16 — Ephemeral TLS host fixture and corrected upstream verifier
+
+- The isolated G04 tools now include `host.py`, a short-lived opt-in TLS 1.2 fixture bound to an explicit private IPv4. It creates ephemeral credentials/independent certificates only in a fresh OS-temp directory outside Git, never opens a vault/Statistics/Reader account, and accepts exactly the fixed synthetic fixture bytes. Only false canonical-ACK/persistence receipts are returned. Public reports omit secrets, endpoints, peer addresses and runtime paths, and always keep Kindle/canonical proof false.
+- **18 host tests PASS twice**: nine real-Lua-5.1 injected-client tests plus nine real Python/OpenSSL loopback TLS/HTTP cases. They cover good/bad trust, auth/current expiry/expired marker/scope, malformed credentials, 429/503/retry/replay, receipt parity, input bounds and runtime/report privacy. First host suite had 15 PASS; the extended run had **17 PASS / one error** on Windows because an early 404 left TLS request bytes unread. Bounded body consumption before early replies fixed that connection reset; all 18 then passed and passed again with the OS-temp confinement guard. This is actual loopback TLS, not native Kindle LuaSec or physical transport proof.
+- Added host-only GitHub CI for these tools, using Python 3.12 and pinned test-only Lupa 2.8. Corrected source `87e04a66fd6ad3e756b7ef368707a8702a74b803` passed [Diagnostic transport host tests 38984191702](https://github.com/olalaurao/quartzo-koplugin/actions/runs/38984191702): **18 PASS** on Linux in 7.062 seconds. It cannot mark any physical/plugin gate PASS. The Windows host run used Python 3.14 / Lua 5.1.
+- Initial workflow attempt [38983893514](https://github.com/olalaurao/quartzo-koplugin/actions/runs/38983893514) is **FAILED before any job**. The unquoted plain `run` scalar contained `--only-binary=:all:` (colon followed by a space); changed command scalars to YAML literal blocks. A fresh actual CI run is required; no Linux/CI PASS is inferred from the earlier local tests.
+- Upstream 754a2d579858ddb9ddc020a90d7f1ebe1589d36b corrected a real Android returning-mmap-pragma API failure. It now passes clean-source Android observed-local cross-batch verification/scratch cleanup/restart/retry/conflicts, 100k/500k host stress and [full hosted CI 38982194464](https://github.com/olalaurao/aplicativo/actions/runs/38982194464): **2524 PASS / one skipped**, 95 architecture/doc checks and analysis without errors/warnings (17 baseline infos). Its exact reports live upstream; the earlier fbd38101 Android attempt remains FAILED. Tiny physical inputs and host stress are synthetic, not native Kindle ingestion or Android scale budgets.
+- The data/production gates remain open. No KUAL launcher, device provisioning/collection, plugin ZIP, native-event codec/extractor/outbox/receiver, canonical ACK or production backend selection was added. The next G04 step is an isolated bounded on-device harness with correlated host/device results and explicitly manual Wi-Fi, while preserving all existing Reader/SimpleUI/Statistics/settings. A real canonical ACK still needs upstream canonical/Drive/Companion durability proof; local fixture receipts never advance a cursor.
+
+## 2026-10-16 — Isolated G04 client preparation (no device deployment)
+
+- `tools/transport_probe/client.lua` adds only diagnostic request policy and a bounded LuaSec adapter, outside any `.koplugin` runtime. This is the independent non-production G04 spike preparation permitted by the adopted integrated gate matrix while G01–G03 remain open; it does not require or grant a production phase exit.
+- The installed KOReader v2026.07.1 package contains LuaSec 1.3.2 and exposes explicit TLS/peer/cafile options. The new adapter supplies those options rather than inheriting the packaged `verify = "none"` default. It accepts only explicit private-IPv4 HTTPS targets, disables redirects, bounds bytes/timeouts/retries, and requires exact diagnostic receipts whose canonical ACK/persistence flags are false. No conclusion about the entire Reader runtime's TLS policy is inferred from this library inspection.
+- Host validation: **9 PASS**, executed with real Lua 5.1 through Lupa 2.8 / Python 3.14, injecting HTTP/clock/sleep. Cases include wrong-CA certificate failure versus offline, invalid/expired auth, noncanonical receipt, private-target/trust/clock preflight, bounded Retry-After/retry exhaustion, TLS adapter options and response cap. These are logic tests, not native TLS, network or PW3 proof. Test dependency was installed only into the private host diagnostics directory; requirements are pinned for reproduction.
+- Extending the adapter case with a CRLF-header injection fixture initially produced **one test error / eight passed**: the Python triple-quoted Lua fixture interpreted the escape before Lua parsed it. Constructed the synthetic CRLF value with `string.char(13,10)` instead; the final rerun is **9 PASS**, including rejection before network I/O. The earlier error remains an error; no physical result is inferred from these runs.
+- No endpoint, production token, private key, runtime config, KUAL launcher, plugin ZIP or Kindle deployment is included yet. The ephemeral TLS fixture host, credential/cert setup, executable on-device harness and correlated collection remain next. No Statistics/config/sidecar/Reader/SimpleUI/Wi-Fi file or setting changed. The existing pure raw-event contracts are not replaced by this diagnostic receipt.
+- Gate 0A remains partial, 0B **BLOCKED for production**, and 0C lacks the authenticated canonical request/ACK protocol. Before any production transport selection, prove actual data-owner durability and authenticated PW3 behavior, errors/retry/revocation and real canonical ACK. A staging receipt never advances a cursor.
+- This entry supersedes earlier blanket descriptions of the repository as having no Lua: it now has diagnostic-only Lua, with no production plugin/codec/extractor/outbox/ingress implemented. See `tools/transport_probe/README.md` for exact boundaries and remaining steps.
+
+## 2026-10-16 — Android local discovery proof and Kindle USB reconnection
+
+This supplements the integrated reconciliation below; no production plugin phase is unlocked.
+
+- Upstream source `e8c79a0620b7e9f137e4c0188a18cfe68f4ba47c` adds bounded local candidate discovery through the existing ObsidianService and a read-only scoped conflict check through SyncQueueService. Unexpected/temp/conflict artifacts, links/junctions and overflow fail without a partial inventory. Candidate paths certify no contents or atomic/global consistency. No new source of truth, runtime registration, distributed claim or ACK.
+- Upstream local regression: **156 PASS**, including 13 new inventory/grammar/conflict/retarget/link cases and existing owner/queue/architecture suites. Scoped analysis exits 0 with no errors/warnings and four pre-existing ObsidianService infos. Initial test matcher and Windows junction-fixture failures are preserved in upstream STATUS and were corrected before this passing run. Contracts remain 1.0.0.
+- Real SM-A546E / Android 16 API 36 probe on clean e8c79a06: **PASS**. Separate package/UID; actual process stop/relaunch; persisted files/native SQLite queue; retry/gap repair/native-payload conflict checks; candidate discovery, scan cap, unresolved sync row and unexpected artifact checks. Four events / 120 seconds are synthetic. The test package was removed and production package metadata remained unchanged. New APK SHA-256 `a1a1608bbccca0639c5400813ef5f786ed5da1132934073f6047afe9dbb748a2`; sanitized report and exact raw source fingerprints are in upstream `docs/reading-integration/android-discovery-probe-2026-10-16.json`. This is local Android proof only, not Drive, reboot/power-loss or canonical ACK.
+- Upstream e8c79a06 passed [Hosted Docs Validation 38976318565](https://github.com/olalaurao/aplicativo/actions/runs/38976318565): **2506 full-suite PASS / one skipped**, **95 architecture/doc checks**, repository-policy analysis with 17 baseline infos and no errors/warnings. [Dial Focus CI 38976318614](https://github.com/olalaurao/aplicativo/actions/runs/38976318614) also passed. Agent Contract Gate was in progress and Windows Flutter CI queued at this checkpoint; later evidence-only pushes may start fresh runs. Prior c34799a7 also passed [38974540894](https://github.com/olalaurao/aplicativo/actions/runs/38974540894), certifying only its earlier source.
+- The user reconnected Kindle D:. Read-only inspection again confirms KOReader v2026.07.1 and unchanged installed Statistics source SHA-256 `da6db5e381bcfdaf05053d23bf75781166cc713b14076a65fcd2c527067fd088`. No device files, Wi-Fi or Statistics database were modified. USB inspection is not KOReader runtime transport.
+- Gate 0A remains partial: full-ledger/cross-batch stability, actual Drive recovery and Companion semantic adoption are pending. Gate 0B remains blocked without authenticated PW3 runtime transport. Gate 0C still lacks the authenticated canonical request/ACK protocol; later plugin phases remain blocked. No Lua implementation or plugin ZIP was created.
+- Exact next dependency: review/merge the upstream candidates, prove complete canonical/Drive recovery and Companion consumption, then the approved smallest authenticated PW3 transport spike. Preserve Reader, SimpleUI/Extra, native Statistics, existing export ownership and all current statuses. The independently implemented upstream annotation projection still needs actual sanitized export/re-export proof.
+- Validation here: documentation/diff inspection only; Lua unit/dev-check/package are not applicable to this documentation-only handoff. Reader and Companion remain unchanged.
+
+## 2026-10-16 — Integrated Reading scope, Gate 0 reconciliation
+
+This entry supersedes the planning-time current milestone below; historical entries remain evidence.
+
+- Branch: `docs/reading-integration-gate0-reconciliation`; initial plugin HEAD `4fa9f3638617bfd973edb2adeb84672a6f432eab`.
+- Upstream baseline: Quartzo `10e11ec93f52d1be34fa06c4d756342a8ae1e20e`, Companion `efa53aa64d8c08277aa7e68dbd79e8e9a61229be`, Reader `075458f6843df936b3810c12cd93851f57805eec`.
+- Reader stable sequencing is satisfied by existing v1.0.0/v1.2.0 tags and documented acceptance. Main source constants say 1.2.1. Subsequent USB inspection found Reader 1.3.0-rc.1 installed, with all 86 runtime Lua files matching branch `feature/reader-metadata-editing-v1.3.0` at e82130ad3d0aeb8ee6d36543e397c64009b36001 after EOL normalization. PR 27 / its M10 acceptance remains open; no Reader code or branch was changed.
+- User-confirmed latest physical baseline: PW3 / G090KB, firmware 5.16.2.1.1 (4097470002), KOReader **v2026.07.1**, package **kindlepw2**, functional jailbreak/KUAL. Reader `docs/KOREADER_UPGRADE.md` agrees. Reconfirm the actual installation before the next physical run. The user initially reported no connection, then identified the mounted Kindle drive. Read-only USB inspection confirmed KOReader git-rev v2026.07.1, SimpleUI 2.7.5 and SimpleUI Extra 1.15.0.
+- Official v2026.07.1 Statistics source was inspected: schema 20221111, page_stat_data uniqueness `(id_book,page,start_time)`, book title/authors/md5 uniqueness, flush at close/save/suspend. Source SHA-256 `da6db5e381bcfdaf05053d23bf75781166cc713b14076a65fcd2c527067fd088`. Installed Statistics source hash matches the official source byte-for-byte; mounted DB header also says user_version 20221111, WAL format. Live SQL was skipped to avoid auxiliary WAL writes. This is inspection evidence, not a plugin extraction/concurrency or runtime transport test.
+- A subsequent host-only immutable frozen-copy audit passed SQLite quick_check and confirmed 39 book rows, 5105 native events and two MD5 groups containing multiple book rows. Source bytes remained unchanged, no WAL appeared, and the temporary host copy was removed. No titles, raw private rows or credentials are recorded. This proves the need for row-scoped native identity; it does not establish Reader provenance or runtime transport.
+- Adopted scope: one-way validated reading/status evidence and restricted opt-in Reader-origin KOReader promotion through upstream Resource owners. Ordinary/unmatched documents do not auto-create. Reader-only catalog/progress does not create Resource or minutes. No bidirectional progress/status writeback or highlights owner added.
+- Quartzo candidate branch: `feature/reading-integration-contracts-g00-g03`; active spec `docs/specs/reading-integration.md`, ADR `docs/adrs/reading-integration-v1.md`, handoff `docs/reading-integration/STATUS.md`, versioned contracts in `contracts/quartzo/reading_identity`, `reading_evidence_status`, `reading_activity`. Candidate is not merged/deployed.
+- Upstream draft review: [aplicativo PR 65](https://github.com/olalaurao/aplicativo/pull/65), implementation commits 83f084ec (contracts), 16a775de (source-specific approval/canonical parser) and dbd38dcb (independent read-only catalog). Final combined targeted run: 98 PASS; documentation/architecture: 95 PASS. Initial full suite had 2422 PASS, one skipped and two failures corrected and rerun in full affected test files; no full-suite PASS is claimed. CI state is tracked in upstream STATUS.
+- Subsequent G03 progress upstream: be873875 (bounded canonical shard planner and independent Python golden path), 28d26b85962ea3250ae28225e8909e2759283bb0 (unregistered local file/queue adapter through existing owners). Final combined targeted run: 116 PASS; vault/sync owner regressions: 55 PASS / one skipped; native-shard SyncManager/in-memory Drive upload/replay/conflict cases: 2 PASS; post-store architecture/docs: 84 PASS. Hosted Docs Validation [38937822480](https://github.com/olalaurao/aplicativo/actions/runs/38937822480) passed on be873875; the newer local-store commit requires fresh CI. This does not prove actual cloud, cross-process, power-loss or physical transport durability. No ACK API was added.
+- Further source-only B03 audit (Reader main 075458f6 and installed branch e82130ad): documents map `reader_id` to unique `local_path`, but the table has no account namespace. Config/UI token save/clear does not itself bind/reset this provenance. HTML `local_content_hash` is MD5 of rendered HTML; raw PDF/EPUB installation records it as nil, and its remote fingerprint includes updated time/category/byte count. Neither is proven equivalent to Statistics partial MD5. The status scanner exposes only partial-MD5 presence, not the digest as a public identity API. Main migrations expect schema 3; installed branch source expects schema 4 (metadata additions), not a live DB schema observation. Therefore a future optional adapter needs explicit account/device/epoch binding and format-specific artifact/Statistics proof; it cannot join these columns by textual hash equality or consume the private DB as a stable public API. No real Reader DB/config/token values were read for this source audit.
+- User-supplied export-template audit upstream at ec12d0ef6e83ff7b22716943aea45bc4b101c2fb: current template has no fixed status, but marker-aware real-vault inspection found 110 export collision candidates under resources. Canonical parsing: 90 inProgress values with no persisted IDs, 20 invalid-YAML cases with IDs unknown, zero repeated export-book IDs. The prior YAML book_id-only scan was insufficient. A private local report stays outside all repos; every action is keep_current_blocked, status origin manual_or_unknown. No real Markdown/config/status/ID was changed. Promotion/status policies now explicitly default closed without export ownership/canonical writer proof. Synthetic template/ownership regression: 121 PASS combined; architecture/docs: 95 PASS; scoped analysis clean. Hosted CI on prior e437ece9 passed full suite 2459 / one skipped; ec12d0ef needs fresh CI. Existing export-as-Resource ownership/separation, protected backup/pilot and actual new export/re-export remain blockers; no mass migration is authorized by this audit.
+- Final upstream implementation CI at ec12d0ef: [Hosted Docs Validation 38944221690](https://github.com/olalaurao/aplicativo/actions/runs/38944221690) **SUCCESS**, full suite **2464 PASS / one skipped**, architecture/docs **95 PASS**, analysis without errors/warnings (17 baseline infos). Agent Contract Gate and Dial Focus CI also succeeded; remaining Windows Flutter CI jobs were queued at the checkpoint. Later upstream bf86dad7 only records the handoff. These results do not close physical/export/Drive/Companion gates or authorize production plugin phases. The next independent read-only task is the existing annotation projection's supplied bullet/wiki-tag format, not a new writer/UI.
+- Gate 0A: **IN_PROGRESS**, explicit upstream vault-domain/owner candidate and local adapter tested, actual cross-process/canonical/Drive durability and Companion adoption still pending.
+- Gate 0B: **BLOCKED**, USB inspection succeeded but no selected runtime transport or authenticated payload/TLS/error/ACK proof exists. No endpoint or always-on backend assumed.
+- Gate 0C: **IN_PROGRESS**, raw-event/identity/status vectors implemented upstream; versioned authenticated request/response/ACK protocol and Lua consumer not yet implemented. Changed native duration with the same tuple is conflict, never a new event.
+- Gates 1–9 remain **BLOCKED**. No plugin runtime code, ZIP, live SQLite query, outbox, network action or Wi-Fi change was introduced. No runtime physical gate is marked PASS.
+- Changes here: reconcile IMPLEMENTATION_SPEC/PLAN/README target and scope; preserve original historical planning. No credentials or private document data added.
+- Validation here: documentation/Git diff inspection only; Lua unit/dev-check/package are not applicable because this repo still has no Lua implementation. Upstream Dart/architecture/schema/Companion compatibility results live in the upstream STATUS.
+- Exact next step: review/merge upstream canonical contracts, prove actual vault shard persistence/Drive recovery and Companion consumption, then run the smallest authenticated transport spike on PW3 after leaving USB export mode safely with canonical ACK. Do not start production plugin phases while 0A/0B/0C remain open.
+
+
 > **Repository:** `olalaurao/quartzo-koplugin`  
 > **Canonical implementation spec:** `IMPLEMENTATION_SPEC.md`  
 > **Product roadmap:** `PLAN.md`  
