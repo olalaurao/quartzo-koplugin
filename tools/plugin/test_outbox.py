@@ -116,6 +116,17 @@ class OutboxTest(unittest.TestCase):
         self.assertEqual(self.outbox.open(str(self.root),self.runtime), (None,"outbox_missing"))
         self.assertFalse(self.owned.exists())
 
+    def test_create_race_does_not_reconfigure_an_existing_unknown_database(self):
+        with statistics.closing(sqlite3.connect(self.owned)) as conn,conn:
+            conn.execute("PRAGMA journal_mode=WAL")
+            conn.execute("PRAGMA user_version=99")
+        before=self.owned.read_bytes()
+        self.runtime.attributes=self.lua.eval("function() return nil end")  # Stale initial observation.
+        self.assertEqual(self.outbox.create(str(self.root),"new_epoch",self.runtime),(None,"outbox_exists"))
+        self.assertEqual(before,self.owned.read_bytes())
+        with statistics.closing(sqlite3.connect(self.owned)) as conn:
+            self.assertEqual(conn.execute("PRAGMA journal_mode").fetchone()[0],"wal")
+
     def test_selected_bytes_survive_source_history_deletion(self):
         self.seed()
         self.queue.stage(self.batch())

@@ -237,10 +237,16 @@ function M.create(root, source_epoch, runtime)
     if not checked then return nil,"unsupported_outbox_file" end
     if exists then return nil,"outbox_exists" end
     return operation(name,runtime,"rwc",function(conn)
-        configured(conn)
-        return transaction(conn,function()
+        -- The file can appear between the filesystem check and SQLite open.
+        -- Reject unknown/existing state before any journal configuration writes.
+        local function fresh()
             check(tonumber(conn:rowexec("PRAGMA user_version"))==0,"outbox_exists")
             check(tonumber(conn:rowexec("SELECT COUNT(*) FROM sqlite_master"))==0,"outbox_exists")
+        end
+        fresh()
+        configured(conn)
+        return transaction(conn,function()
+            fresh()
             local context={device_id=generated_device(runtime),source_epoch=source_epoch}
             conn:exec("CREATE TABLE identity(id INTEGER PRIMARY KEY CHECK(id=1), device_id TEXT NOT NULL,source_epoch TEXT NOT NULL)")
             conn:exec("CREATE TABLE pending(event_id TEXT PRIMARY KEY,line TEXT NOT NULL,native_digest TEXT NOT NULL)")

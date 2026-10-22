@@ -1,5 +1,13 @@
 # Implementation Status
 
+Final creation-race review: a store file may appear after the initial filesystem
+observation. Creation now checks version/empty schema before any journal-mode
+write and repeats that condition under the transaction; an unknown existing DB
+is preserved. New real-SQLite fixture checks unchanged bytes and WAL mode after
+the stale observation. Focused Windows outbox40 PASS/21 native-Linux skips
+(61 total,8.243s). The earlier0bea host proof below remains source-specific;
+this small guard requires its own exact-head native CI/package comparison.
+
 ## 2026-10-22 — Native outbox host block passed; physical Gate4 remains open
 
 Exact `0bea3f92699e65a99c62f01066e3a4939bb0368a` CI39722438051 passed320
