@@ -1,4 +1,4 @@
-# Phase D physical resumption — not an active test request
+# Phase D physical resumption â€” not an active test request
 
 The user cannot operate the Kindle/phone now. There is no installed0.0.4 trial,
 pairing, listener, timer or one-time credential waiting. Do not ask the user to
@@ -8,7 +8,7 @@ The [host report](evidence/outbox-host-2026-10-22.json) is not physical Gate4 PA
 ## Before preparing a device trial
 
 1. Confirm user/device availability, current Git head and all exact-head checks.
-   Runtime0bea3f9 and the39,962-byte archive are source-bound candidates, not a
+   Runtime7a7fb09 and the40,200-byte archive are source-bound candidates, not a
    release. If source changes, regenerate the package/proof rather than reuse a
    stale installer or reinterpret old observations.
 2. Reconfirm KOReader v2026.07.1 kindlepw2/PW3 and mounted source hashes. Preserve

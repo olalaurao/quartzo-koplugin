@@ -1,5 +1,14 @@
 # Implementation Status
 
+Final guarded candidate `7a7fb09e24bcd956ab913ea9b9a7ea3491fdee92` passed
+CI39723070687:323 tests/no skips (174 plugin including55 actual native SQLite
+cases,34 transport,115 wire). Actual Linux/Windows40,200-byte ZIP matches
+c805ce77307cb6acb0ad9f28cb604b272e577d3069c4051a39c1987a611e4d4f.
+The host report now binds this guarded source and preserves0bea's prior320-case
+evidence separately. The creation-race fixture ran in all three VM/SDK variants.
+No source/runtime change follows this evidence update. Gate4 remains OPEN;
+PR5 stays draft, no device/session installed/started and no test question pending.
+
 Final creation-race review: a store file may appear after the initial filesystem
 observation. Creation now checks version/empty schema before any journal-mode
 write and repeats that condition under the transaction; an unknown existing DB
