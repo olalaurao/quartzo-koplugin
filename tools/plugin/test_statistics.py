@@ -4,6 +4,7 @@ from contextlib import closing
 import os
 from pathlib import Path
 import sqlite3
+import subprocess
 import sys
 import tempfile
 import time
@@ -111,9 +112,10 @@ class StatisticsTest(unittest.TestCase):
 
     def probe(self):
         before = hashlib.sha256(self.path.read_bytes()).digest()
+        names = set(Path(self.temp.name).iterdir())
         result = self.module.probe(str(self.path), self.sdk)
         self.assertEqual(before, hashlib.sha256(self.path.read_bytes()).digest())
-        self.assertEqual(list(Path(self.temp.name).iterdir()), [self.path])
+        self.assertEqual(set(Path(self.temp.name).iterdir()), names)
         return result
 
     def assert_closed_read_only(self):
@@ -221,13 +223,37 @@ class StatisticsTest(unittest.TestCase):
         self.assert_closed_read_only()
 
     def test_exclusive_writer_is_bounded_busy_and_no_retry_or_write(self):
-        writer = sqlite3.connect(self.path)
-        self.addCleanup(writer.close)
-        writer.execute("BEGIN EXCLUSIVE")
-        start = time.monotonic()
-        self.assertEqual(self.probe(), (None, "statistics_busy"))
-        self.assertLess(time.monotonic() - start, 3)
-        self.assert_closed_read_only()
+        # POSIX locks belong to the process. Python's SQLite and the independent
+        # KOReader library in one PID cannot model a competing process lock.
+        marker = Path(self.temp.name) / "writer-ready"
+        script = '''
+import sqlite3, sys
+from pathlib import Path
+c = sqlite3.connect(sys.argv[1])
+c.execute("BEGIN EXCLUSIVE")
+Path(sys.argv[2]).write_text("locked")
+sys.stdin.readline()
+c.rollback()
+c.close()
+'''
+        with subprocess.Popen([sys.executable, "-c", script, str(self.path), str(marker)],
+                              stdin=subprocess.PIPE, stdout=subprocess.DEVNULL,
+                              stderr=subprocess.DEVNULL, text=True) as writer:
+            try:
+                deadline = time.monotonic() + 5
+                while not marker.exists() and writer.poll() is None and time.monotonic() < deadline:
+                    time.sleep(0.01)
+                self.assertTrue(marker.exists(), "Synthetic writer did not acquire its lock")
+                start = time.monotonic()
+                self.assertEqual(self.probe(), (None, "statistics_busy"))
+                self.assertLess(time.monotonic() - start, 3)
+                self.assert_closed_read_only()
+            finally:
+                try:
+                    writer.communicate("release\n", timeout=5)
+                except subprocess.TimeoutExpired:
+                    writer.kill()  # Only this test's owned child process.
+                    writer.communicate(timeout=5)
 
     def test_real_read_only_connection_rejects_a_write_to_synthetic_fixture(self):
         before = self.path.read_bytes()

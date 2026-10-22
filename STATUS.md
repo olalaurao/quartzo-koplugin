@@ -42,6 +42,20 @@ source always closed its SQ3 connection. Final Windows plugin suite:37 PASS,
 requires the real SQLite readonly error when a synthetic write is attempted.
 The prepared reference's three hashes match the official release archive;
 Windows does not claim native Linux SDK execution. No0.0.2 package is installed.
+
+Initial6c74b92 CI39715615157 actually ran all50 plugin cases and failed only
+the native exclusive-lock fixture: Python and the independent KOReader SQLite
+library in the same PID do not model conflicting POSIX process locks. The
+fixture now acquires its lock in a bounded owned child process. The busy
+criterion stays unchanged and the prior failure remains recorded; this is not
+a production read-only bypass or a skipped native test.
+
+The host's earlier `mode=ro` metadata audit left a zero-byte SQLite WAL and a
+32KiB control SHM beside the source DB, while the main DB hash stayed unchanged.
+Those auxiliary observations are distinct from the earlier completed Gate1
+unchanged-file proof. Do not remove/repair the Statistics owner's files or label
+the later sidecars unchanged; subsequent independent reference queries use a
+private offline snapshot so the host cannot add source-side cache effects.
 Next: final local/native CI/package verification, then real PW3 read-only/count
 and normal-reading acceptance. G2 and integrated ingestion G08 remain OPEN;
 PhaseC extraction has not started and the full seven-topic goal remains ACTIVE.
