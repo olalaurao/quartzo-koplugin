@@ -1,5 +1,36 @@
 # Implementation Status
 
+## 2026-10-22 — Native recovery host block accepted, physical Gate4 still OPEN
+
+Exact `92af1bd97b46e8df8b158129363c02b17e34d420` CI39725331982 passed357
+cases without skips:208 plugin (67 actual official native SQLite, including33
+outbox cases),34 transport,115 wire. Actual Linux/Windows48,563-byte ZIP matches
+4a7bbabef2cbf6e9c553edbba16a1e8c39988c175c36c9c712a515eb521ca7c1.
+Runtime remained b90272c after the last test-only correction; its ordinary source
+opens remain non-creating rw, and only a fresh validated recovery target uses rwc.
+The native direct API case confirmed both behaviors without relaxing criteria.
+
+[Source-bound recovery proof](docs/evidence/outbox-recovery-host-2026-10-22.json)
+preserves both actual failed attempts separately. Eight owned-process stop cases
+now cover stage, receipt prune, backup and restore before/after commit, including
+real spilled journals and native recovery. A partial restore remains unregistered
+and preserved with its valid backup; there is no automatic new identity or data
+discard. Same-device/epoch and exact pending canonical bytes/review survive a
+verified explicit restore. A stale backup cannot certify facts selected later or
+the current Statistics generation.
+
+Full Windows plugin suite208:141 PASS/67 explicit Linux-native skips,19.440s;
+focused outbox95:62 PASS/33 skips,13.503s. All those platform cases actually ran
+in Linux CI without skips, including OS entropy. Unknown columns/objects/keys,
+future schemas and foreign/malformed native facts are refused before restoration;
+existing damaged primary and older recovery snapshots remain intact.
+
+No device/app/credential/Wi-Fi/session was touched. PR5 remains draft/OPEN for
+required source-lifecycle and physical Gate4 conditions, despite host PASS.
+Verified source-generation enrollment, recovery/reset UX and actual PW3/paired
+delivery still need proof/implementation before production registration. Later
+phases/full seven-topic DoD remain incomplete; full goal ACTIVE/topic2/7.
+
 Follow-upb90272c CI39725147557 confirmed the creating-mode diagnosis and passed
 all recovery/restore/process cases:207/208 plugin cases passed. The only failure
 was the new native API assertion comparing SQ3's int64 cdata COUNT directly with

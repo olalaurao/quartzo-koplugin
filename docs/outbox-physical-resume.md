@@ -8,7 +8,7 @@ The [host report](evidence/outbox-host-2026-10-22.json) is not physical Gate4 PA
 ## Before preparing a device trial
 
 1. Confirm user/device availability, current Git head and all exact-head checks.
-   Runtime7a7fb09 and the40,200-byte archive are source-bound candidates, not a
+   Runtimeb90272c/tested92af1bd and the48,563-byte archive are source-bound candidates, not a
    release. If source changes, regenerate the package/proof rather than reuse a
    stale installer or reinterpret old observations.
 2. Reconfirm KOReader v2026.07.1 kindlepw2/PW3 and mounted source hashes. Preserve
@@ -35,6 +35,11 @@ The [host report](evidence/outbox-host-2026-10-22.json) is not physical Gate4 PA
   and after stage/prune commits, including a real live journal. Do not kill the
   user's normal KOReader process or induce battery/power loss. Reopen through
   the normal store and verify old/committed state without automatic reset.
+- Explicit recovery: include backup/restore interruption before/after commit,
+  same device/epoch and exact selected bytes/review after restore. Preserve an
+  existing damaged primary and every partial recovery artifact; an incomplete
+  destination stays unregistered, with the good backup retained for review.
+  Do not substitute a new identity or silently select an older recovery point.
 - Paired delivery: the normal scoped Android canonical receiver must commit the
   selected native facts. Discard a successful receipt deliberately, restart the
   source trial and resend identical IDs/bytes with a fresh request. Independently

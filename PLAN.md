@@ -1,5 +1,11 @@
 # Quartzo ↔ KOReader — Product & Delivery Plan
 
+2026-10-22 PhaseD0.0.5 native host proof passed357 cases/no skips, including
+eight stage/prune/backup/restore process-stop cases. Source and restored identity/
+selected bytes/review are preserved; partial artifacts do not become empty new
+identities. Gate4 remains OPEN for actual PW3/paired proof and required lifecycle
+work. No device install or session while user unavailable. See recovery evidence.
+
 2026-10-22 PhaseD0.0.5 candidate adds explicit validated recovery snapshots through
 the existing SQLite outbox owner. Restore retains device/epoch and selected bytes,
 requires a missing primary and never overwrites damaged/unknown state. No automatic

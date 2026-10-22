@@ -16,7 +16,9 @@ newer than its point in time or establish current Statistics generation.
 Source-generation enrollment, reset UX/lifecycle and physical Gate4 remain open.
 This extends only the existing PhaseD storage owner while user devices cannot
 be operated; no installs, sessions, networking or production effects are enabled.
-Native/process tests are required before accepting this new source.
+Exact92af1bd native CI passed357 cases/no skips, including eight actual
+owned-process stage/prune/backup/restore interruption cases. This is host-only
+acceptance, not physical Gate4 or hardware power-loss/source-generation proof.
 
 
 2026-10-22 PhaseD0.0.4 candidate (supersedes historical .lua state example):
