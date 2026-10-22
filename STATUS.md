@@ -1,5 +1,36 @@
 # Implementation Status
 
+## 2026-10-21 — Physical bootstrap Gate 1 PASS; Phase B is next
+
+The user completed both native PW3 steps: exact0.0.1 opened responsively with
+unchanged Wi-Fi, then KOReader restarted normally with the Quartzo menu absent
+after removal. Independent USB checks verified the exact two installed source
+files before removing only those files and their empty owned directory. The
+Statistics DB/WAL/SHM and reserved own settings paths (five tracked paths)
+remained unchanged after both executions, as did all180 existing Lua files in
+Statistics,Reader,SimpleUI and Extra. The bounded log tail (up to2,000 lines) had zero
+Quartzo error lines. Actual plugin absence was verified after the final restart.
+
+[Source-bound physical evidence](docs/evidence/plugin-bootstrap-pw3-2026-10-21.json)
+records source2a319d3, runtime firstc0af57b, exact package hashes and the two
+trusted user reports. Actual2a CI39711826260 and documentationea05 follow-up
+CI39712156217 passed all152 cases without skips; the1,599-byte ZIP matched
+Windows/Linux. The development test installation is now removed. This is
+KOReader PhaseA/Gate1 PASS, not integrated identity G01 or ingestion G08 PASS.
+
+PhaseB may now implement the small read-only Statistics/schema/count probe and
+its tests, with its own required physical Gate2. There is no Statistics query,
+event extraction,outbox/cursor,promotion or production release in this change.
+No raw/wire schema,upstream contract,Companion lock or other plugin changed.
+The full seven-topic goal remains ACTIVE and incomplete.
+
+Quartzo2261cf8f now has actual Windows Test PASS (2,807 tests/37skips) and
+Agent Contract Gate PASS, in addition to hosted2,836/eight skips. Analyze was
+running and Dial queued at this checkpoint; PR67 remains unmerged until all
+exact-head checks pass. PR1 is ready/green and PR2 stays stacked until the
+canonical-owner foundation is merged. Standing user merge authorization remains
+valid; no redundant merge permission is required.
+
 ## 2026-10-21 — Exact Phase A package staged on PW3; user startup proof pending
 
 PR2 runtime source `2a319d3a43060be908627dd40f00492adefccd43` passed exact-head

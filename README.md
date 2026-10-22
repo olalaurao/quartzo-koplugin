@@ -2,7 +2,7 @@
 
 KOReader plugin in development for synchronizing reading activity into Quartzo.
 
-> **Status:** Gate 0 foundation criteria are met. The minimal Phase A bootstrap is implemented and host-tested; physical install/start/menu/remove Gate 1 remains open. Statistics access, ingestion and effects are inactive. See STATUS for source-bound evidence and remaining gates.
+> **Status:** Gate 0 foundation and physical Phase A install/start/menu/remove Gate 1 passed. The development bootstrap was removed after the trial. Phase B read-only Statistics/schema is next; ingestion and effects are inactive. See STATUS for source-bound evidence and remaining gates.
 
 The bootstrap package and offline physical acceptance steps are documented in
 [tools/plugin](tools/plugin/README.md). The plugin's Quartzo Tools entry currently

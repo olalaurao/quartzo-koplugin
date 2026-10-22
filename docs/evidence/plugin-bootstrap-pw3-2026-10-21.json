@@ -1,0 +1,54 @@
+{
+  "evidence_version": 1,
+  "gate": "KOReader Gate 1: bootstrap install/remove safety",
+  "gate_status": "PASS",
+  "scope": "Phase A bootstrap only; no Statistics probe, ingestion or release",
+  "source_commit": "2a319d3a43060be908627dd40f00492adefccd43",
+  "runtime_first_commit": "c0af57bc18bdd4f3e6e0bb8d28ff3effe99d2123",
+  "runtime_version": "0.0.1",
+  "koreader_version": "v2026.07.1",
+  "koreader_package": "kindlepw2",
+  "device": "Kindle Paperwhite 3 / seventh generation",
+  "archive": {
+    "bytes": 1599,
+    "sha256": "58b55323c5f59a0f6e271816fd1da1d575aa3967cee17bc328586ae74e4ef85d",
+    "actual_linux_ci_and_windows_bytes_equal": true,
+    "files": {
+      "quartzo.koplugin/_meta.lua": "a2518a40100afcc0397bc2be6881b54a85c5338954558514555612b7a9b70785",
+      "quartzo.koplugin/main.lua": "8def2baa15a65c865baa5806555db3e75bd99bf45df52516078469875f5e1451"
+    }
+  },
+  "host_evidence": {
+    "exact_source_ci": "https://github.com/olalaurao/quartzo-koplugin/actions/runs/39711826260",
+    "documentation_followup_ci": "https://github.com/olalaurao/quartzo-koplugin/actions/runs/39712156217",
+    "bootstrap_package_cases": 7,
+    "transport_cases": 34,
+    "wire_cases": 111,
+    "ci_skips": 0,
+    "version_and_native_pluginloader_api_verified": true,
+    "fresh_directory_and_exact_installed_files_verified": true
+  },
+  "human_observations": {
+    "installed_startup_and_menu": "Abriu 0.0.1, respondeu normalmente e Wi-Fi ficou igual; reconectei",
+    "removed_startup_and_menu": "Iniciou normalmente, Quartzo sumiu e reconectei",
+    "boundary": "Human-observed screen behavior and Wi-Fi state; USB file checks independently verify the exact installation and preserved bytes. No automated screen or network-state attestation is claimed."
+  },
+  "independent_usb_observations": {
+    "statistics_db_wal_shm_and_own_settings_paths_checked": 5,
+    "changed_tracked_paths_after_installed_execution": 0,
+    "changed_tracked_paths_after_removal_restart": 0,
+    "existing_statistics_reader_simpleui_extra_lua_files_verified": 180,
+    "startup_log_tail_line_limit": 2000,
+    "quartzo_error_lines_in_checked_tail": 0,
+    "only_verified_owned_runtime_files_removed": 2,
+    "empty_owned_directory_removed": true,
+    "directory_absent_after_real_restart": true
+  },
+  "statistics_probe_enabled": false,
+  "production_ingestion_enabled": false,
+  "source_cursor_enabled": false,
+  "production_release": false,
+  "goal_complete": false,
+  "next_required_gate": "Phase B bounded read-only Statistics/schema probe and actual PW3 Gate 2 acceptance",
+  "limitations": "No SQLite query, raw event extraction, persistent outbox, pairing UI, lifecycle synchronization, performance or real reading event is certified by this bootstrap proof. The development plugin was removed after the trial."
+}

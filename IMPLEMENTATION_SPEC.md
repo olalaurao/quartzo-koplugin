@@ -63,7 +63,7 @@ gates remain open. No production activation follows this diagnostic.
 > **Target V1 device:** Kindle Paperwhite 3 / 7th gen (PW3), firmware 5.16.2.1.1, KUAL, KOReader v2026.07.1 (`kindlepw2`)
 > **Product roadmap:** `PLAN.md`  
 > **Progress ledger:** `STATUS.md`  
-> **Implementation state:** Gate 0 foundation accepted; Phase A bootstrap implemented, physical Gate 1 pending
+> **Implementation state:** Gate 0 foundation and physical Phase A Gate 1 accepted; Phase B read-only Statistics probe next
 > **Last reconciled:** 2026-10-21 (historical planning pass: 2026-09-22)
 
 This file is the implementation source of truth once implementation begins. If code and this specification disagree, either the code is wrong or this file must be deliberately updated in the same change, with the reason recorded in `STATUS.md`.
