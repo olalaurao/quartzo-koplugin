@@ -1,5 +1,18 @@
 # Implementation Status
 
+Initial0.0.5 sourcec6a7a86 CI39724674354 FAILED six actual-native backup cases
+(189/195 plugin cases passed; later transport/wire steps skipped). No backup
+artifact appeared, unlike the Python SQLite bridge. The source opens with
+native `sqlite3_open_v2(...,rw)` and ATTACH inherits a non-creating mode. The
+candidate now explicitly initializes only the fresh owned destination via rwc,
+checks its empty schema, closes it, then attaches it through the unchanged rw
+source. There is no creating-mode fallback for the source. A native-only direct
+API case checks the actual failure and successful precreated-target path; final
+CI must confirm this diagnosis and the complete recovery matrix. Failure logs
+are preserved, not relabeled as passed. Added process-stop fixtures interrupt
+backup/restore before/after commit with actual spilled attached journals; local
+94 cases62 PASS/32 native-Linux skips (12.871s) precede this native-target fix.
+
 ## 2026-10-22 — Explicit recovery snapshots preserve identity; native proof pending
 
 Previous goal turn made progress: PhaseC accepted/merged and the PhaseD storage

@@ -466,11 +466,21 @@ try:
             local c=sdk.open(path,mode)
             c:exec('PRAGMA cache_size=1')
             c:exec('PRAGMA cache_spill=ON')
+            local exec=c.exec
+            c.exec=function(_,sql)
+                if sql=='PRAGMA recovery.synchronous=EXTRA' then
+                    exec(c,'PRAGMA recovery.cache_size=1')
+                    exec(c,'PRAGMA recovery.cache_spill=ON')
+                end
+                return exec(c,sql)
+            end
             return c
         end}
     """,case.sdk)
-    queue=case.outbox.open(root,case.runtime)
-    assert not isinstance(queue,tuple)
+    queue=None
+    if not phase.startswith('restore'):
+        queue=case.outbox.open(root,case.runtime)
+        assert not isinstance(queue,tuple)
     def convert(value):
         if isinstance(value,dict): return case.lua.table_from({k:convert(v) for k,v in value.items()})
         if isinstance(value,list): return case.lua.table_from([convert(v) for v in value])
@@ -482,7 +492,11 @@ try:
     def hook(operation,value):
         if phase.endswith('before_commit') and operation=='exec' and value=='COMMIT': stop_here()
     case.query_hook=hook
-    if phase.startswith('prune'):
+    if phase.startswith('restore'):
+        result=case.outbox.restore(root,'quartzo_sync_recovery_'+'41'*16+'.sqlite3',case.runtime)
+    elif phase.startswith('backup'):
+        result=queue.backup()
+    elif phase.startswith('prune'):
         owner=case.receipt_owner()
         info=case.codec.inspect_event(queue.pending().event_lines[1])
         receipt=owner.mint(case.lua.table_from([info]),'request-a')
@@ -507,15 +521,21 @@ finally:
                     self.fail("Owned child exited before readiness: "+error)
                 self.fail("Owned child readiness timed out")
             if phase.endswith("before_commit"):
-                journal=Path(str(self.owned)+"-journal")
+                journal_root=self.owned
+                if phase.startswith("backup"):
+                    journal_root=self.root/("quartzo_sync_recovery_"+"41"*16+".sqlite3")
+                journal=Path(str(journal_root)+"-journal")
                 self.assertTrue(journal.is_file())
                 self.assertNotEqual(journal.read_bytes()[:8],b"\0"*8)
             child.kill()  # Only this test's owned process; no finally/SQLite close.
             child.communicate(timeout=5)
-            status=self.reopen().status()
-            self.assertEqual((status.pending,status.review),(expected_pending,expected_review))
-            self.assertFalse(status.canonical_ack)
-            self.assertIsNone(status.source_watermark)
+            if phase=="restore_before_commit":
+                self.assertEqual(self.outbox.open(str(self.root),self.runtime),(None,"unsupported_outbox_schema"))
+            else:
+                status=self.reopen().status()
+                self.assertEqual((status.pending,status.review),(expected_pending,expected_review))
+                self.assertFalse(status.canonical_ack)
+                self.assertIsNone(status.source_watermark)
         finally:
             if child.poll() is None:
                 child.kill()
@@ -540,6 +560,47 @@ finally:
         self.mutate("DELETE FROM page_stat_data; DELETE FROM book")
         self.killed_child("prune_after_commit",1,1)
 
+    def test_process_stop_before_backup_commit_keeps_original_and_rejects_partial(self):
+        self.seed()
+        self.queue.stage(self.batch())
+        self.mutate("DELETE FROM page_stat_data; DELETE FROM book")
+        self.killed_child("backup_before_commit",2,1)
+        leaf="quartzo_sync_recovery_"+"41"*16+".sqlite3"
+        self.assertEqual(self.outbox.inspect_backup(str(self.root),leaf,self.runtime),(None,"unsupported_outbox_schema"))
+
+    def test_process_stop_after_backup_commit_keeps_valid_recovery_snapshot(self):
+        self.seed()
+        self.queue.stage(self.batch())
+        self.mutate("DELETE FROM page_stat_data; DELETE FROM book")
+        self.killed_child("backup_after_commit",2,1)
+        leaf="quartzo_sync_recovery_"+"41"*16+".sqlite3"
+        snapshot=self.outbox.inspect_backup(str(self.root),leaf,self.runtime)
+        self.assertNotIsInstance(snapshot,tuple)
+        self.assertEqual((snapshot.pending,snapshot.review),(2,1))
+
+    def test_process_stop_before_restore_commit_preserves_backup_without_empty_identity(self):
+        self.seed()
+        self.queue.stage(self.batch())
+        snapshot,backup=self.snapshot()
+        before=backup.read_bytes()
+        self.owned.unlink()
+        self.mutate("DELETE FROM page_stat_data; DELETE FROM book")
+        self.killed_child("restore_before_commit",None,None)
+        self.assertTrue(self.owned.is_file())  # Preserve interrupted destination for review.
+        self.assertEqual(before,backup.read_bytes())
+        preview=self.outbox.inspect_backup(str(self.root),snapshot.backup_leaf,self.runtime)
+        self.assertEqual((preview.pending,preview.review),(2,1))
+
+    def test_process_stop_after_restore_commit_keeps_original_device_and_epoch(self):
+        self.seed()
+        self.queue.stage(self.batch())
+        context=dict(self.queue.context().items())
+        snapshot,backup=self.snapshot()
+        self.owned.unlink()
+        self.mutate("DELETE FROM page_stat_data; DELETE FROM book")
+        self.killed_child("restore_after_commit",2,1)
+        self.assertEqual(dict(self.reopen().context().items()),context)
+
 
 class OutboxLuaJITTest(OutboxTest):
     lua_type=LuaJITRuntime
@@ -549,6 +610,29 @@ class OutboxLuaJITTest(OutboxTest):
 class NativeOutboxTest(OutboxTest):
     lua_type=LuaJITRuntime
     make_sdk=statistics.NativeStatisticsTest.make_sdk
+
+    def test_native_rw_attach_requires_an_explicitly_created_destination(self):
+        destination=self.root/"owned-attach-fixture.sqlite3"
+        conn=self.sdk.open(str(self.owned),"rw")
+        try:
+            stmt=conn.prepare(conn,"ATTACH DATABASE ? AS scratch")
+            stmt.bind(stmt,str(destination))
+            try:
+                with self.assertRaises(Exception) as raised:
+                    stmt.step(stmt)
+                self.assertIn("unable to open database",str(raised.exception).lower())
+            finally:
+                stmt.close(stmt)
+            self.assertFalse(destination.exists())
+            created=self.sdk.open(str(destination),"rwc")
+            created.close(created)
+            stmt=conn.prepare(conn,"ATTACH DATABASE ? AS scratch")
+            stmt.bind(stmt,str(destination))
+            stmt.step(stmt)
+            stmt.close(stmt)
+            self.assertEqual(conn.rowexec(conn,"SELECT COUNT(*) FROM scratch.sqlite_master"),0)
+        finally:
+            conn.close(conn)
 
     def test_actual_linux_entropy_creates_non_fixture_device_identity(self):
         root=self.root/"native-entropy"

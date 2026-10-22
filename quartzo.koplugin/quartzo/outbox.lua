@@ -195,6 +195,16 @@ local function clone(conn, destination, runtime, context)
     check(conn:rowexec("PRAGMA journal_mode")=="delete")
     conn:exec("PRAGMA synchronous=EXTRA")
     check(tonumber(conn:rowexec("PRAGMA synchronous"))==3)
+    -- Native sqlite3_open_v2(...,rw) does not let ATTACH create its target.
+    -- Create only this fresh owned destination explicitly; never weaken the
+    -- existing source's non-creating open mode to rwc.
+    local created,reason=operation(destination,runtime,"rwc",function(target)
+        check(tonumber(target:rowexec("PRAGMA user_version"))==0,"outbox_exists")
+        check(tonumber(target:rowexec("SELECT COUNT(*) FROM sqlite_master"))==0,"outbox_exists")
+        configured(target)
+        return true
+    end)
+    if not created then error(reason,0) end
     execute(conn,"ATTACH DATABASE ? AS recovery",destination)
     local function fresh()
         check(tonumber(conn:rowexec("PRAGMA recovery.user_version"))==0,"outbox_exists")
