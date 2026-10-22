@@ -1,5 +1,12 @@
 # Implementation Status
 
+Final test-harness hygiene: killed children now place their synthetic fixtures
+inside the parent's owned temporary root, so normal parent cleanup also removes
+the child's leftover fixture files without running child finally/SQLite close.
+No production source or interruption criterion changes; no broad Temp cleanup
+or deletion of unrelated files is performed. This test-only follow-up requires
+its final exact-head CI; runtime/archive still match accepted92af1bd.
+
 ## 2026-10-22 — Native recovery host block accepted, physical Gate4 still OPEN
 
 Exact `92af1bd97b46e8df8b158129363c02b17e34d420` CI39725331982 passed357

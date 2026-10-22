@@ -453,14 +453,15 @@ class OutboxTest(unittest.TestCase):
         inputs.write_text(json.dumps(fields))
         marker=self.root/(phase+".ready")
         script=r'''
-import json,sys
+import json,sys,tempfile
 from pathlib import Path
 sys.path.insert(0,sys.argv[1])
 import test_outbox
+root,phase,marker,input_path=sys.argv[2:6]
+tempfile.tempdir=root  # Killed child fixtures stay under the parent's owned cleanup root.
 case=getattr(test_outbox,sys.argv[6])('runTest')
 case.setUp()
 try:
-    root,phase,marker,input_path=sys.argv[2:6]
     case.runtime.sqlite=case.lua.execute("""local sdk=...
         return {open=function(path,mode)
             local c=sdk.open(path,mode)
