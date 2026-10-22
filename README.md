@@ -8,6 +8,10 @@ Candidate0.0.4 implements inactive plugin-owned delivery state with native SQLit
 transactions and exact opaque-receipt pruning. Gate4 remains open; no new version
 is installed and no source enrollment or production synchronization is enabled.
 
+Candidate0.0.5 extends that same owner with explicit validated recovery snapshots
+and restoration of the original identity. Native/device acceptance is pending;
+the installed0.0.2 trial and production behavior are untouched.
+
 The package and offline acceptance steps are documented in
 [tools/plugin](tools/plugin/README.md). The Quartzo Tools menu shows diagnostics
 and a separate Reading Statistics action. Neither starts synchronization.

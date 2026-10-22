@@ -15,8 +15,15 @@ local function integer(value)
         and math.abs(value) <= 9007199254740991
 end
 local function path(root)
-    check(type(root) == "string" and #root > 0 and not root:find("%z"))
+    check(type(root) == "string" and #root > 0 and not root:find("%z")
+        and not root:lower():match("^file:"))
     return root .. "/" .. FILE
+end
+local function backup_path(root, leaf)
+    path(root)
+    local suffix=type(leaf)=="string" and leaf:match("^quartzo_sync_recovery_([a-f0-9]+)%.sqlite3$")
+    check(suffix and #suffix==32)
+    return root.."/"..leaf
 end
 local function regular(name, runtime)
     local attributes = runtime.attributes
@@ -56,6 +63,47 @@ local function query(conn, sql, ...)
     stmt:close()
     return row
 end
+local function bounded(name, maximum)
+    -- Fixed owner column names only; do not load oversized corrupt fields.
+    return "CASE WHEN typeof("..name..")='text' AND length(CAST("..name
+        .." AS BLOB))<="..maximum.." THEN "..name.." ELSE NULL END"
+end
+local columns = {
+    identity={{"id","INTEGER",0,1},{"device_id","TEXT",1,0},{"source_epoch","TEXT",1,0}},
+    pending={{"event_id","TEXT",0,1},{"line","TEXT",1,0},{"native_digest","TEXT",1,0}},
+    review={{"started_at","INTEGER",1,1},{"book_id","TEXT",1,2},{"page","TEXT",1,3},
+        {"duration","TEXT",1,4},{"pages","TEXT",1,5},{"types","TEXT",1,6}},
+}
+local function create_schema(conn, prefix)
+    check(prefix=="" or prefix=="recovery.")
+    conn:exec("CREATE TABLE "..prefix.."identity(id INTEGER PRIMARY KEY CHECK(id=1), device_id TEXT NOT NULL,source_epoch TEXT NOT NULL)")
+    conn:exec("CREATE TABLE "..prefix.."pending(event_id TEXT PRIMARY KEY,line TEXT NOT NULL,native_digest TEXT NOT NULL)")
+    conn:exec("CREATE TABLE "..prefix.."review(started_at INTEGER NOT NULL,book_id TEXT NOT NULL,page TEXT NOT NULL,"
+        .. "duration TEXT NOT NULL,pages TEXT NOT NULL,types TEXT NOT NULL,"
+        .. "PRIMARY KEY(started_at,book_id,page,duration,pages,types))")
+end
+local function check_schema(conn)
+    local objects=conn:prepare("SELECT name,type FROM sqlite_master WHERE name NOT GLOB 'sqlite_*' LIMIT 4")
+    local seen={}
+    for _=1,4 do
+        local row=objects:step()
+        if not row then break end
+        check(columns[row[1]] and row[2]=="table" and not seen[row[1]])
+        seen[row[1]]=true
+    end
+    objects:close()
+    for _,name in ipairs({"identity","pending","review"}) do
+        check(seen[name])
+        local stmt=conn:prepare("PRAGMA table_info("..name..")")
+        for i,expected in ipairs(columns[name]) do
+            local row=stmt:step()
+            check(row and row[1]==i-1 and row[2]==expected[1] and row[3]==expected[2]
+                and row[4]==expected[3] and row[5]==nil and row[6]==expected[4])
+        end
+        check(stmt:step()==nil)
+        stmt:close()
+    end
+end
 local function configured(conn)
     conn:set_busy_timeout(1000)
     -- Existing KOReader SQLite owns recovery/rollback; no second JSON journal.
@@ -67,14 +115,17 @@ end
 local function own_schema(conn)
     check(tonumber(conn:rowexec("PRAGMA user_version")) == 1, "unsupported_outbox_schema")
     check(conn:rowexec("PRAGMA quick_check(1)") == "ok", "invalid_outbox_state")
-    local row = query(conn, "SELECT device_id,source_epoch FROM identity WHERE id=1")
+    check_schema(conn)
+    check(tonumber(conn:rowexec("SELECT COUNT(*) FROM (SELECT 1 FROM identity LIMIT 2)"))==1)
+    local row = query(conn, "SELECT "..bounded("device_id",128)..","..bounded("source_epoch",128).." FROM identity WHERE id=1")
     check(row and scope(row[1]) and scope(row[2]))
     check(count(conn, "pending") + count(conn, "review") <= CAP, "outbox_capacity")
     return {device_id=row[1], source_epoch=row[2]}
 end
 local errors = {invalid_outbox_state=true,unsupported_outbox_schema=true,unsupported_outbox_file=true,
     outbox_capacity=true,outbox_exists=true,outbox_missing=true,outbox_scope_mismatch=true,
-    outbox_native_conflict=true,outbox_entropy_unavailable=true,unverified_reading_receipt=true}
+    outbox_native_conflict=true,outbox_entropy_unavailable=true,unverified_reading_receipt=true,
+    outbox_backup_missing=true}
 local function operation(name, runtime, mode, callback)
     local conn
     local ok, value = pcall(function()
@@ -104,6 +155,68 @@ local function inspect(codec, line, context)
     context_equal(entry, context)
     return entry
 end
+local function verify_contents(conn, codec, context)
+    check(type(codec)=="table" and type(codec.inspect_event)=="function")
+    local stmt=conn:prepare("SELECT "..bounded("event_id",68)..","..bounded("line",8192)
+        ..","..bounded("native_digest",64).." FROM pending LIMIT 1001")
+    for i=1,CAP+1 do
+        local row=stmt:step()
+        if not row then break end
+        check(i<=CAP,"outbox_capacity")
+        local entry=inspect(codec,row[2],context)
+        check(entry.event_id==row[1] and entry.native_digest==row[3])
+    end
+    stmt:close()
+    stmt=conn:prepare("SELECT CASE WHEN typeof(started_at)='integer' THEN started_at ELSE NULL END,"
+        ..bounded("book_id",20)..","..bounded("page",20)..","..bounded("duration",20)..","
+        ..bounded("pages",20)..","..bounded("types",39).." FROM review LIMIT 1001")
+    local valid_types={integer=true,real=true,text=true,blob=true,["null"]=true}
+    for i=1,CAP+1 do
+        local row=stmt:step()
+        if not row then break end
+        check(i<=CAP,"outbox_capacity")
+        check(integer(tonumber(row[1])) and type(row[6])=="string")
+        local types={}
+        for value in row[6]:gmatch("[^,]+") do check(valid_types[value]);types[#types+1]=value end
+        check(#types==5 and types[3]=="integer" and table.concat(types,",")==row[6])
+        for j,source in ipairs({1,2,4,5}) do
+            local value=row[j+1]
+            check(type(value)=="string")
+            if types[source]=="integer" then check(value:match("^%-?%d+$"))
+            else check(value=="") end
+        end
+    end
+    stmt:close()
+end
+local function clone(conn, destination, runtime, context)
+    check(not regular(destination,runtime),"outbox_exists")
+    -- Both databases are plugin-owned, in the same directory. SQLite's attached
+    -- DELETE-journal transaction is the copy/recovery mechanism; no raw file copy.
+    check(conn:rowexec("PRAGMA journal_mode")=="delete")
+    conn:exec("PRAGMA synchronous=EXTRA")
+    check(tonumber(conn:rowexec("PRAGMA synchronous"))==3)
+    execute(conn,"ATTACH DATABASE ? AS recovery",destination)
+    local function fresh()
+        check(tonumber(conn:rowexec("PRAGMA recovery.user_version"))==0,"outbox_exists")
+        check(tonumber(conn:rowexec("SELECT COUNT(*) FROM recovery.sqlite_master"))==0,"outbox_exists")
+    end
+    fresh()
+    check(conn:rowexec("PRAGMA recovery.journal_mode=DELETE")=="delete")
+    conn:exec("PRAGMA recovery.synchronous=EXTRA")
+    check(tonumber(conn:rowexec("PRAGMA recovery.synchronous"))==3)
+    return transaction(conn,function()
+        fresh()
+        context_equal(own_schema(conn),context)
+        verify_contents(conn,runtime.codec,context)
+        create_schema(conn,"recovery.")
+        for _,name in ipairs({"identity","pending","review"}) do
+            conn:exec("INSERT INTO recovery."..name.." SELECT * FROM main."..name)
+        end
+        conn:exec("PRAGMA recovery.user_version=1")
+        return {device_id=context.device_id,source_epoch=context.source_epoch,
+            pending=count(conn,"pending"),review=count(conn,"review"),canonical_ack=false}
+    end)
+end
 local function handle(name, runtime, context)
     local codec = runtime.codec
     check(type(codec) == "table" and type(codec.inspect_event) == "function")
@@ -127,6 +240,18 @@ local function handle(name, runtime, context)
         return access(false, function(conn)
             return {pending=count(conn,"pending"), review=count(conn,"review"), capacity=CAP,
                 source_watermark=nil, canonical_ack=false}
+        end)
+    end
+    function api.backup()
+        return access(true,function(conn)
+            local leaf="quartzo_sync_recovery_"..generated_device(runtime):sub(5)..".sqlite3"
+            local destination=name:sub(1,-#FILE-1)..leaf
+            local result=clone(conn,destination,runtime,context)
+            local preview=M.inspect_backup(name:sub(1,-#FILE-2),leaf,runtime)
+            check(preview and preview.pending==result.pending and preview.review==result.review)
+            context_equal(preview,context)
+            result.backup_leaf=leaf
+            return result
         end)
     end
     function api.stage(batch)
@@ -248,11 +373,7 @@ function M.create(root, source_epoch, runtime)
         return transaction(conn,function()
             fresh()
             local context={device_id=generated_device(runtime),source_epoch=source_epoch}
-            conn:exec("CREATE TABLE identity(id INTEGER PRIMARY KEY CHECK(id=1), device_id TEXT NOT NULL,source_epoch TEXT NOT NULL)")
-            conn:exec("CREATE TABLE pending(event_id TEXT PRIMARY KEY,line TEXT NOT NULL,native_digest TEXT NOT NULL)")
-            conn:exec("CREATE TABLE review(started_at INTEGER NOT NULL,book_id TEXT NOT NULL,page TEXT NOT NULL,"
-                .. "duration TEXT NOT NULL,pages TEXT NOT NULL,types TEXT NOT NULL,"
-                .. "PRIMARY KEY(started_at,book_id,page,duration,pages,types))")
+            create_schema(conn,"")
             execute(conn,"INSERT INTO identity VALUES(1,?,?)",context.device_id,context.source_epoch)
             conn:exec("PRAGMA user_version=1")
             return handle(name,runtime,context)
@@ -269,5 +390,47 @@ function M.open(root, runtime)
     return operation(name,runtime,"rw",function(conn)
         return handle(name,runtime,own_schema(conn))
     end)
+end
+function M.inspect_backup(root, backup_leaf, runtime)
+    runtime=runtime or {}
+    local ok,name=pcall(backup_path,root,backup_leaf)
+    if not ok then return nil,"invalid_outbox_state" end
+    local checked,exists=pcall(regular,name,runtime)
+    if not checked then return nil,"unsupported_outbox_file" end
+    if not exists then return nil,"outbox_backup_missing" end
+    return operation(name,runtime,"rw",function(conn)
+        conn:exec("BEGIN DEFERRED")
+        local context=own_schema(conn)
+        verify_contents(conn,runtime.codec,context)
+        return {device_id=context.device_id,source_epoch=context.source_epoch,
+            pending=count(conn,"pending"),review=count(conn,"review"),canonical_ack=false}
+    end)
+end
+function M.restore(root, backup_leaf, runtime)
+    runtime=runtime or {}
+    local ok,name=pcall(path,root)
+    local valid,backup=pcall(backup_path,root,backup_leaf)
+    if not ok or not valid then return nil,"invalid_outbox_state" end
+    local checked,exists=pcall(regular,name,runtime)
+    if not checked then return nil,"unsupported_outbox_file" end
+    if exists then return nil,"outbox_exists" end
+    checked,exists=pcall(regular,backup,runtime)
+    if not checked then return nil,"unsupported_outbox_file" end
+    if not exists then return nil,"outbox_backup_missing" end
+    local restored,reason=operation(backup,runtime,"rw",function(conn)
+        local context=own_schema(conn)
+        -- Validate before creating/attaching the destination; a malformed backup
+        -- remains available for review and cannot silently become empty state.
+        verify_contents(conn,runtime.codec,context)
+        return clone(conn,name,runtime,context)
+    end)
+    if not restored then return nil,reason end
+    local reopened,failure=M.open(root,runtime)
+    if not reopened then return nil,failure end
+    local context=reopened.context()
+    if context.device_id~=restored.device_id or context.source_epoch~=restored.source_epoch then
+        return nil,"outbox_scope_mismatch"
+    end
+    return reopened
 end
 return M

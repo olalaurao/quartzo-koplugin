@@ -1,5 +1,11 @@
 # Quartzo ↔ KOReader — Product & Delivery Plan
 
+2026-10-22 PhaseD0.0.5 candidate adds explicit validated recovery snapshots through
+the existing SQLite outbox owner. Restore retains device/epoch and selected bytes,
+requires a missing primary and never overwrites damaged/unknown state. No automatic
+backup selection, source enrollment or network hook. Native/process/device proof
+remain required; user cannot operate devices now. See STATUS for actual scope.
+
 2026-10-22 PhaseD candidate0.0.4 adds bounded plugin-owned native SQLite delivery
 state, immutable selected bytes, retained review and opaque per-event receipt
 pruning. The existing paired owner moved unchanged into the plugin namespace.

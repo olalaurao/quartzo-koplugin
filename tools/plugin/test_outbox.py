@@ -135,6 +135,132 @@ class OutboxTest(unittest.TestCase):
         self.assertEqual(set(self.reopen().pending().event_lines.values()),before)
         self.assertEqual(self.queue.status().review,1)
 
+    def snapshot(self):
+        snapshot=self.queue.backup()
+        self.assertNotIsInstance(snapshot,tuple)
+        backup=self.root/snapshot.backup_leaf
+        self.assertTrue(backup.is_file())
+        return snapshot,backup
+
+    def test_backup_restore_preserves_identity_selected_bytes_and_review(self):
+        self.seed()
+        self.queue.stage(self.batch())
+        original=set(self.queue.pending().event_lines.values())
+        context=dict(self.queue.context().items())
+        source=self.path.read_bytes()
+        state=self.owned.read_bytes()
+        snapshot,backup=self.snapshot()
+        self.assertEqual(state,self.owned.read_bytes())
+        self.assertEqual(source,self.path.read_bytes())
+        self.assertEqual((snapshot.pending,snapshot.review,snapshot.canonical_ack),(2,1,False))
+        preview=self.outbox.inspect_backup(str(self.root),snapshot.backup_leaf,self.runtime)
+        self.assertEqual((preview.pending,preview.review),(2,1))
+        saved=backup.read_bytes()
+        self.mutate("DELETE FROM page_stat_data; DELETE FROM book")
+        self.owned.unlink()  # Owned synthetic state-loss fixture only.
+        self.runtime.entropy=self.lua.eval("function() error('restore must not generate identity') end")
+        restored=self.outbox.restore(str(self.root),snapshot.backup_leaf,self.runtime)
+        self.assertNotIsInstance(restored,tuple)
+        self.assertEqual(dict(restored.context().items()),context)
+        self.assertEqual(set(restored.pending().event_lines.values()),original)
+        self.assertEqual(restored.status().review,1)
+        self.assertIsNone(restored.status().source_watermark)
+        self.assertEqual(saved,backup.read_bytes())
+
+    def test_restore_preserves_an_existing_damaged_primary_and_immutable_backup(self):
+        self.seed()
+        self.queue.stage(self.batch())
+        snapshot,backup=self.snapshot()
+        self.owned.write_bytes(b"owned damaged state remains available for review")
+        before=self.owned.read_bytes()
+        saved=backup.read_bytes()
+        self.assertEqual(self.outbox.restore(str(self.root),snapshot.backup_leaf,self.runtime),(None,"outbox_exists"))
+        self.assertEqual(before,self.owned.read_bytes())
+        self.assertEqual(saved,backup.read_bytes())
+
+    def test_backup_collision_never_replaces_the_older_snapshot(self):
+        self.seed()
+        self.queue.stage(self.batch())
+        snapshot,backup=self.snapshot()
+        saved=backup.read_bytes()
+        self.mutate("INSERT INTO page_stat_data VALUES(1,5,105,20,10)")
+        self.queue.stage(self.batch())
+        self.assertEqual(self.queue.backup(),(None,"outbox_exists"))
+        self.assertEqual(saved,backup.read_bytes())
+        self.runtime.entropy=self.lua.eval("function() return string.rep('B',16) end")
+        newer,new_path=self.snapshot()
+        self.assertNotEqual(newer.backup_leaf,snapshot.backup_leaf)
+        self.assertEqual((newer.pending,newer.review),(3,1))
+        self.assertEqual(saved,backup.read_bytes())
+        self.assertEqual(self.outbox.inspect_backup(str(self.root),snapshot.backup_leaf,self.runtime).pending,2)
+
+    def test_invalid_or_missing_backup_path_cannot_create_state(self):
+        self.owned.unlink()
+        for leaf in ("../statistics.sqlite3","file:/statistics.sqlite3",
+                     "quartzo_sync_recovery_"+"a"*31+".sqlite3",
+                     "quartzo_sync_recovery_"+"A"*32+".sqlite3"):
+            self.assertEqual(self.outbox.restore(str(self.root),leaf,self.runtime),(None,"invalid_outbox_state"))
+        missing="quartzo_sync_recovery_"+"a"*32+".sqlite3"
+        self.assertEqual(self.outbox.restore(str(self.root),missing,self.runtime),(None,"outbox_backup_missing"))
+        self.assertFalse(self.owned.exists())
+
+    def test_future_backup_and_unknown_columns_are_preserved_without_target_creation(self):
+        self.seed()
+        self.queue.stage(self.batch())
+        snapshot,backup=self.snapshot()
+        self.owned.unlink()
+        with statistics.closing(sqlite3.connect(backup)) as conn,conn:
+            conn.execute("PRAGMA user_version=99")
+        before=backup.read_bytes()
+        self.assertEqual(self.outbox.restore(str(self.root),snapshot.backup_leaf,self.runtime),(None,"unsupported_outbox_schema"))
+        self.assertEqual(before,backup.read_bytes())
+        self.assertFalse(self.owned.exists())
+        with statistics.closing(sqlite3.connect(backup)) as conn,conn:
+            conn.execute("PRAGMA user_version=1")
+            conn.execute("ALTER TABLE pending ADD COLUMN unknown TEXT")
+        before=backup.read_bytes()
+        self.assertEqual(self.outbox.restore(str(self.root),snapshot.backup_leaf,self.runtime),(None,"invalid_outbox_state"))
+        self.assertEqual(before,backup.read_bytes())
+        self.assertFalse(self.owned.exists())
+
+    def test_corrupt_or_foreign_pending_in_backup_is_not_restored(self):
+        self.seed()
+        self.queue.stage(self.batch())
+        snapshot,backup=self.snapshot()
+        self.owned.unlink()
+        with statistics.closing(sqlite3.connect(backup)) as conn,conn:
+            line=conn.execute("SELECT line FROM pending ORDER BY event_id LIMIT 1").fetchone()[0]
+            event=json.loads(line)
+            event.pop("event_id")
+            event["device_id"]="qrd_foreign"
+            foreign=self.codec.encode_event(self.to_lua(event))
+            info=self.codec.inspect_event(foreign)
+            conn.execute("UPDATE pending SET event_id=?,line=?,native_digest=? WHERE line=?",
+                         (info.event_id,foreign,info.native_digest,line))
+        before=backup.read_bytes()
+        self.assertEqual(self.outbox.restore(str(self.root),snapshot.backup_leaf,self.runtime),(None,"outbox_scope_mismatch"))
+        self.assertEqual(before,backup.read_bytes())
+        self.assertFalse(self.owned.exists())
+
+    def test_backup_transaction_failure_preserves_original_and_partial_artifact(self):
+        self.seed()
+        self.queue.stage(self.batch())
+        context=dict(self.queue.context().items())
+
+        def fail(operation,value):
+            if operation=="exec" and value=="COMMIT": raise RuntimeError("owned simulated snapshot interruption")
+
+        self.query_hook=fail
+        self.assertEqual(self.queue.backup(),(None,"outbox_unavailable"))
+        self.query_hook=None
+        self.assertEqual((self.reopen().status().pending,self.queue.status().review),(2,1))
+        self.assertEqual(dict(self.queue.context().items()),context)
+        artifacts=list(self.root.glob("quartzo_sync_recovery_*.sqlite3"))
+        self.assertEqual(len(artifacts),1)
+        preview=self.outbox.inspect_backup(str(self.root),artifacts[0].name,self.runtime)
+        self.assertEqual(preview,(None,"unsupported_outbox_schema"))
+        self.assertTrue(artifacts[0].is_file())
+
     def receipt_owner(self):
         # Trust boundary fixture for this store only: real pairing's separate
         # suite proves its opaque handles/delivery checks. No public list setter.

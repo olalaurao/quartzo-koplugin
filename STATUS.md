@@ -1,5 +1,50 @@
 # Implementation Status
 
+## 2026-10-22 — Explicit recovery snapshots preserve identity; native proof pending
+
+Previous goal turn made progress: PhaseC accepted/merged and the PhaseD storage
+core passed exact native CI. Revalidated clean0c76d42 and draftPR5/all green
+before this continuation. User remains unable to operate devices; no device
+install/session/question is active. This change stays within the open PhaseD,
+without enabling a later production phase or weakening its physical gate.
+
+Candidate0.0.5 adds explicit `backup`, `inspect_backup` and `restore` through the
+same outbox owner. Recovery files use an OS-random, strictly bounded own leaf
+name in the same settings directory. SQLite ATTACH with DELETE journals and
+synchronous EXTRA copies all three bounded tables in one native transaction;
+there is no second serializer, raw database-file copy, custom journal or writer.
+Identity and source epoch are copied verbatim, never regenerated during restore.
+Selected bytes and pending review remain intact even after source-history loss.
+
+All owner tables/columns/types/nullability/primary keys are validated; unknown
+objects/columns cannot be silently dropped by a recovery copy. Full bounded
+pending lines and digests/context plus review integer/type fields are validated
+without loading all events or arbitrarily large corrupt fields. Restoration
+requires the primary to be absent. Existing, even damaged, primary state and
+existing recovery files are preserved; malformed/future/foreign snapshots fail
+without fallback or automatic identity reset. Partial recovery artifacts remain
+for review and cannot be read as registered state. Ordinary open never chooses a
+backup automatically. A snapshot is the point-in-time selected state, not proof
+that facts selected after it, the current Statistics generation or a cloud
+receipt can be recovered from it.
+
+The implementation deliberately uses native attached-database transactions
+rather than VACUUM INTO: SQLite documents INTO as permitting an existing empty
+destination, while this owner checks fresh destination/schema and uses its own
+normal table/identity validation. Official ATTACH documentation establishes the
+DELETE-journal multi-database transaction contract; no hardware power-loss claim
+follows. References: https://www.sqlite.org/lang_attach.html and
+https://www.sqlite.org/lang_vacuum.html.
+
+Local focused outbox82 cases:54 PASS/28 actual-native Linux skips (10.235s).
+New cases cover byte-identical source/backup preservation, same identity/bytes
+after source deletion, collision retention, malformed names/missing files,
+unknown/future schemas, foreign pending facts and interrupted copy rollback.
+Actual native CI, recovery process-stop extensions and final package proof are
+pending. Existing 323-case0.0.4 evidence remains historical/source-specific.
+No upstream contract, Companion lock, source DB, release or production caller
+changed. Gate4/full seven-topic goal remain OPEN, topic2/7.
+
 Final guarded candidate `7a7fb09e24bcd956ab913ea9b9a7ea3491fdee92` passed
 CI39723070687:323 tests/no skips (174 plugin including55 actual native SQLite
 cases,34 transport,115 wire). Actual Linux/Windows40,200-byte ZIP matches

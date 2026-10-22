@@ -152,3 +152,23 @@ not new native TLS, PW3 restart, hardware power-loss or full Gate4 acceptance.
 No user database, existing Reader state, Wi-Fi, real credential or live listener
 is involved. Device tests wait until the user is available; never start a finite
 pairing/session in advance of that availability.
+
+### Explicit recovery snapshots (0.0.5 candidate)
+
+`queue.backup()` creates a fresh `quartzo_sync_recovery_<32hex>.sqlite3` in the
+same owner directory. Native SQLite ATTACH/DELETE-journal transactions copy the
+complete bounded identity/pending/review state; a second serializer or bytewise
+database-file copier is not used. `inspect_backup(root, leaf, runtime)` verifies
+schema, every bounded selected canonical line/digest/scope and review fields.
+`restore(root, leaf, runtime)` works only when the primary file is absent, copies
+the same identity and selected data, then reopens through the normal owner.
+It never calls entropy to create a replacement identity.
+
+No unknown objects/columns are silently dropped; malformed/future/foreign or
+oversized data fails. Existing primary/recovery files are preserved, including
+damaged state; preserve/review them before any explicit restore. A failed copy
+may leave an unregistered partial artifact, which is retained and rejected by
+normal open/inspection. There is no automatic fallback, overwriting, pruning or
+directory-wide scan. A recovery snapshot is point-in-time: newer selected facts
+need their source or another verified recovery point; restored identity does
+not verify the current Statistics generation or issue canonical receipts.

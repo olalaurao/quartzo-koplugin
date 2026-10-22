@@ -1,5 +1,24 @@
 # Quartzo ↔ KOReader — Implementation Specification
 
+2026-10-22 PhaseD0.0.5 recovery candidate:
+Use the SAME SQLite outbox owner for explicit point-in-time recovery copies.
+ATTACH/DELETE-journal/synchronous EXTRA transactions copy complete bounded
+identity, pending and review tables; no alternate store, raw file copier,
+serializer or custom journal. Every owner table/column/PK/default shape and
+bounded content is validated. Unknown/future/foreign state cannot be silently
+reinterpreted or dropped. Recovery filenames are strict own random leaves in
+the same directory. Restore requires primary absence, keeps the original
+device/epoch/selected bytes, never regenerates identity and never overwrites
+damaged state. Ordinary open never selects backup automatically. Failed-copy
+artifacts stay preserved/unregistered. A snapshot cannot recover selected facts
+newer than its point in time or establish current Statistics generation.
+
+Source-generation enrollment, reset UX/lifecycle and physical Gate4 remain open.
+This extends only the existing PhaseD storage owner while user devices cannot
+be operated; no installs, sessions, networking or production effects are enabled.
+Native/process tests are required before accepting this new source.
+
+
 2026-10-22 PhaseD0.0.4 candidate (supersedes historical .lua state example):
 Use plugin-owned quartzo_sync_state.sqlite3 with existing native SQ3, DELETE
 journal and synchronous EXTRA checked as3, not a new JSON/temp journaling layer.
