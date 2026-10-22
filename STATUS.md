@@ -1,5 +1,33 @@
 # Implementation Status
 
+## 2026-10-22 — Recovery schema preservation review (0.0.6, native CI pending)
+
+The previous goal turn made concrete host progress: exact8b73c6e passed367 CI
+cases and prepared an uninstalled offline artifact. The user still cannot operate
+devices. No install, device access, timed pairing or user question is active.
+
+Review found a real gap in the advertised unknown-schema preservation rule:
+table_info cannot describe CHECK/UNIQUE/FK constraints, collations or generated
+columns. Recovery accepted such a modified table and rebuilt only known fields,
+silently dropping the unfamiliar declaration. The new CHECK regression actually
+failed on both host VMs against8b73c6e before the correction; its log is preserved
+privately. This is a recovery-owner fix, not source-generation enrollment proof.
+
+Candidate0.0.6 uses ONE existing-owner declaration map for both CREATE and exact
+validation. Recognize only the three original table declarations and their two
+implicit indexes, including bounded stored SQL. Unknown columns/constraints/table
+options/internal objects fail before creating a restore destination, preserving
+the input. No generic SQL parser, schema rewrite/migration or new state store.
+The actual v1 CREATE bytes are unchanged, so untouched0.0.4/0.0.5 owner state remains
+compatible; equivalent hand-edited SQL is deliberately not automatically adopted.
+
+Focused Windows101 cases:66 PASS/35 explicit native-Linux skips,13.219s. Regressions
+cover CHECK, UNIQUE, FK, virtual/stored generated fields, collation and internal
+analysis objects; existing backup/restore/interruption paths still pass locally.
+Final full native CI is required. Prior8b73c6e artifact/evidence remains historical
+and must not be installed as this new source. No physical Gate4 or later-phase
+acceptance is claimed; full goal ACTIVE/topic2/7, source lifecycle still incomplete.
+
 ## 2026-10-22 — Offline outbox physical block preparation (not installed)
 
 Accepted exactb081938 native CI39729636826:364 cases/no skips (215 plugin,

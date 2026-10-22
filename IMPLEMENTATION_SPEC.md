@@ -1,5 +1,16 @@
 # Quartzo ↔ KOReader — Implementation Specification
 
+2026-10-22 PhaseD0.0.6 recovery validation correction:
+Use the SAME owner declaration strings for CREATE and validation of schema-v1
+identity/pending/review tables. Stored table_info alone cannot describe generated
+columns, CHECK/UNIQUE/FK constraints, collation or table options. Accept exactly
+the original CREATE declarations and two implicit PK indexes; unknown SQLite
+internal objects are not silently dropped. Stored SQL projection is bounded and
+there is no general SQL parser or second schema source. Unknown/equivalent edited
+declarations require review, preserving input before any restore target creation.
+Existing untouched owner CREATE bytes and schema version remain unchanged; this
+requires no data migration. Native CI/physical/source-enrollment gates remain.
+
 2026-10-22 PhaseD offline acceptance preparation:
 Use tools/plugin/outbox_probe_bundle.py as a definition of the existing wire
 artifact owner and reuse its finite single-use KUAL launcher. No second installer,

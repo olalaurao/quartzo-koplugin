@@ -242,6 +242,43 @@ class OutboxTest(unittest.TestCase):
         self.assertEqual(before,backup.read_bytes())
         self.assertFalse(self.owned.exists())
 
+    def test_recovery_rejects_unrecognized_constraints_and_generated_columns(self):
+        self.seed()
+        self.queue.stage(self.batch())
+        snapshot,backup=self.snapshot()
+        self.owned.unlink()  # Only this fixture's owned primary.
+        original=backup.read_bytes()
+        ordinary="event_id TEXT PRIMARY KEY,line TEXT NOT NULL,native_digest TEXT NOT NULL"
+        definitions=(ordinary+",CHECK(length(line)>0)",ordinary+",UNIQUE(native_digest)",
+            ordinary+",FOREIGN KEY(event_id) REFERENCES identity(device_id)",
+            ordinary+",unknown TEXT GENERATED ALWAYS AS (line) VIRTUAL",
+            ordinary+",unknown TEXT GENERATED ALWAYS AS (line) STORED",
+            ordinary.replace("line TEXT NOT NULL","line TEXT NOT NULL COLLATE NOCASE"))
+        for definition in definitions:
+            backup.write_bytes(original)
+            with statistics.closing(sqlite3.connect(backup)) as conn,conn:
+                conn.executescript("ALTER TABLE pending RENAME TO old_pending;CREATE TABLE pending("
+                    +definition+");INSERT INTO pending(event_id,line,native_digest) "
+                    "SELECT event_id,line,native_digest FROM old_pending;DROP TABLE old_pending;")
+            before=backup.read_bytes()
+            self.assertEqual(self.outbox.restore(str(self.root),snapshot.backup_leaf,self.runtime),
+                             (None,"invalid_outbox_state"),definition)
+            self.assertEqual(before,backup.read_bytes())
+            self.assertFalse(self.owned.exists())
+
+    def test_unknown_internal_schema_objects_are_not_dropped_by_recovery(self):
+        self.seed()
+        self.queue.stage(self.batch())
+        snapshot,backup=self.snapshot()
+        self.owned.unlink()
+        with statistics.closing(sqlite3.connect(backup)) as conn,conn:
+            conn.execute("ANALYZE")  # Adds SQLite-owned analysis tables to this fixture only.
+        before=backup.read_bytes()
+        self.assertEqual(self.outbox.restore(str(self.root),snapshot.backup_leaf,self.runtime),
+                         (None,"invalid_outbox_state"))
+        self.assertEqual(before,backup.read_bytes())
+        self.assertFalse(self.owned.exists())
+
     def test_backup_transaction_failure_preserves_original_and_partial_artifact(self):
         self.seed()
         self.queue.stage(self.batch())

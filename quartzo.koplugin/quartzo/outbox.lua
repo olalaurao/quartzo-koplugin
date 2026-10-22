@@ -68,40 +68,43 @@ local function bounded(name, maximum)
     return "CASE WHEN typeof("..name..")='text' AND length(CAST("..name
         .." AS BLOB))<="..maximum.." THEN "..name.." ELSE NULL END"
 end
-local columns = {
-    identity={{"id","INTEGER",0,1},{"device_id","TEXT",1,0},{"source_epoch","TEXT",1,0}},
-    pending={{"event_id","TEXT",0,1},{"line","TEXT",1,0},{"native_digest","TEXT",1,0}},
-    review={{"started_at","INTEGER",1,1},{"book_id","TEXT",1,2},{"page","TEXT",1,3},
-        {"duration","TEXT",1,4},{"pages","TEXT",1,5},{"types","TEXT",1,6}},
+-- One owner declaration serves creation AND validation. table_info alone hides
+-- generated columns, collations, CHECK/UNIQUE/FK constraints and table options.
+-- Cloning an unfamiliar declaration would silently drop those semantics.
+local definitions = {
+    identity="(id INTEGER PRIMARY KEY CHECK(id=1), device_id TEXT NOT NULL,source_epoch TEXT NOT NULL)",
+    pending="(event_id TEXT PRIMARY KEY,line TEXT NOT NULL,native_digest TEXT NOT NULL)",
+    review="(started_at INTEGER NOT NULL,book_id TEXT NOT NULL,page TEXT NOT NULL,"
+        .."duration TEXT NOT NULL,pages TEXT NOT NULL,types TEXT NOT NULL,"
+        .."PRIMARY KEY(started_at,book_id,page,duration,pages,types))",
 }
 local function create_schema(conn, prefix)
     check(prefix=="" or prefix=="recovery.")
-    conn:exec("CREATE TABLE "..prefix.."identity(id INTEGER PRIMARY KEY CHECK(id=1), device_id TEXT NOT NULL,source_epoch TEXT NOT NULL)")
-    conn:exec("CREATE TABLE "..prefix.."pending(event_id TEXT PRIMARY KEY,line TEXT NOT NULL,native_digest TEXT NOT NULL)")
-    conn:exec("CREATE TABLE "..prefix.."review(started_at INTEGER NOT NULL,book_id TEXT NOT NULL,page TEXT NOT NULL,"
-        .. "duration TEXT NOT NULL,pages TEXT NOT NULL,types TEXT NOT NULL,"
-        .. "PRIMARY KEY(started_at,book_id,page,duration,pages,types))")
+    for _,name in ipairs({"identity","pending","review"}) do
+        conn:exec("CREATE TABLE "..prefix..name..definitions[name])
+    end
 end
 local function check_schema(conn)
-    local objects=conn:prepare("SELECT name,type FROM sqlite_master WHERE name NOT GLOB 'sqlite_*' LIMIT 4")
+    local indexes={sqlite_autoindex_pending_1="pending",sqlite_autoindex_review_1="review"}
+    local objects=conn:prepare("SELECT name,type,tbl_name,"
+        .."CASE WHEN typeof(sql)='text' AND length(CAST(sql AS BLOB))<=1024 THEN sql ELSE NULL END "
+        .."FROM sqlite_master LIMIT 6")
     local seen={}
-    for _=1,4 do
+    for _=1,6 do
         local row=objects:step()
         if not row then break end
-        check(columns[row[1]] and row[2]=="table" and not seen[row[1]])
+        local name=row[1]
+        check(not seen[name])
+        if definitions[name] then
+            check(row[2]=="table" and row[3]==name and row[4]=="CREATE TABLE "..name..definitions[name])
+        else
+            check(indexes[name] and row[2]=="index" and row[3]==indexes[name] and row[4]==nil)
+        end
         seen[row[1]]=true
     end
     objects:close()
-    for _,name in ipairs({"identity","pending","review"}) do
+    for _,name in ipairs({"identity","pending","review","sqlite_autoindex_pending_1","sqlite_autoindex_review_1"}) do
         check(seen[name])
-        local stmt=conn:prepare("PRAGMA table_info("..name..")")
-        for i,expected in ipairs(columns[name]) do
-            local row=stmt:step()
-            check(row and row[1]==i-1 and row[2]==expected[1] and row[3]==expected[2]
-                and row[4]==expected[3] and row[5]==nil and row[6]==expected[4])
-        end
-        check(stmt:step()==nil)
-        stmt:close()
     end
 end
 local function configured(conn)

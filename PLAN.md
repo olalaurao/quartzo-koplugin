@@ -1,5 +1,12 @@
 # Quartzo ↔ KOReader — Product & Delivery Plan
 
+2026-10-22 PhaseD0.0.6 closes a reproduced recovery schema gap before the device
+trial: exact owner declarations now serve creation and recognition, preventing
+silent removal of unfamiliar constraints/generated columns/internal objects.
+Untouched v1 schema CREATE bytes stay compatible; no migration/identity enrollment
+or later phase is enabled. Full native CI and refreshed source-bound artifacts
+are required; the prepared8b73c6e offline bundle remains historical, uninstalled.
+
 2026-10-22 offline PhaseD proof is prepared, NOT installed. Exactb081938 passed
 364 native/fixture CI cases without skips. Reuse the existing finite KUAL launcher
 and artifact owner, run six actual synthetic stage/backup/restore process stops,
