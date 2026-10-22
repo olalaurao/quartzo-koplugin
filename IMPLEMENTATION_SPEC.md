@@ -1,5 +1,16 @@
 # Quartzo ↔ KOReader — Implementation Specification
 
+2026-10-22: exact0.0.2 source5b22dd6 passed actual PW3 Gate2. The manual
+read-only diagnostic preserved main DB bytes and logical counts/dates; the
+separate normal-reading trial remained responsive and added one native event.
+Other plugin sources and own settings remained unchanged. Empty WAL/SHM cache
+lifecycle is recorded separately, not labeled identical files. See STATUS and
+`docs/evidence/statistics-read-only-pw3-2026-10-22.json`. PhaseC bounded
+deterministic extraction may proceed; outbox/ingestion and full release gates
+remain open. No reading duration, canonical receipt or production effect is
+inferred from this diagnostic.
+
+
 The new exact47aa17f/profile7d3b6735 paired PW3/Android trial passed independent
 receipt/canonical-byte/replay collection and verified normal completion,
 revocation,package removal and full manual cleanup. The upstream G04 finite
@@ -63,7 +74,7 @@ gates remain open. No production activation follows this diagnostic.
 > **Target V1 device:** Kindle Paperwhite 3 / 7th gen (PW3), firmware 5.16.2.1.1, KUAL, KOReader v2026.07.1 (`kindlepw2`)
 > **Product roadmap:** `PLAN.md`  
 > **Progress ledger:** `STATUS.md`  
-> **Implementation state:** Gate 0/physical Phase A accepted; bounded Phase B probe implemented, physical Gate 2 pending
+> **Implementation state:** Gate 0 and physical Phases A/B accepted; Phase C deterministic event extraction next
 > **Last reconciled:** 2026-10-21 (historical planning pass: 2026-09-22)
 
 This file is the implementation source of truth once implementation begins. If code and this specification disagree, either the code is wrong or this file must be deliberately updated in the same change, with the reason recorded in `STATUS.md`.

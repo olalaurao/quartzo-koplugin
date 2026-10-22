@@ -62,7 +62,9 @@ hash-pinned actual official KOReader SQ3 source and SQLite binary. Windows
 skips only that native POSIX class; it still executes real synthetic SQLite
 behavior through the injected test-only SQ3 API on both Lua5.1 and LuaJIT.
 
-Actual PW3 acceptance remains mandatory and separates two observations:
+Actual0.0.2 PW3 acceptance completed these two separate observations, recorded
+in the [Gate2 report](../../docs/evidence/statistics-read-only-pw3-2026-10-22.json).
+Future changed implementations still need their applicable physical evidence:
 
 1. Preserve the mounted DB/WAL/SHM and other-plugin source baseline. Install a
    fresh exact-source0.0.2 package. The user starts without reading a document,
@@ -75,5 +77,6 @@ Actual PW3 acceptance remains mandatory and separates two observations:
 
 Do not write a synthetic schema or test lock into the user's Statistics DB.
 Unknown-schema/write-rejection/fault tests use synthetic fixtures only. Keep
-Reader mappings,sidecars and other plugins untouched. PhaseC is blocked until
-the real Gate2 proof is recorded. No0.0.2 physical acceptance is inferred from CI.
+Reader mappings,sidecars and other plugins untouched. PhaseC may proceed after
+the real Gate2 proof; this0.0.2 acceptance is based on the actual human/USB/
+private-copy trial, not inferred from CI alone.

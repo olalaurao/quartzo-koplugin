@@ -1,0 +1,73 @@
+{
+  "evidence_version": 1,
+  "gate": "KOReader Gate 2: read-only Statistics safety",
+  "gate_status": "PASS",
+  "scope": "Phase B bounded manual Statistics diagnostic; not production ingestion or source acknowledgement",
+  "source_commit": "5b22dd67cf74a69eb9e192b5c807ac9a19d97824",
+  "runtime_first_commit": "6c74b9262bb2350b418a3b1abe3482be5f8d1a73",
+  "plugin_version": "0.0.2",
+  "koreader_version": "v2026.07.1",
+  "koreader_package": "kindlepw2",
+  "device": "Kindle Paperwhite 3 / seventh generation",
+  "archive": {
+    "bytes": 9203,
+    "sha256": "0d018078f23c6638e88eb969833db11db188a1655106c4538b307e88e0c5cca4",
+    "files": {
+      "quartzo.koplugin/main.lua": "2ea7eac755137043a1ccdf4c8691dfbb000b5eafff42f3820b265969a18db7fa",
+      "quartzo.koplugin/_meta.lua": "fcb1abb3014821ed7bc95daf5c3a151f73203ef098ddb8a83c4fb721450f1979",
+      "quartzo.koplugin/quartzo/statistics.lua": "77e3c9b7661bb4c3a18e854a2b74ea2d28b5e7896df72b9ced51a1ade3e8f2cd"
+    },
+    "linux_ci_windows_bytes_equal": true
+  },
+  "native_sq3_source_sha256": "8cfdeecde02c21079c4ec825348831972491d59009ccc69fe9b8a444f994073d",
+  "mounted_arm_sqlite_library_sha256_observed_after_trial": "0fe034a13eee2a79fa2079702b08813d7ed277818c98f4838d308907a0746d73",
+  "exact_source_ci": {
+    "url": "https://github.com/olalaurao/quartzo-koplugin/actions/runs/39715969542",
+    "plugin_cases": 50,
+    "native_sdk_cases_in_plugin_suite": 13,
+    "transport_cases": 34,
+    "wire_cases": 111,
+    "skipped": 0,
+    "native_reference": "tools/plugin/SQLITE_REFERENCE.lock.json",
+    "fault_scope": "Synthetic real SQLite files only; unknown schema, corruption, readonly write rejection, separate-process exclusive lock, WAL snapshot, capped history, unsafe indexes and close failure. No fault was injected into the user DB."
+  },
+  "read_only_physical_step": {
+    "human_report": "Mostrou20221111,43 e5726 sem travar; fechei e reconectei",
+    "schema_version": 20221111,
+    "book_rows": 43,
+    "raw_events": 5726,
+    "human_responsive": true,
+    "main_db_bytes_unchanged": true,
+    "independent_private_before_after_counts_and_dates_equal": true,
+    "source_wal_data_frames_present_after": false,
+    "all_tracked_files_identical": false,
+    "changed_control_sidecars": [
+      "statistics.sqlite3-wal",
+      "statistics.sqlite3-shm"
+    ]
+  },
+  "normal_reading_physical_step": {
+    "human_report": "Leitura, navegação e retorno ao diagnóstico funcionaram; reconectei",
+    "human_reading_navigation_and_diagnostic_normal": true,
+    "book_rows_after": 43,
+    "raw_events_after": 5727,
+    "native_raw_event_count_change": 1,
+    "main_db_changed_during_ordinary_reading": true,
+    "earliest_timestamp_preserved": true,
+    "latest_timestamp_non_regressed": true,
+    "boundary": "Ordinary reading naturally changed native Statistics. Unchanged-byte proof applies to the separate diagnostic-only step; no unchanged whole-cycle claim or fabricated reading duration."
+  },
+  "existing_statistics_reader_simpleui_extra_lua_files_verified": 180,
+  "own_settings_unchanged": true,
+  "bounded_log_tail_line_limit": 2000,
+  "quartzo_error_lines_in_checked_tails": 0,
+  "source_database_opened_by_host_during_physical_collection": false,
+  "independent_query_location": "Private offline copies outside Git; no book metadata or timestamps published",
+  "cache_boundary": "An earlier host mode=ro metadata audit left an empty WAL/control SHM without changing main DB bytes. Their later disappearance is explicitly recorded as control-sidecar lifecycle, not silently labeled identical files.",
+  "physical_latency_ms_measured": null,
+  "production_ingestion_enabled": false,
+  "canonical_source_cursor_enabled": false,
+  "production_release": false,
+  "goal_complete": false,
+  "next_required_gate": "Phase C deterministic bounded native event extraction; durable offline outbox and real canonical delivery remain later gates"
+}

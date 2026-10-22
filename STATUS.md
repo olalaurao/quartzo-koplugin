@@ -1,5 +1,44 @@
 # Implementation Status
 
+## 2026-10-22 — Actual PW3 read-only/normal-reading Gate 2 PASS
+
+Exact0.0.2 source `5b22dd67cf74a69eb9e192b5c807ac9a19d97824` passed the actual
+PW3 diagnostic and normal-reading steps. The first human report matched the
+independent private before/after snapshots: schema20221111,43 book rows and
+5,726 raw events. Main DB bytes and logical counts/earliest/latest timestamps
+were identical after the diagnostic-only execution. The recorded disappearance
+of the earlier empty WAL/control SHM is not mislabeled as identical sidecars.
+
+The user then read/navigated an existing book and reopened the diagnostic
+without freezing. Independent USB/private-copy checks found43 book rows and
+5,727 native events, with the earlier timestamp preserved and latest timestamp
+not regressed. Main DB bytes legitimately changed during ordinary reading;
+this is a separate observation from the unchanged diagnostic-only step, not
+plugin ingestion or a fabricated duration. Exact runtime/native wrapper hashes,
+all180 existing plugin Lua sources and own settings were verified. The bounded
+log tails contained zero Quartzo error lines. No PW3 query latency was measured;
+the human verified responsiveness, not the full release performance budget.
+
+[Source-bound Gate2 evidence](docs/evidence/statistics-read-only-pw3-2026-10-22.json)
+has SHA256113d48ef8be1177fd1a18b63b2c5915dcf22a64d01960fb9b27b15c112c783e2.
+Exact5b CI39715969542 passed195 tests without skips:50 plugin (including13
+actual native official KOReader SQ3/SQLite cases),34 transport and111 wire.
+The corrected separate-process writer proves real busy rejection without
+weakening or skipping the earlier failed case. Actual Windows/Linux9,203-byte
+package hashes match0d018078f23c6638e88eb969833db11db188a1655106c4538b307e88e0c5cca4.
+
+The development0.0.2 probe remains installed; it runs only on explicit request.
+Source data/private backups and actual timestamps stay outside Git. Source DB
+was not opened by the host during physical collection; independent SQL ran on
+private offline copies. No release,network,Statistics write SQL,outbox/cursor,
+Reader API,Resource or automation behavior is enabled.
+
+KOReader PhaseB/Gate2 is PASS. PhaseC deterministic bounded native event
+extraction is next, followed by durable offline state/outbox and canonical
+delivery. Integrated ingestion G08 and the full seven-topic goal remain OPEN.
+PR3 requires its final evidence-head CI before the standing-authorized merge;
+earlier foundations PR67/PR1/PR2 are already merged as documented below.
+
 ## 2026-10-22 — Foundation and Phase A merged; bounded Phase B implemented
 
 After all exact-head checks passed, authorized PR67 merged upstream as
