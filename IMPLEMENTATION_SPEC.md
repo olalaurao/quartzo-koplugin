@@ -1,5 +1,32 @@
 # Quartzo ↔ KOReader — Implementation Specification
 
+2026-10-22 PhaseD0.0.4 candidate (supersedes historical .lua state example):
+Use plugin-owned quartzo_sync_state.sqlite3 with existing native SQ3, DELETE
+journal and synchronous EXTRA checked as3, not a new JSON/temp journaling layer.
+It is a bounded outbox, not canonical Reading Activity. Explicit create generates
+an OS-entropy device ID and takes an explicit source epoch; generation enrollment
+is still a separate required production boundary. Existing-file open never
+recreates missing/corrupt/future state, migrates unknown files or rotates identity.
+Restore/review identity before historical replay. Native rw is required only for
+this owned store's hot-journal recovery; Statistics always stays explicit ro.
+
+Selected canonical bytes survive source deletion. Duplicate stage preserves the
+first bytes; native conflict/capacity/commit failures rollback. Bounded pending
+review cannot be auto-discarded. Native transactions replace snapshots atomically;
+there is no independent staging/temp-file promotion or recovery framework.
+The unchanged paired_exchange owner moves into quartzo.koplugin/quartzo with its
+consumers updated. Only its opaque session/request-bound receipts can prune exact
+per-event native/line bindings; there is no accepted-ID list/boolean shortcut.
+No source watermark API is exposed: conservative replay must retain identity and
+use canonical deduplication. Source-generation/reset/lifecycle integration remains
+required before production; do not treat local scan positions as acknowledged.
+
+Gate4 stays OPEN until full native tests and actual PW3 crash/restart/paired
+receipt acceptance. Current host process-stop/SDK fixtures are not device/power
+loss evidence. No lifecycle/network/configuration/ingestion hook is enabled;
+user cannot operate devices now, so no new install or timed session is started.
+
+
 2026-10-22 PhaseC0.0.3 accepted fixture/native Gate3 (historical SQL superseded):
 Reuse the existing Statistics read-only/schema/snapshot owner and wire codec.
 Book enumeration is keyset-bounded; event collection defaults50/max100 rows,

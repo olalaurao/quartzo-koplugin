@@ -1,5 +1,71 @@
 # Implementation Status
 
+## 2026-10-22 — Phase D durable delivery-state candidate; no device available
+
+PR4 merged after exact0d96d1e CI39720286930 passed262 cases without skips as
+`f416b8d8314fd25cdde020ad5d4c988b12f00e2a`; its tree matches tested0d.
+Branch `feature/reading-durable-outbox` starts from that merged source. The user
+cannot operate the Kindle/phone now and requested independent host work followed
+by later physical tests. No device installation, active session or question is
+pending. Installed development0.0.2 remains untouched; full goal stays ACTIVE.
+
+Candidate0.0.4 adds the plugin-owned `quartzo_sync_state.sqlite3` delivery owner.
+This deliberately replaces the unused reserved `.lua` state example with native
+SQLite transactions rather than inventing another atomic JSON/temp journal.
+It is not canonical Reading Activity. Explicit creation uses a strong16-byte
+`/dev/urandom` device ID and a caller-supplied source epoch; this API does not
+prove a database generation or implement production enrollment. Ordinary open
+uses existing-file `rw` for native hot-journal recovery, never `rwc`/re-enrollment
+on missing/corrupt/future state. Statistics remains a separate explicit-`ro` owner.
+No migration or fallback to an empty state, identity rotation or raw source write.
+
+Owned write transactions require native DELETE journal and synchronous EXTRA,
+read back as3. SQLite documents EXTRA's directory sync after rollback-journal
+unlink in DELETE mode: https://www.sqlite.org/pragma.html#pragma_synchronous.
+This delegates recovery to the existing SDK, not a hardware power-loss claim.
+Selected canonical lines remain immutable; same-ID/native-payload differences
+rollback the whole stage. Bounded review cases retain exact integer text/type
+flags. Combined pending/review capacity1000 fails atomically without removing
+older data. Delivery selection caps100 lines/512KiB. Source deletion does not
+erase previously selected bytes; no source watermark or review-deletion API is
+exposed. Conservative source rescans must reuse the persisted identity; a
+missing identity requires restore/review, not silent new-ID historical reupload.
+
+The existing approved `paired_exchange.lua` owner moved byte-for-byte into the
+plugin namespace (SHA2560f7bad0287d878244af4121881c6ccd3f1bde17ddc899a046fc9050d8af1f5a8).
+Its tooling consumers now read that single source. No TLS/role/pin/window/receipt
+rule changed and no transport/startup hook was enabled. Only that owner's opaque
+session/request-bound per-event receipts can prune exact queued bytes. The wire
+codec exposes its existing event inspection/digests for this owner; no second
+serializer/hash/parser or accepted-ID/boolean setter was introduced.
+
+Host tests include actual paired owner/shared carrier composition with the
+existing native-API SDK model (not actual new TLS/device proof), raw-claim/
+wrong-session/request/line rejection, partial acceptance with retained review,
+atomic later-position failure, replay and prune failure. Separate owned Python
+children are killed before/after commit and during receipt prune, with forced
+cache spill and a nonzero rollback-journal header observed before interruption.
+Reopen recovers the old or committed state as appropriate; no finally/SQLite
+close runs in killed children. These are real process stops, not power cuts.
+
+Local final focused outbox:38 PASS/20 explicit Linux-native skips (58 total,
+7.240s). Initial helper failures (duplicate keyword, colliding synthetic capacity
+rows and nested quote syntax) were corrected in fixtures; prior logs preserved.
+Earlier full plugin pass164 total preceded the last additional cases; updated
+full suite/native CI/package comparison remain pending. Native Linux additionally
+must execute the actual official SQ3/SQLite and actual OS entropy cases.
+
+Final local complete plugin run:117 PASS/54 explicit native-Linux skips
+(171 total,16.438s). Wire regressions:111 PASS/four explicit native-platform
+skips (115 total,7.298s). The remaining native class must run in CI without
+skips, including actual OS entropy; host results do not close physical Gate4.
+
+PhaseD/Gate4 remains OPEN. Production source-generation enrollment, identity
+restore/reset UX, lifecycle/checkpoint integration and the actual PW3 restart/
+interruption + paired receipt matrix remain required before activation/later
+phase acceptance. No claim of canonical ACK, ingestion, Resource effects,
+configured sync or completed seven-topic goal follows from this storage module.
+
 ## 2026-10-22 — Gate 3 deterministic extraction accepted
 
 Exact `1cfd3ecdf9c6979b786bf7f2cc0e7dfd57c348f2` CI39719998012 passed262

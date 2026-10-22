@@ -72,7 +72,7 @@ class PairedSequenceTest(unittest.TestCase):
         self.case.binding=self.case.fixture[b'binding']
         self.raw=encoded(self.document)
         self.module=self.lua.execute((ROOT/'paired_sequence.lua').read_bytes())
-        self.paired=self.lua.execute((ROOT/'paired_exchange.lua').read_bytes())
+        self.paired=self.lua.execute((ROOT.parents[1]/'quartzo.koplugin/quartzo/paired_exchange.lua').read_bytes())
         callback=self.lua.eval('function(fn) return function(...) return fn(...) end end')(self.case.transport)
         https,http,ltn12,self.counts=native_sdk(self.lua,callback,self.document['peer_certificate_sha256'])
         self.runtime=self.case.runtime

@@ -56,8 +56,11 @@ class StatisticsTest(unittest.TestCase):
         # Exercise real SQLite through a test-only implementation of the SQ3 API.
         def open_db(path, mode):
             self.trace("open", mode)
-            self.assertEqual(mode, "ro")
-            conn = sqlite3.connect(Path(path).as_uri() + "?mode=ro", uri=True)
+            if getattr(self, "allow_owned_writes", False):
+                self.assertIn(mode, ("ro", "rw", "rwc"))
+            else:
+                self.assertEqual(mode, "ro")
+            conn = sqlite3.connect(Path(path).as_uri() + "?mode=" + mode, uri=True, isolation_level=None)
             self.connections.append(conn)
             cursors = []
 

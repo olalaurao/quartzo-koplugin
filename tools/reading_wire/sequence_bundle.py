@@ -20,7 +20,7 @@ REVISION = 'canonical-paired-sequence-v1'
 SOURCE_MAP = {
     'codec.lua': 'tools/reading_wire/codec.lua',
     'koreader_deps.lua': 'tools/reading_wire/koreader_deps.lua',
-    'exchange.lua': 'tools/reading_wire/paired_exchange.lua',
+    'exchange.lua': 'quartzo.koplugin/quartzo/paired_exchange.lua',
     'sequence.lua': 'tools/reading_wire/paired_sequence.lua',
     'client.lua': 'tools/transport_probe/client.lua',
     'kindle.lua': 'tools/reading_wire/sequence_kindle.lua',

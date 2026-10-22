@@ -27,18 +27,23 @@ class CollectorTest(unittest.TestCase):
         self.null = self.lua.table()
         self.lua.globals().collector_null = self.null
         kind = self.lua.eval("function(v) if v==collector_null then return 'null' end; "
-                             "if type(v)=='table' then return 'object' end; return type(v) end")
+                             "if type(v)=='table' then local m=getmetatable(v); return m and m.wire_kind end; return type(v) end")
+        mark = self.lua.eval("function(t,k) return setmetatable(t,{wire_kind=k}) end")
 
         def convert(value):
             if value is None:
                 return self.null
             if isinstance(value, dict):
-                return self.lua.table_from({k: convert(v) for k, v in value.items()})
+                return mark(self.lua.table_from({k: convert(v) for k, v in value.items()}), "object")
+            if isinstance(value, list):
+                return mark(self.lua.table_from([convert(v) for v in value]), "array")
             return value
 
         wrap = self.lua.eval("function(f) return function(...) return f(...) end end")
         deps = self.lua.table(sha256=wrap(lambda b: hashlib.sha256(b.encode()).hexdigest()),
                               decode_json=wrap(lambda b: convert(json.loads(b))), kind=kind, null=self.null)
+        deps.object=self.lua.eval("function(t) return setmetatable(t,{wire_kind='object'}) end")
+        self.to_lua,self.codec_dependencies=convert,deps
         self.codec = self.lua.execute((ROOT / "tools/reading_wire/codec.lua").read_text()).new(deps)
 
     def collect(self, **options):

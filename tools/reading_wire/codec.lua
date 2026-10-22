@@ -237,6 +237,14 @@ local function create(deps)
         return result
     end
     local api = {}
+    function api.inspect_event(line)
+        return guarded(function()
+            local entry = inspect_event(line)
+            check(not entry.rejection, "invalid_event")
+            return {event_id=entry.event_id, device_id=entry.device_id, source_epoch=entry.source_epoch,
+                native_digest=digest(entry.native), line_digest=digest(line), canonical_ack=false}
+        end)
+    end
     -- Construction and inspection share the same serializer, identity and validator.
     -- Plain caller fields are copied; no receipt or cursor capability is created.
     function api.encode_event(input)

@@ -273,6 +273,12 @@ class WireCodecTest(unittest.TestCase):
             entry = self.inspect_lines([case["line"]])[b"entries"][1]
             self.assertIsNone(entry[b"rejection"])
             self.assertEqual(entry[b"native_digest"], hashlib.sha256(case["native_payload"].encode()).hexdigest().encode())
+            inspected = self.codec[b"inspect_event"](case["line"].encode())
+            self.assertEqual(inspected[b"native_digest"], entry[b"native_digest"])
+            self.assertEqual(inspected[b"event_id"], entry[b"event_id"])
+            self.assertEqual(inspected[b"line_digest"], hashlib.sha256(case["line"].encode()).hexdigest().encode())
+            self.assertFalse(inspected[b"canonical_ack"])
+            self.assertIsNone(inspected[b"accepted_events"])
 
 
 if __name__ == "__main__":

@@ -18,7 +18,7 @@ class PairedExchangeTest(unittest.TestCase):
         self.lua = self.harness.lua
         self.harness.reference.dependencies[b'object'] = self.lua.eval(
             "function(value) return setmetatable(value,{wire_kind='object'}) end")
-        self.module = self.lua.execute((ROOT / 'paired_exchange.lua').read_text(encoding='utf-8'))
+        self.module = self.lua.execute((ROOT.parents[1] / 'quartzo.koplugin/quartzo/paired_exchange.lua').read_text(encoding='utf-8'))
         self.document = dict(pairing_version=1, receiver_role='canonical_reading_activity_v1',
             endpoint='https://127.0.0.1:8443', certificate_pem='-----BEGIN CERTIFICATE-----\nsynthetic\n-----END CERTIFICATE-----\n',
             peer_certificate_sha256='1' * 64, binding=self.harness.reference.binding,

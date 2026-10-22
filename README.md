@@ -4,6 +4,10 @@ KOReader plugin in development for synchronizing reading activity into Quartzo.
 
 > **Status:** Foundations and physical Phases A/B passed. Version0.0.3 passed PhaseC deterministic extraction fixtures/native SDK and private-backup host comparison; it has not run on PW3. PhaseD durable state/outbox is next. Ingestion and effects remain inactive. See STATUS for source-bound evidence and remaining gates.
 
+Candidate0.0.4 implements inactive plugin-owned delivery state with native SQLite
+transactions and exact opaque-receipt pruning. Gate4 remains open; no new version
+is installed and no source enrollment or production synchronization is enabled.
+
 The package and offline acceptance steps are documented in
 [tools/plugin](tools/plugin/README.md). The Quartzo Tools menu shows diagnostics
 and a separate Reading Statistics action. Neither starts synchronization.

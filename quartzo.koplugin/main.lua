@@ -13,7 +13,7 @@ function Quartzo:init()
     -- Locate paths without opening files. Our config/state remain untouched.
     local settings_dir = DataStorage:getSettingsDir()
     self.config_path = settings_dir .. "/quartzo.lua"
-    self.state_path = settings_dir .. "/quartzo_sync_state.lua"
+    self.state_path = settings_dir .. "/quartzo_sync_state.sqlite3"
     self.statistics_path = settings_dir .. "/statistics.sqlite3"
     self.ui.menu:registerToMainMenu(self)
 end

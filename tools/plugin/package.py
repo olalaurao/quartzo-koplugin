@@ -9,7 +9,8 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[2]
 FILES = ("quartzo.koplugin/_meta.lua", "quartzo.koplugin/main.lua",
-         "quartzo.koplugin/quartzo/statistics.lua", "quartzo.koplugin/quartzo/collector.lua")
+         "quartzo.koplugin/quartzo/statistics.lua", "quartzo.koplugin/quartzo/collector.lua",
+         "quartzo.koplugin/quartzo/outbox.lua", "quartzo.koplugin/quartzo/paired_exchange.lua")
 
 
 def package(output, root=ROOT):

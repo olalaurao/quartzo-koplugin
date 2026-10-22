@@ -37,7 +37,7 @@ jobs:
           curl -fL --retry 2 --max-time 120 -o "$RUNNER_TEMP/koreader-sqlite.tar.xz" \
             https://github.com/koreader/koreader/releases/download/v2026.07.1/koreader-linux-x86_64-v2026.07.1.tar.xz
           python tools/plugin/prepare_sqlite_reference.py --archive "$RUNNER_TEMP/koreader-sqlite.tar.xz" --output "$RUNNER_TEMP/koreader-sqlite-reference"
-      - name: Plugin and native read-only Statistics fixtures (no physical proof)
+      - name: Plugin, read-only Statistics and owned outbox fixtures (no physical proof)
         env:
           READING_SQLITE_REFERENCE_DIR: ${{ runner.temp }}/koreader-sqlite-reference
         run: |

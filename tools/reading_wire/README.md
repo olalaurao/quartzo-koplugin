@@ -2,7 +2,8 @@
 
 ## Finite approved-pairing composition (G04, unregistered)
 
-`paired_exchange.lua` reuses the existing codec and shared pinned carrier. It
+`quartzo.koplugin/quartzo/paired_exchange.lua` (promoted byte-for-byte from this
+tools directory) reuses the existing codec and shared pinned carrier. It
 accepts the exact private document issued by Quartzo's normal current-target
 `ReadingTransportPairingSession`, plus its independently approved SHA256 from
 an explicit trusted out-of-band handoff. Never compute approval from an

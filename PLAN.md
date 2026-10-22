@@ -1,5 +1,12 @@
 # Quartzo ↔ KOReader — Product & Delivery Plan
 
+2026-10-22 PhaseD candidate0.0.4 adds bounded plugin-owned native SQLite delivery
+state, immutable selected bytes, retained review and opaque per-event receipt
+pruning. The existing paired owner moved unchanged into the plugin namespace.
+No lifecycle/network/enrollment is activated. Gate4 remains OPEN for native CI,
+remaining source lifecycle integration and real device crash/restart/receipt
+proof. User cannot operate devices now; no session/install is pending. See STATUS.
+
 2026-10-22 Gate3 PASS at1cfd3ec:262 native/fixture CI cases without skips;
 complete private-backup host comparison accounted for5,717 valid events and
 ten retained page-zero review positions over58 bounded batches. No new PW3

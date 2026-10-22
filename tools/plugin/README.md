@@ -1,11 +1,12 @@
-# Plugin and read-only Statistics probe
+# Plugin, read-only Statistics and owned delivery-state development
 
 Phase A0.0.1 passed the actual PW3 install/start/menu/remove/restart gate. PhaseB
 0.0.2 adds a separate, explicitly requested Reading Statistics diagnostic.
 Synchronization remains inactive. KOReader's PluginLoader
 loads `_meta.lua` into the plugin class; it is the single version owner.
-`DataStorage:getSettingsDir()` supplies the two reserved Quartzo settings paths.
-Neither path is opened or written. Reader, SimpleUI and Extra are not dependencies.
+`DataStorage:getSettingsDir()` supplies reserved Quartzo settings paths; normal
+startup opens/writes neither. The inactive outbox API can explicitly own its
+separate SQLite file. Reader, SimpleUI and Extra are not dependencies.
 
 Run with the existing pinned test-only Lupa dependency:
 
@@ -15,7 +16,8 @@ python tools/plugin/package.py --output /existing/output/directory/quartzo-boots
 ```
 
 Packaging exclusively creates a fresh uncompressed ZIP containing
-`quartzo.koplugin/main.lua`, `_meta.lua` and `quartzo/statistics.lua`. Its JSON
+the six exact Lua sources in `package.py`'s allowlist: main,metadata,Statistics,
+collector,outbox and the unchanged paired owner. Its JSON
 output records ZIP and individual source SHA-256 hashes.
 It never installs a plugin, replaces an archive or bundles diagnostics, fixtures,
 credentials, contract copies or private data.
@@ -114,3 +116,39 @@ preserve review and cannot advance an acknowledged checkpoint across it.
 Safe earlier/later dates use SQLite UTC conversion, avoiding host timezone and
 32-bit `os.date` limits. Close failure suppresses all collected results. Loading
 the module has no DB access; the normal plugin still invokes only diagnostics.
+
+## Phase D delivery-state candidate
+
+`quartzo/outbox` owns only `DataStorage:getSettingsDir()/quartzo_sync_state.sqlite3`.
+It uses existing native SQ3 transactions, DELETE journal and synchronous EXTRA,
+checked as3; missing state never opens in create mode. Explicit `create` refuses
+an existing file, generates a16-byte OS-entropy device ID and requires an explicit
+source epoch. This does not establish source generation or enroll a production
+device. Restore/review a missing identity before any historical reupload; do not
+silently generate a new identity after state loss. The old unused `.lua` path is
+not migrated or parsed automatically. No state is created by plugin startup.
+
+`stage` persists at most100 selected source positions atomically. It retains
+original canonical bytes/observation on duplicate, blocks native-payload conflict
+and deduplicates identical review cases by their bounded integer/type content.
+Review case counts are not canonical event counts or evidence that damaged
+source rows can be discarded. All original source rows remain Statistics-owned.
+The shared1000-entry capacity stops staging without dropping old work. `pending`
+returns at most100 lines and512KiB; it validates stored canonical bytes/digests.
+
+`consume_receipt` calls the unchanged `quartzo/paired_exchange` opaque receipt
+owner. Only exact per-event native/line bindings can prune, inside one native
+transaction. An absent/bad/expired/foreign/raw-claim receipt cannot prune. Review
+is never removed; no source-watermark advancement API exists. Full conservative
+replay therefore requires retained identity and canonical native-ID deduplication,
+not another local archive/index. Existing canonical Reading Activity is upstream.
+
+Host fixtures kill their own separate writer processes before/after commit and
+during prune, forcing cache spill and checking a live journal before interruption.
+Both real SQLite bridge VMs execute those cases; Linux CI must also use actual
+official KOReader SQ3/SQLite and OS entropy. The joined receipt test uses the
+actual paired owner/shared carrier with its existing injected SDK model. It is
+not new native TLS, PW3 restart, hardware power-loss or full Gate4 acceptance.
+No user database, existing Reader state, Wi-Fi, real credential or live listener
+is involved. Device tests wait until the user is available; never start a finite
+pairing/session in advance of that availability.

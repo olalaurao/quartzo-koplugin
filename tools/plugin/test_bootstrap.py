@@ -71,7 +71,7 @@ class BootstrapTest(unittest.TestCase):
         self.assertEqual(len(self.environment.registered), 1)
         self.assertEqual(self.environment.settings_calls, 1)
         self.assertEqual(instance.config_path, "/synthetic/custom/settings/quartzo.lua")
-        self.assertEqual(instance.state_path, "/synthetic/custom/settings/quartzo_sync_state.lua")
+        self.assertEqual(instance.state_path, "/synthetic/custom/settings/quartzo_sync_state.sqlite3")
         self.assertEqual(len(self.environment.shown), 0)
 
     def test_menu_diagnostics_use_metadata_version_without_private_data(self):
