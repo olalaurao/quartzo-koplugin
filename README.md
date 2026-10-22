@@ -2,7 +2,7 @@
 
 KOReader plugin in development for synchronizing reading activity into Quartzo.
 
-> **Status:** Gate 0 foundation and physical Phase A Gate1 passed and merged. Version0.0.2 also passed actual read-only Statistics/normal-reading Gate2 on PW3. PhaseC event extraction is next; ingestion and effects remain inactive. See STATUS for source-bound evidence and remaining gates.
+> **Status:** Foundations and physical Phases A/B passed. Version0.0.3 passed PhaseC deterministic extraction fixtures/native SDK and private-backup host comparison; it has not run on PW3. PhaseD durable state/outbox is next. Ingestion and effects remain inactive. See STATUS for source-bound evidence and remaining gates.
 
 The package and offline acceptance steps are documented in
 [tools/plugin](tools/plugin/README.md). The Quartzo Tools menu shows diagnostics

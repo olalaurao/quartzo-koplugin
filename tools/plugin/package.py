@@ -9,7 +9,7 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[2]
 FILES = ("quartzo.koplugin/_meta.lua", "quartzo.koplugin/main.lua",
-         "quartzo.koplugin/quartzo/statistics.lua")
+         "quartzo.koplugin/quartzo/statistics.lua", "quartzo.koplugin/quartzo/collector.lua")
 
 
 def package(output, root=ROOT):
@@ -23,7 +23,7 @@ def package(output, root=ROOT):
             raise ValueError("plugin source must be a regular file")
         contents[name] = source.read_bytes()
     buffer = io.BytesIO()
-    # Two tiny files: storing them avoids zlib-version-dependent archive bytes.
+    # Storing these small sources avoids zlib-version-dependent archive bytes.
     with zipfile.ZipFile(buffer, "w", compression=zipfile.ZIP_STORED) as archive:
         for name, data in contents.items():
             entry = zipfile.ZipInfo(name, date_time=(2026, 10, 21, 0, 0, 0))

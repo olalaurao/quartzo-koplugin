@@ -1,5 +1,111 @@
 # Implementation Status
 
+## 2026-10-22 — Gate 3 deterministic extraction accepted
+
+Exact `1cfd3ecdf9c6979b786bf7f2cc0e7dfd57c348f2` CI39719998012 passed262
+cases without skips:113 plugin (including34 actual official KOReader native
+SQLite cases),34 transport and115 wire. The18,810-byte Linux/Windows package
+hash matches0b7dcfd0d43acdf78da39f45b39024f1bf8eb4d217fe9af445325cbaefe64fb4.
+Updated final Windows plugin suite:79 PASS/34 explicit native-Linux skips
+(113 total,9.515s). No fixture or contract was weakened to handle page zero.
+
+A fresh private offline copy of the existing PW3 backup was fully traversed in
+58 batches, maximum100 source positions each. Independent Python native-ID and
+canonical-byte reconstruction matched all5,717 valid events. Ten page-zero rows
+remain bounded pending review; all5,727 positions are accounted for. Original
+private backup bytes stayed unchanged. No host SQLite call opened the mounted
+device DB, no new code executed on PW3, no event line/private metadata/date was
+published, and synthetic context grants no production identity or receipt.
+The earlier9dd first host-copy failure remains distinct preserved evidence.
+
+[Source-bound Gate3 evidence](docs/evidence/statistics-extraction-host-2026-10-22.json)
+establishes the specified fixture/native replay gate: same snapshot/same bytes,
+same-second progress, overlap IDs, title invariance, distinct devices/epochs,
+missing metadata, corruption isolation, duration conflicts and reflow. It is
+not physical0.0.3, full performance, continuous-source or release acceptance.
+The development0.0.2 installed on PW3 is untouched and its Gate2 proof remains
+source-specific. PR4 still requires exact final evidence-head checks before the
+standing-authorized merge; no release/production installation is included.
+
+PhaseC/Gate3 PASS. PhaseD is next: plugin-owned durable state/outbox must retain
+selected canonical bytes and unresolved review, preserve device/DB-generation
+identity, recover interruptions and gate pruning/checkpoints on trusted receipt
+positions. Prefer existing native primitives; no second canonical Reading store,
+JSON/hash/date provider or new background service. Full goal remains ACTIVE,
+topic2/7; later ingestion/provenance/Readwise/effects/UI/release remain open.
+
+## 2026-10-22 — Gate 2 merged; bounded Phase C candidate
+
+PR3 merged as `92dfa8a27106c4a239783b79322f1a407030ca6c` after exact
+`88b739ff48c4d29f503982a69b54ca328e9657a6` CI39717880247 passed195 tests
+without skips. The merged tree matches that tested source. Standing user
+authorization covers merges after all exact-head checks; no release follows.
+The source-bound physical Gate2 report below remains valid for installed0.0.2,
+not an assertion that the new0.0.3 candidate ran on the PW3.
+
+Branch `feature/reading-event-extraction` starts from merged92dfa. Candidate
+0.0.3 reuses the same native read-only/schema/snapshot owner, exposing a bounded
+reader callback rather than duplicating SQLite ownership. The collector emits
+at most100 events (default50) and bounded book/digest projections. Separate
+book enumeration includes rows without events. MD5 groups retain every native
+book ID; missing/invalid MD5 and absent book metadata never discard otherwise
+valid native events. No titles/authors/paths/Reader IDs enter this projection.
+
+The existing wire codec now constructs events using its own canonical serializer,
+UTC validator and shared native-ID hash. The collector accepts that codec and
+explicit caller device/epoch/observation; generation/persistence remain PhaseD.
+The existing tools codec stays its sole owner until production composition needs
+it; no copied production serializer or new dependency/provider was introduced.
+SQL performs UTC conversion, including dates beyond32-bit time_t, rather than a
+new Lua calendar implementation. Local-date projection remains absent/unknown.
+
+A250-row same-second fixture justifies an internal indexed `(start_time,rowid)`
+scan. Rowid is only a transient tie-breaker within a source scan, never event
+identity, persisted state or an acknowledged watermark. Each read revalidates
+schema and closes its short snapshot. Reopen inclusive time overlap for replay;
+any canonical checkpoint still requires later trusted per-event receipts.
+Malformed numeric payloads become bounded pending-review descriptors, retaining
+exact integer text and type flags without copying arbitrary corrupt text/blob.
+They never become canonical events. An unrepresentable time/rowid scan key
+still rejects the complete batch without a continuation; no filter silently
+loses invalid durations/pages or source history. The transient scan can reach
+valid neighbors, but no acknowledged checkpoint may cross unresolved review.
+
+The new module is packaged but has no menu/startup/lifecycle caller. Existing
+diagnostics remain manual. No device install, Wi-Fi/network, outbox/state,
+credential, upstream contract, Companion lock, Resource or automation changed.
+Local final plugin suite:73 PASS/31 explicit Linux-native skips (104 total,
+8.138s). It includes36 collector cases across Lua5.1/LuaJIT, with18 additional
+actual-native SQLite cases reserved for Linux CI. Wire suite:111 PASS/four
+explicit native-platform skips (115 total,5.635s), including actual pinned
+dkjson/SHA construction against Dart-generated canonical lines. The existing
+six-file upstream lock remains verified and unchanged. The17,233-byte local
+package has SHA2564814450f5e579dc75d9e27c77762ee2fe312c9071a9a67a0ccc40e3e384bd851;
+actual Linux package comparison/native CI and Gate3 acceptance remain pending.
+An initial row-value query required90,034 VM steps to resume the last ten of
+10,000 equal-second rows in a synthetic in-memory DB. The two-seek version is
+covered by a strict1,500-instruction synthetic bound and native result fixtures;
+no new index is introduced. Earlier local fixture passes are preserved separately.
+Full seven-topic goal remains ACTIVE in topic2; PhaseD is not started.
+
+Follow-up source audit: exact9dd7fa3 CI39719457802 passed253 cases without
+skips (104 plugin,34 transport,115 wire) with actual official native SQLite
+and matching17,233-byte package hash. However, an additional host-only check
+of a fresh copy of the existing private PW3 backup stopped with the intended
+`invalid_statistics_event`: ten native rows have page zero. It did not run code
+on the PW3 or open the mounted source DB. The failed host check is preserved;
+it is not relabeled as complete history extraction or physical acceptance.
+
+The ratified contract rejects page zero. Keep that boundary, preserve those
+rows for review, and collect valid neighbors without fabricating a page or
+changing the upstream contract. This concrete counterexample justifies the
+pending-review result; it is not a new persistence/quarantine writer. Later
+PhaseD must retain unresolved review and cannot infer an ACK from next_scan.
+New fixtures cover page-zero boundary progression, no copying a1MiB corrupt
+TEXT value, lossless invalid signed64 integer text and unsafe scan-key rejection.
+Updated collector local42 PASS/21 native-Linux skips (63 total,7.874s);
+updated full/native suite and complete private-copy comparison remain pending.
+
 ## 2026-10-22 — Actual PW3 read-only/normal-reading Gate 2 PASS
 
 Exact0.0.2 source `5b22dd67cf74a69eb9e192b5c807ac9a19d97824` passed the actual
@@ -36,7 +142,7 @@ Reader API,Resource or automation behavior is enabled.
 KOReader PhaseB/Gate2 is PASS. PhaseC deterministic bounded native event
 extraction is next, followed by durable offline state/outbox and canonical
 delivery. Integrated ingestion G08 and the full seven-topic goal remain OPEN.
-PR3 requires its final evidence-head CI before the standing-authorized merge;
+PR3 subsequently merged after final evidence-head CI as recorded above;
 earlier foundations PR67/PR1/PR2 are already merged as documented below.
 
 ## 2026-10-22 — Foundation and Phase A merged; bounded Phase B implemented

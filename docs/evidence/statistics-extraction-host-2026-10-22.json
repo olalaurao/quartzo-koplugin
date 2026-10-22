@@ -1,0 +1,82 @@
+{
+  "evidence_version": 1,
+  "gate": "KOReader Gate 3: deterministic bounded extraction",
+  "gate_status": "PASS",
+  "scope": "Fixture/native SDK replay and private-backup host comparison; no new PW3 runtime execution or production ingestion",
+  "source_commit": "1cfd3ecdf9c6979b786bf7f2cc0e7dfd57c348f2",
+  "plugin_version": "0.0.3",
+  "runtime_hashes": {
+    "quartzo.koplugin/quartzo/collector.lua": "83b5f4b6bd63bd4a3fd20261209059703354e904cb89ae2e9ddbc7e935c5a1d4",
+    "quartzo.koplugin/quartzo/statistics.lua": "3d58a6f7b98ce2b252b93c9724d7e172be5caa98acbc264e8cbf24c02b1bf745",
+    "tools/reading_wire/codec.lua": "f1b06a1177661725e8c20ae11df9d94ac3be35a023ddc539ec25b9f9bd84101b"
+  },
+  "exact_source_ci": {
+    "url": "https://github.com/olalaurao/quartzo-koplugin/actions/runs/39719998012",
+    "conclusion": "success",
+    "plugin_cases": 113,
+    "native_statistics_sdk_cases": 34,
+    "transport_cases": 34,
+    "wire_cases": 115,
+    "skipped": 0,
+    "native_sqlite_reference": "tools/plugin/SQLITE_REFERENCE.lock.json"
+  },
+  "archive": {
+    "bytes": 18810,
+    "sha256": "0b7dcfd0d43acdf78da39f45b39024f1bf8eb4d217fe9af445325cbaefe64fb4",
+    "linux_ci_windows_bytes_equal": true
+  },
+  "deterministic_replay": {
+    "unchanged_snapshot_same_event_bytes": true,
+    "title_author_changes_preserve_native_ids": true,
+    "shared_md5_retains_distinct_book_rows": true,
+    "distinct_device_epoch_ids_do_not_collide": true,
+    "same_tuple_duration_change_retains_id_for_conflict": true,
+    "reflow_preserves_raw_page_counts": true,
+    "inclusive_time_overlap_only_repeats_existing_ids": true,
+    "simulated_ack_boundary_does_not_create_new_logical_ids": true,
+    "actual_dart_reference_event_bytes_match": true,
+    "same_second_fixture_rows": 250,
+    "same_second_batch_limit": 37,
+    "same_second_batches": 7,
+    "large_equal_second_resume_rows": 10000,
+    "large_equal_second_resume_instruction_limit": 1500,
+    "scan": "Two bounded time-index seeks; transient rowid is neither event identity nor acknowledged/persisted watermark"
+  },
+  "private_backup_host_comparison": {
+    "raw_event_count": 5727,
+    "valid_canonical_lines": 5717,
+    "pending_page_zero_review": 10,
+    "source_positions_accounted_for": 5727,
+    "batches": 58,
+    "maximum_scanned_batch": 100,
+    "independent_native_ids_and_bytes_match": true,
+    "private_backup_unchanged": true,
+    "source_device_database_opened": false,
+    "device_execution": false,
+    "production_identity": false,
+    "boundary": "Fresh private offline copy; synthetic explicit device/epoch/observation only. No raw rows, book metadata, source dates or event lines exported. Page zero remains outside the ratified contract and pending review, not fabricated or discarded."
+  },
+  "faults": {
+    "invalid_numeric_rows_remain_pending_review": true,
+    "integer64_rejection_text_preserved_exactly": true,
+    "arbitrary_corrupt_text_blob_not_copied": true,
+    "unsafe_scan_key_blocks_batch": true,
+    "close_failure_suppresses_results": true,
+    "wal_writer_not_visible_until_next_snapshot": true,
+    "missing_book_md5_does_not_discard_valid_event": true,
+    "utc_conversion_beyond_32bit_time_t": true
+  },
+  "earlier_counterexample": {
+    "source_commit": "9dd7fa3d50b51685180b861b597fe61109773e01",
+    "fixture_ci_passed": true,
+    "private_backup_complete_extraction_passed": false,
+    "reason": "Whole-batch invalid_statistics_event on observed native page-zero rows; corrected by bounded pending review, not relaxing the canonical event contract"
+  },
+  "new_pw3_runtime_proof": false,
+  "durable_outbox": false,
+  "persisted_source_watermark": false,
+  "canonical_ack": false,
+  "production_ingestion": false,
+  "full_goal_complete": false,
+  "next": "Phase D plugin-owned durable state/outbox, retained review and trusted-receipt gating; actual crash/restart proof remains mandatory"
+}

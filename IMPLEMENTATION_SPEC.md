@@ -1,5 +1,47 @@
 # Quartzo ↔ KOReader — Implementation Specification
 
+2026-10-22 PhaseC0.0.3 accepted fixture/native Gate3 (historical SQL superseded):
+Reuse the existing Statistics read-only/schema/snapshot owner and wire codec.
+Book enumeration is keyset-bounded; event collection defaults50/max100 rows,
+with one bounded lookahead and at most two native time-index seeks per batch.
+A250-event same-second fixture proves simple overlap alone cannot progress
+within a smaller batch. Use transient `(start_time,rowid)` scan ordering; native
+event identity remains the ratified device/epoch/book/page/start tuple. Separate
+`start_time = ? AND rowid > ?` and `start_time > ?` seeks avoid SQLite's observed
+linear equal-time rescan for a combined row-value predicate. No new DB index,
+write SQL or durable rowid/checkpoint is permitted. Restart from inclusive time
+overlap; any acknowledged source position still requires trusted receipts in
+later phases. Arbitrarily backdated mutations/DB maintenance require the later
+lifecycle/epoch/backfill policy, not an inferred continuous-source guarantee.
+
+Invalid numeric payloads remain bounded pending-review descriptors, retaining
+exact integer text/type flags without arbitrary TEXT/BLOB. Unsafe scan keys
+reject the whole batch without continuation. Native page zero is observed in
+ten private-backup rows and remains outside the ratified canonical contract;
+do not fabricate a page, discard the row or infer an ACK. Transient scanning
+may reach valid neighbors, but later durable state must retain unresolved
+review and cannot advance an acknowledged checkpoint across it. Never hide
+invalid rows via `total_pages > 0`/duration filters or clamp values. Missing or
+invalid MD5 and missing book metadata do not discard a valid native event: the
+ratified native tuple, not file identity, owns raw evidence. Such rows establish
+no cross-device/Reader/Resource association. Groups retain distinct book IDs
+and cover only the current bounded projection. Minimal metadata preserves a
+bounded valid native digest; title/author/display selection is deferred to the
+optional provenance phase, so no metadata variant is selected as authoritative.
+UTC event starts use native SQLite conversion with canonical codec validation,
+not host timezone/os.date or another calendar implementation. Local date stays
+unknown; no event-day, duration-policy or automation projection is fabricated.
+
+The packaged collector takes an explicit codec/device/epoch/observation and has
+no startup/menu/lifecycle caller. Existing tools codec is still the sole owner;
+production composition may relocate it with its consumers, never copy it. No
+state/outbox/ACK/network/production effect is enabled. Exact1cfd3ec passed262
+native/fixture CI cases without skips; a full private-backup host comparison
+accounted for5,717 valid events plus ten page-zero pending-review positions.
+Gate3 is PASS; PhaseD is next. Actual installed0.0.2 Gate2 evidence remains
+source-specific. This is not a new PW3 or release acceptance report.
+
+
 2026-10-22: exact0.0.2 source5b22dd6 passed actual PW3 Gate2. The manual
 read-only diagnostic preserved main DB bytes and logical counts/dates; the
 separate normal-reading trial remained responsive and added one native event.

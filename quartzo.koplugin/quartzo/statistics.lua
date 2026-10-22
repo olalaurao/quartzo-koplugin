@@ -1,4 +1,4 @@
--- A short-lived diagnostic snapshot. Statistics remains the sole database owner.
+-- Short-lived read-only snapshots. Statistics remains the sole database owner.
 local M = {}
 local LIMIT = 100000
 local schemas = {
@@ -70,7 +70,7 @@ local function integer(value, maximum)
     return value
 end
 
-function M.probe(path, sqlite)
+function M.with_snapshot(path, sqlite, read)
     local conn
     local ok, result = pcall(function()
         sqlite = sqlite or require("lua-ljsqlite3/init")
@@ -90,6 +90,29 @@ function M.probe(path, sqlite)
         if not relation or relation[3] ~= "book" or relation[4] ~= "id_book"
             or relation[5] ~= "id" or fk:step() then unsupported() end
         fk:close()
+        return read(conn)
+    end)
+    -- SQ3 closes all of its remaining prepared statements, including on error.
+    if conn then
+        local closed = pcall(conn.close, conn)
+        if not closed then return nil, "statistics_read_failed" end
+    end
+    if ok then return result end
+    if result == "unsupported_statistics_schema" or result == "invalid_statistics_data"
+        or result == "invalid_statistics_event" or result == "invalid_statistics_collection" then
+        return nil, result
+    end
+    -- SDK errors may contain private paths/SQL. Expose only fixed categories.
+    local message = tostring(result)
+    if message:find("ljsqlite3%[busy%]") or message:find("ljsqlite3%[locked%]")
+        or message:find("database is locked", 1, true) then
+        return nil, "statistics_busy"
+    end
+    return nil, "statistics_unavailable"
+end
+
+function M.probe(path, sqlite)
+    return M.with_snapshot(path, sqlite, function(conn)
         local books = integer(conn:rowexec(
             "SELECT COUNT(*) FROM (SELECT 1 FROM book LIMIT 100001)"), LIMIT + 1)
         local events = integer(conn:rowexec(
@@ -112,22 +135,6 @@ function M.probe(path, sqlite)
             first_started_at = first, last_started_at = last,
         }
     end)
-    -- SQ3 closes all of its remaining prepared statements, including on error.
-    if conn then
-        local closed = pcall(conn.close, conn)
-        if not closed then return nil, "statistics_read_failed" end
-    end
-    if ok then return result end
-    if result == "unsupported_statistics_schema" or result == "invalid_statistics_data" then
-        return nil, result
-    end
-    -- SDK errors may contain private paths/SQL. Expose only fixed categories.
-    local message = tostring(result)
-    if message:find("ljsqlite3%[busy%]") or message:find("ljsqlite3%[locked%]")
-        or message:find("database is locked", 1, true) then
-        return nil, "statistics_busy"
-    end
-    return nil, "statistics_unavailable"
 end
 
 return M
