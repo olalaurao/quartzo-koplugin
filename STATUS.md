@@ -1,5 +1,39 @@
 # Implementation Status
 
+## 2026-10-21 — Paired PW3/profile trial passed; Gate 0 foundation accepted
+
+The user executed exact47aa17f through KUAL against the verified ARM64 profile
+APK7d3b6735/current Quartzo host0e026599 and reconnected USB. The independent
+collector passed six requests/five verified per-event receipts/one deliberately
+discarded response, three exact canonical shards, three unique synthetic events
+and120 native seconds. The normal Android current-target receiver issued its
+actual fresh TLS identity/bearer; checked UID/USB delivery supplied independent
+pairing approval. It completed normally and revoked the credential. Listener
+closure, production metadata preservation, isolated package removal and all four
+user-performed folder removals were independently verified. Both earlier failed
+trials remain failed; this new source-bound trial has separate evidence.
+
+Upstream `docs/reading-integration/wire-paired-canonical-physical-2026-10-21.json`
+has SHA25661579af0104c60bfd0f059c75e845a3bf3bf2533680a9b3433adddd1a34c417b.
+Its companion G04 exit audit passes the finite authenticated transport spike
+from cumulative exact-source physical/native/owner proofs. Embedded diagnostic
+ACK/cursor/cloud/memory-budget flags stay false. Prior physical401/429/503
+evidence keeps its original source; it is not relabeled as a new pinned-factory
+fault run. Full production failures/reboot/performance remain later gates.
+
+Gate0A (ratified canonical domain/G03),0B (actual authenticated PW3 transport)
+and0C (ratified versioned protocol/fixtures and verified receipt boundary) meet
+their foundation exit criteria. The next implementation is PhaseA plugin
+bootstrap/install-remove safety, then PhaseB bounded read-only Statistics/schema
+probe. There is still no installed production plugin,Statistics ingestion,
+outbox/cursor,promotion or effect. No active diagnostic remains.
+
+Exact app0e026599 passed all four workflows including2807 Windows tests/37skips
+and2836 hosted/eight skips; both analyses passed with14 existing infos. Exact
+47aa17f CI39626633996 passed111 wire/34 transport without skips. Raw/wire and
+Companion lock remain unchanged. Foundation PRs still require their own merge
+authorization/checks; no merge,release or production installation is inferred.
+
 ## 2026-10-21 — Certificate candidate passes both host backends; devices deferred
 
 Quartzo c6ec01a1 hosted39623152396 passed its actual native certificate and

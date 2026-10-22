@@ -2,7 +2,7 @@
 
 Planned KOReader plugin for synchronizing reading activity from KOReader into Quartzo.
 
-> **Status:** Gate 0 reconciliation in progress. The isolated synthetic TLS diagnostic passed on PW3; canonical durability/protocol and production transport remain unproved. No production plugin code exists.
+> **Status:** G03 and the finite G04 transport spike accepted with source-bound PW3/profile-Android receipts and canonical bytes. Gate 0 foundation criteria are met; plugin bootstrap/install-remove and read-only Statistics/schema implementation are next. No production plugin is installed and no ingestion/effect is enabled. See STATUS for the exact proof boundaries.
 
 Independent Gate 0B client preparation and real-Lua-5.1 host logic tests are in
 [tools/transport_probe](tools/transport_probe/README.md). This is diagnostic-only,

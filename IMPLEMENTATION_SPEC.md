@@ -1,13 +1,14 @@
 # Quartzo ↔ KOReader — Implementation Specification
 
-The two new paired physical attempts failed before any receipt. Exact7555814
-identified reading_certificate_rejected; Android independently reported an
-original-process LOW_MEMORY exit. No clean revocation/completion was observed
-for that second interrupted process. Its package/listener are absent, forensic
-evidence is preserved and manual temporary-folder cleanup was verified. Quartzo
-now has a small certificate-profile candidate passing both native backend steps;
-fresh Android/PW3 acceptance remains pending and the user is unavailable for it.
-No pin, authentication, receipt requirement or wire schema is weakened.
+The new exact47aa17f/profile7d3b6735 paired PW3/Android trial passed independent
+receipt/canonical-byte/replay collection and verified normal completion,
+revocation,package removal and full manual cleanup. The upstream G04 finite
+transport exit audit and separate G03 audit establish Gate0A/0B/0C foundation
+exit. PhaseA bootstrap/install-remove and PhaseB read-only Statistics/schema
+probe are the next implementations; production ingestion is not enabled.
+Both prior failed trials remain separately preserved, including the certificate
+rejection and original-process LOW_MEMORY exit. No TLS/auth/receipt check or raw
+wire schema was relaxed to obtain this new source-bound physical PASS.
 
 Current physical preparation uses the same single-use bundle/launcher with
 `paired_sequence.lua` and the existing approved-pairing consumer. Six requests
@@ -16,8 +17,8 @@ five per-event lookups. The actual normal Android receiver issues the document;
 the checked host UID/source channel delivers it over USB. Host keys/OpenSSL
 provisioning is removed. The collector independently reconstructs request and
 event bindings and compares the complete exported canonical byte inventory.
-This is still synthetic/unregistered; real source-bound PW3/Android execution
-is pending, no Statistics/outbox/cursor or production feature is enabled.
+This remains synthetic/unregistered; actual source-bound PW3/Android execution
+passed the finite gate, while no Statistics/outbox/cursor or production feature is enabled.
 The earlier untrusted-claim sequence remains a host reference, not the current
 physical source. The successful bad10518/6cfdba8 native host join has a separate
 exact-source report and does not silently certify this new orchestration.
@@ -63,7 +64,7 @@ gates remain open. No production activation follows this diagnostic.
 > **Product roadmap:** `PLAN.md`  
 > **Progress ledger:** `STATUS.md`  
 > **Implementation state:** Gate 0 reconciliation in progress — production plugin not started
-> **Last reconciled:** 2026-10-20 (historical planning pass: 2026-09-22)
+> **Last reconciled:** 2026-10-21 (historical planning pass: 2026-09-22)
 
 This file is the implementation source of truth once implementation begins. If code and this specification disagree, either the code is wrong or this file must be deliberately updated in the same change, with the reason recorded in `STATUS.md`.
 
@@ -80,7 +81,7 @@ The user adopted the integrated Quartzo Reading Integration requirements. Upstre
 - One-way validated status evidence is now in scope: upstream may reconcile existing linked Resource status with explicit finished/abandoned or reliable progress, preserving manual/terminal intent. Bidirectional status/progress writeback, highlights and another Reader API client remain excluded.
 - Ratified event ID is SHA-256 of compact UTF-8 JSON tuple `[domain,device_id,source_epoch,book_row_id,page,started_at_unix_seconds]`. MD5/title is not the native event key. Duration corrections for the same tuple are conflict, not new events. This supersedes the historical duration/MD5 example below. No production Lua codec has been implemented yet.
 - Ratified canonical destination is immutable bounded vault JSONL shards under `sessions/reading_activity_v1/`, separate from Activity History. Existing vault/sync owners remain responsible. Android local persistence and actual-owner synthetic byte exchange have source-specific evidence; live Drive/Companion and canonical source acknowledgement still need proof.
-- Gate 0A: IN_PROGRESS with ratified contracts and guarded owner implementations; 0B: IN_PROGRESS with actual isolated PW3 TLS/auth/retry proof, but no production canonical transport; 0C: IN_PROGRESS with ratified wire vectors and isolated Android secure admission, but no source-cursor ACK authority. No production phases start. Staging never returns durable ACK or advances cursors.
+- Gate 0A: PASS with ratified canonical domain/G03 ownership; 0B: PASS with actual PW3 HTTPS/auth/error/retry and normal-pairing receipt proof; 0C: PASS with ratified wire/native-ID/duplicate/error fixtures and verified finite receipt boundary. Next is PhaseA bootstrap/install-remove and PhaseB bounded read-only Statistics/schema. No ingestion,outbox/cursor,effect or release is enabled; staging never grants durable ACK or cursor advance. The G04 audit preserves the exact source limits and the separate G08/G16 requirements.
 - The pure `tools/reading_wire/codec.lua` consumer now pins the ratified upstream revision and validates canonical request/response binding, bounded native entries and untrusted claims in Lua 5.1. It is not loaded by the production plugin or TLS diagnostic. The explicit `koreader_deps.lua` adapter targets existing dkjson/ffi-sha2 APIs, probes preserved object/array/null shape and known hashes, and fails without a fallback. Host LuaJIT tests execute the same contract suite through pinned real library source. The separate exact-source offline KUAL probe subsequently passed on the actual PW3 ARM runtime at 1af5a67 with installed native source hashes verified; the user confirmed manual execution. STATUS and the source-bound physical report record counts and narrow proof limits. Physical production performance/lifecycle, authenticated delivery and durable acknowledgement still require proof. No decoded claim grants ACK, durable receipt or source-cursor authority. This is Gate 0C compatibility work, not permission to start later production phases.
 - A separate `quartzo-wire-probe` KUAL diagnostic may test those native providers/codec offline with synthetic fixtures before production gates close. Its exact-commit package and bounded installed-source/report checks must pass first; it can create only its fresh owned extension and diagnostic output, never replace an existing folder or load production Statistics/Reader/device/UI code. It reuses the tested single-use process deadline, performs no network/Wi-Fi operation and exposes no ACK/cursor authority. Host matching observations alone cannot prove physical execution; source-specific PW3 acceptance additionally requires the real mounted target and manual execution observation. See `tools/reading_wire/README.md` and STATUS.
 - `tools/reading_wire/exchange.lua` prepares one explicit canonical-wire diagnostic attempt through the existing shared LuaSec carrier, with request/time checks before network and complete response/time binding afterward. `client.wire_transport` is fixed to the canonical receiver route and bounded header/body inputs under the existing dedicated-test-certificate/private-HTTPS policy. It creates no listener, production transport, automatic retry, credential/outbox owner or ACK/cursor grant. Host injected-HTTPS tests and a syntactically committed claim do not prove native TLS/canonical persistence. Existing physical reports stay source-specific; a combined source-to-canonical diagnostic still needs exact-source package, actual native receiver and new device execution evidence.

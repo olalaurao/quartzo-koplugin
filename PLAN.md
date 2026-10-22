@@ -1,21 +1,20 @@
 # Quartzo ↔ KOReader — Product & Delivery Plan
 
-Current execution checkpoint: both new app-issued-pairing PW3 attempts failed.
-The second exposed certificate verification rejection with zero receipts, and
-Android separately reported a low-memory exit. Cleanup is complete. Quartzo's
-bounded certificate correction at c6ec01a1 passed the existing native certificate
-and paired-receipt steps on system OpenSSL and official KOReader v2026.07.1
-LibreSSL4.3.2 in hosted39623152396; its completed job passed2836 full tests.
-The clean7d3b6735 profile/AOT ARM64 APK built and passed provenance checks.
-Physical memory/receipt acceptance remains required. The user cannot perform device work now; no
-session is active and no further device step is requested. G04 stays open.
+Current execution checkpoint: the new exact47aa17f/profile7d3b6735 PW3/Android
+trial passed independent per-event receipt, canonical-byte and replay collection.
+Its normal completion, credential revocation and full diagnostic cleanup were
+verified. The prior two physical failures remain preserved. The upstream G04
+audit passes the finite transport spike; G03 is separately PASS. Gate0A/0B/0C
+foundation criteria are met. Next implement PhaseA bootstrap/install-remove,
+then PhaseB bounded read-only Statistics/schema probe. This does not enable
+ingestion,outbox/cursor,Resource effects or later production/release behavior.
 
 Current G04 work now includes finite source receipt composition through the
 existing codec/carrier, conditioned on an independently approved exact pairing
 document from the canonical Quartzo receiver. It adds no production plugin,
-Statistics access or outbox/cursor. Actual approval/import, combined native
-interoperability and new-source physical acceptance remain required; see STATUS
-and the canonical implementation spec rather than inferring a passed gate.
+Statistics access or outbox/cursor. Finite actual approval/native interoperability
+and source-bound physical receipt acceptance are recorded in STATUS. Reusable
+production enrollment/import and later runtime gates remain separate.
 
 2026-10-20 checkpoint: actual exact-source PW3/Android finite canonical wire
 diagnostic passed independent byte/report collection (three shards, three
