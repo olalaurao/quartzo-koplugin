@@ -16,6 +16,14 @@ to overwrite an existing archive. CI now executes these seven cases and builds
 the exact package alongside the existing transport/wire suites. These local
 tests are not a PW3 install/start/menu/remove proof; Gate 1 remains OPEN.
 
+Exact initial bootstrap `c0af57b` CI39711628188 passed all152 cases without
+skips (seven bootstrap/package,34 transport,111 wire). Source file hashes were
+identical on Windows/Linux, but compressed ZIP bytes differed with their zlib
+versions. Packaging now uses uncompressed ZIP entries for these two tiny files,
+removing that platform variation without adding a compression dependency.
+No plugin runtime changed; a fresh exact-head CI/package comparison is required
+before the physical install. No initial archive was installed.
+
 Foundation sources remain Quartzo `2261cf8f` and KOReader `e331f441`, based on
 actual physical host `0e026599`/APK `7d3b6735`/Kindle `47aa17f`. Reader stable
 tags satisfy sequencing; Companion main remains `10e840ab`, with no new lock or

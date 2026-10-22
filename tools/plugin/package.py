@@ -22,12 +22,13 @@ def package(output, root=ROOT):
             raise ValueError("plugin source must be a regular file")
         contents[name] = source.read_bytes()
     buffer = io.BytesIO()
-    with zipfile.ZipFile(buffer, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+    # Two tiny files: storing them avoids zlib-version-dependent archive bytes.
+    with zipfile.ZipFile(buffer, "w", compression=zipfile.ZIP_STORED) as archive:
         for name, data in contents.items():
             entry = zipfile.ZipInfo(name, date_time=(2026, 10, 21, 0, 0, 0))
             entry.create_system = 3
             entry.external_attr = 0o100644 << 16
-            entry.compress_type = zipfile.ZIP_DEFLATED
+            entry.compress_type = zipfile.ZIP_STORED
             archive.writestr(entry, data)
     data = buffer.getvalue()
     with output.open("xb") as handle:

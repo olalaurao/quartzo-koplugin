@@ -19,6 +19,7 @@ class PackageTest(unittest.TestCase):
                 self.assertEqual(archive.namelist(), list(FILES))
                 self.assertIsNone(archive.testzip())
                 for name in FILES:
+                    self.assertEqual(archive.getinfo(name).compress_type, zipfile.ZIP_STORED)
                     self.assertEqual(archive.read(name), (ROOT / name).read_bytes())
             with self.assertRaises(FileExistsError):
                 package(first)
