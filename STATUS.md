@@ -1,5 +1,51 @@
 # Implementation Status
 
+## 2026-10-22 — Foundation and Phase A merged; bounded Phase B implemented
+
+After all exact-head checks passed, authorized PR67 merged upstream as
+`b5ae6cbde9d9007d9b7498419204eb020e26ca58`, PR1 as
+`7b9f9ac2b1afd77d9ea3e31fa4d3a1df99641cdd`, then physical-bootstrap PR2 as
+`d31aeb1f2b14bdbb745bb108653db7220f6900c2`. Each resulting main tree was
+independently compared with its exact tested source and matched. No release,
+tag,production install or Companion lock/contract change was performed.
+
+Branch `feature/reading-statistics-probe` from d31aeb1 implements0.0.2 PhaseB:
+explicit Tools → Quartzo → Reading Statistics opens the existing native SQ3
+wrapper with `ro`, sets a one-second connection busy timeout and uses a short
+read transaction. It checks schema20221111, native table columns,key/time
+indexes and foreign-key shape before returning only counts and first/last
+native timestamps. Extra nonunique SimpleUI indexes remain compatible. Startup
+and ordinary reading perform no Statistics access. There is no fallback to
+create/write mode, migration,network,outbox,cursor or event ingestion.
+
+Counts inspect at most100,001 rows per table; over100,000 displays `100000+`
+rather than a false exact total. First/last queries force the validated time
+index. Missing/corrupt/busy/unsupported/close errors return fixed diagnostics
+without paths,SQL or source data; every opened connection is closed before
+returning a summary. Date formatting failure on constrained runtimes is also
+contained. This deliberately bounds the PhaseB diagnostic, not full backfill.
+
+Actual mounted v2026.07.1 Statistics/SQ3 source and read-only schema metadata
+were rechecked. SQ3 SHA2568cfdeecde02c21079c4ec825348831972491d59009ccc69fe9b8a444f994073d
+matches the official Linux reference; source Statistics remains da6db5e381bcfdaf05053d23bf75781166cc713b14076a65fcd2c527067fd088.
+The known target DB uses WAL and20221111, including SimpleUI's extra MD5 index.
+No private book metadata or credential was logged or committed.
+
+Tests use real synthetic SQLite files through Lua5.1/LuaJIT and a separately
+pinned official Linux KOReader SQ3/SQLite binary reference in CI. Local native
+POSIX cases are explicitly skipped on Windows; native CI and actual PW3 Gate2
+must still pass before accepting PhaseB. Initial local fixtures failed Windows
+temporary-directory cleanup because Python transaction contexts do not close
+connections; explicit fixture closing corrected that test issue. Production
+source always closed its SQ3 connection. Final Windows plugin suite:37 PASS,
+13 explicit native-Linux skips (50 total,56.140s). A focused follow-up also
+requires the real SQLite readonly error when a synthetic write is attempted.
+The prepared reference's three hashes match the official release archive;
+Windows does not claim native Linux SDK execution. No0.0.2 package is installed.
+Next: final local/native CI/package verification, then real PW3 read-only/count
+and normal-reading acceptance. G2 and integrated ingestion G08 remain OPEN;
+PhaseC extraction has not started and the full seven-topic goal remains ACTIVE.
+
 ## 2026-10-21 — Physical bootstrap Gate 1 PASS; Phase B is next
 
 The user completed both native PW3 steps: exact0.0.1 opened responsively with

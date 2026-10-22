@@ -2,11 +2,11 @@
 
 KOReader plugin in development for synchronizing reading activity into Quartzo.
 
-> **Status:** Gate 0 foundation and physical Phase A install/start/menu/remove Gate 1 passed. The development bootstrap was removed after the trial. Phase B read-only Statistics/schema is next; ingestion and effects are inactive. See STATUS for source-bound evidence and remaining gates.
+> **Status:** Gate 0 foundation and physical Phase A Gate 1 passed and merged. Version0.0.2 adds a bounded, manually requested read-only Statistics diagnostic; its physical Gate2 is still open. Ingestion and effects are inactive. See STATUS for source-bound evidence and remaining gates.
 
-The bootstrap package and offline physical acceptance steps are documented in
-[tools/plugin](tools/plugin/README.md). The plugin's Quartzo Tools entry currently
-shows its version and inactive integration status.
+The package and offline acceptance steps are documented in
+[tools/plugin](tools/plugin/README.md). The Quartzo Tools menu shows diagnostics
+and a separate Reading Statistics action. Neither starts synchronization.
 
 Independent Gate 0B client preparation and real-Lua-5.1 host logic tests are in
 [tools/transport_probe](tools/transport_probe/README.md). This is diagnostic-only,

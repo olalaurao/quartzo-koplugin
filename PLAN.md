@@ -1,5 +1,10 @@
 # Quartzo ↔ KOReader — Product & Delivery Plan
 
+2026-10-22: foundations and accepted bootstrap merged as recorded in STATUS.
+PhaseB0.0.2 now implements only the bounded, manually requested read-only
+Statistics/schema/count diagnostic. Its native CI and physical Gate2 remain
+required; there is no PhaseC extraction, outbox,ingestion or lifecycle activation.
+
 Current PhaseA bootstrap0.0.1 passed actual PW3 startup/menu/removal/restart
 acceptance with unchanged Statistics/settings and180 existing plugin Lua
 sources. The test installation has been removed. Next is PhaseB bounded

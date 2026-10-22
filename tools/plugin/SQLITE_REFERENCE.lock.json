@@ -1,0 +1,10 @@
+{
+  "purpose": "Test-only official KOReader v2026.07.1 Linux x64 SQLite wrapper and library; not PW3 execution proof",
+  "url": "https://github.com/koreader/koreader/releases/download/v2026.07.1/koreader-linux-x86_64-v2026.07.1.tar.xz",
+  "archive_sha256": "299aadb28147a25e9432ced1214ea444a4184393b5ae97cf42402c8a61b1a1b0",
+  "files": {
+    "common/lua-ljsqlite3/init.lua": "8cfdeecde02c21079c4ec825348831972491d59009ccc69fe9b8a444f994073d",
+    "ffi/posix_h.lua": "fb727bc3bda8feea32eb014f49df33599057ad0f5282fcb8743bb050f82ae7cd",
+    "libs/libsqlite3.so.0": "9341f59991c140a56a27c81bc8373db66b9db7820738b48ef7d4a78ff2b66a7f"
+  }
+}

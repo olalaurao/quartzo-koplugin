@@ -32,7 +32,14 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y --no-install-recommends lua5.1 lua-sec lua-socket
           lua5.1 -e 'assert(_VERSION == "Lua 5.1"); assert(require("ssl")._VERSION == "1.3.2"); assert(require("ssl.https")._VERSION == "1.3.2")'
-      - name: Plugin bootstrap and exact package (no physical install proof)
+      - name: Prepare pinned native KOReader SQLite reference
+        run: |
+          curl -fL --retry 2 --max-time 120 -o "$RUNNER_TEMP/koreader-sqlite.tar.xz" \
+            https://github.com/koreader/koreader/releases/download/v2026.07.1/koreader-linux-x86_64-v2026.07.1.tar.xz
+          python tools/plugin/prepare_sqlite_reference.py --archive "$RUNNER_TEMP/koreader-sqlite.tar.xz" --output "$RUNNER_TEMP/koreader-sqlite-reference"
+      - name: Plugin and native read-only Statistics fixtures (no physical proof)
+        env:
+          READING_SQLITE_REFERENCE_DIR: ${{ runner.temp }}/koreader-sqlite-reference
         run: |
           python -m unittest discover -s tools/plugin -p 'test_*.py' -v
           python tools/plugin/package.py --output "$RUNNER_TEMP/quartzo-bootstrap.zip"

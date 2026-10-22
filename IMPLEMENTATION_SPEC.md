@@ -63,7 +63,7 @@ gates remain open. No production activation follows this diagnostic.
 > **Target V1 device:** Kindle Paperwhite 3 / 7th gen (PW3), firmware 5.16.2.1.1, KUAL, KOReader v2026.07.1 (`kindlepw2`)
 > **Product roadmap:** `PLAN.md`  
 > **Progress ledger:** `STATUS.md`  
-> **Implementation state:** Gate 0 foundation and physical Phase A Gate 1 accepted; Phase B read-only Statistics probe next
+> **Implementation state:** Gate 0/physical Phase A accepted; bounded Phase B probe implemented, physical Gate 2 pending
 > **Last reconciled:** 2026-10-21 (historical planning pass: 2026-09-22)
 
 This file is the implementation source of truth once implementation begins. If code and this specification disagree, either the code is wrong or this file must be deliberately updated in the same change, with the reason recorded in `STATUS.md`.
@@ -412,6 +412,19 @@ SQ3.open(path, "ro")
 when supported by pinned KOReader's sqlite wrapper.
 
 If target behavior differs, Gate 2 must experimentally prove the safest read-only equivalent.
+
+The Phase B diagnostic uses that exact native mode, a short `BEGIN DEFERRED`
+read snapshot and unconditional connection closure. It validates schema20221111
+columns and required index/foreign-key shapes, while allowing the observed
+nonunique SimpleUI MD5 index. It never migrates or repairs Statistics.
+
+To keep diagnostic work bounded on PW3, each count inspects at most100,001
+rows. Counts above100,000 are explicitly reported as `100000+`, not an exact
+total; first/last timestamps use the validated native start-time index. This
+bounded summary is not the Phase C collector or full-history backfill. Version
+0.0.2 performs this work only through the manual Reading Statistics menu action,
+never on startup, page turns, close or suspend. Native fixture CI and actual
+PW3 Gate2 remain required independently of the accepted bootstrap Gate1.
 
 ## 7.2 Busy handling
 

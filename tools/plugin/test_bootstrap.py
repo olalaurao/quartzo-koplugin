@@ -43,6 +43,7 @@ class BootstrapTest(unittest.TestCase):
                 assert(modules[name], "unexpected dependency: " .. name)
                 return modules[name]
             end
+            e.set_statistics = function(module) modules["quartzo/statistics"] = module end
             e.ui = {menu = {registerToMainMenu = function(_, plugin)
                 table.insert(e.registered, plugin)
             end}}
@@ -80,14 +81,44 @@ class BootstrapTest(unittest.TestCase):
         self.assertEqual(items.quartzo.sorting_hint, "more_tools")
         self.assertEqual(items.quartzo.text, "Quartzo")
         self.assertEqual(len(self.environment.shown), 0)
-        items.quartzo.callback()
+        self.assertEqual(len(items.quartzo.sub_item_table), 2)
+        items.quartzo.sub_item_table[1].callback()
         self.assertEqual(len(self.environment.shown), 1)
         text = self.environment.shown[1].text
         self.assertIn("Quartzo " + self.meta.version, text)
-        self.assertIn("Statistics access: inactive", text)
+        self.assertIn("Statistics access: read-only, on request", text)
         self.assertIn("Synchronization: inactive", text)
         self.assertNotIn("synthetic", text)
         self.assertEqual(self.environment.settings_calls, 1)
+
+    def test_missing_statistics_sdk_is_a_sanitized_manual_diagnostic(self):
+        instance = self.instance()
+        instance.showStatistics(instance)
+        self.assertEqual(self.environment.shown[1].text,
+                         "Reading Statistics could not be read. No data was collected.")
+
+    def test_manual_statistics_action_displays_capped_counts_and_safe_date_failure(self):
+        calls = []
+        result = self.lua.table(schema_version=20221111, book_count=2,
+                                event_count=100000, event_count_limited=True,
+                                first_started_at=100, last_started_at=200)
+
+        def probe(path):
+            calls.append(path)
+            return result
+
+        self.environment.set_statistics(self.lua.table(probe=probe))
+        instance = self.instance()
+        items = self.lua.table()
+        instance.addToMainMenu(instance, items)
+        self.assertEqual(calls, [])
+        items.quartzo.sub_item_table[2].callback()
+        self.assertEqual(calls, ["/synthetic/custom/settings/statistics.sqlite3"])
+        text = self.environment.shown[1].text
+        self.assertIn("Raw events: 100000+", text)
+        self.assertIn("Book rows: 2", text)
+        self.assertIn("Earliest event: Unavailable", text)
+        self.assertNotIn("synthetic", text)
 
 
 class BootstrapLuaJITTest(BootstrapTest):
