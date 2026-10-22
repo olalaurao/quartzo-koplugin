@@ -194,6 +194,13 @@ local function create(deps)
         check(value.bytes == bytes, "noncanonical_request")
         return value
     end
+    local function event_identity(raw)
+        local started = timestamp(raw.started_at_utc)
+        check(started.micros == 0, "native_start_precision")
+        local preimage = '[' .. quote("quartzo-reading-event-v1") .. ',' .. quote(raw.device_id) .. ',' .. quote(raw.source_epoch)
+            .. ',' .. primitive(raw.book_row_id) .. ',' .. primitive(raw.page) .. ',' .. string.format('%.0f', started.seconds) .. ']'
+        return "qre_" .. digest(preimage)
+    end
     local function inspect_event(line)
         local raw = parse(line, 8192)
         if kind(raw) ~= "object" then return {rejection="fatal_corruption"} end
@@ -203,12 +210,8 @@ local function create(deps)
             and nonblank(raw.source_epoch) and nonblank(raw.source_schema_version), "invalid_native_fields")
         for _, key in ipairs({"book_row_id", "page", "total_pages"}) do check(integer(raw[key],1,9007199254740991), "native_integer") end
         check(integer(raw.duration_seconds,1,86400), "native_duration")
-        local started = timestamp(raw.started_at_utc)
         timestamp(raw.observed_at_utc)
-        check(started.micros == 0, "native_start_precision")
-        local preimage = '[' .. quote("quartzo-reading-event-v1") .. ',' .. quote(raw.device_id) .. ',' .. quote(raw.source_epoch)
-            .. ',' .. primitive(raw.book_row_id) .. ',' .. primitive(raw.page) .. ',' .. string.format('%.0f', started.seconds) .. ']'
-        check(raw.event_id == "qre_" .. digest(preimage) and object(raw,event_keys) == line, "native_identity_or_encoding")
+        check(raw.event_id == event_identity(raw) and object(raw,event_keys) == line, "native_identity_or_encoding")
         return {event_id=raw.event_id, device_id=raw.device_id, source_epoch=raw.source_epoch,
             native=object(raw,event_keys,"observed_at_utc")}
     end
@@ -234,6 +237,25 @@ local function create(deps)
         return result
     end
     local api = {}
+    -- Construction and inspection share the same serializer, identity and validator.
+    -- Plain caller fields are copied; no receipt or cursor capability is created.
+    function api.encode_event(input)
+        return guarded(function()
+            check(type(input) == "table", "event_fields_required")
+            local raw, allowed = {}, {}
+            for _, key in ipairs(event_keys) do
+                if key ~= "event_id" then
+                    check(input[key] ~= nil, "missing_field")
+                    raw[key], allowed[key] = input[key], true
+                end
+            end
+            for key in pairs(input) do check(allowed[key], "unknown_field") end
+            raw.event_id = event_identity(raw)
+            local line = object(raw, event_keys)
+            check(not inspect_event(line).rejection, "invalid_event")
+            return line
+        end)
+    end
     function api.check_pairing_window(issued, expiry, now, previous)
         return guarded(window,issued,expiry,now,1800,previous)
     end

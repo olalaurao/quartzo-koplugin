@@ -80,3 +80,33 @@ Unknown-schema/write-rejection/fault tests use synthetic fixtures only. Keep
 Reader mappings,sidecars and other plugins untouched. PhaseC may proceed after
 the real Gate2 proof; this0.0.2 acceptance is based on the actual human/USB/
 private-copy trial, not inferred from CI alone.
+
+## Phase C bounded collector
+
+Candidate0.0.3 adds an inactive `quartzo/collector` module. `books` enumerates
+at most100 native book rows using the primary key, including rows with no events.
+`collect` emits at most100 events (default50) from the validated native time
+index. Both call the same `Statistics.with_snapshot` owner with explicit `ro`.
+Only bounded valid32-hex MD5 values accompany native IDs; titles,authors,paths,
+annotations and Reader identifiers are not projected. Groups describe only the
+rows in the current batch, not an authoritative whole-library association.
+
+Pass an explicit codec from the existing `tools/reading_wire/codec.lua` owner,
+device ID, database-generation epoch and canonical UTC observation. The codec
+constructs/validates canonical event bytes with the ratified native tuple, not
+MD5. Missing book/MD5 still permits an otherwise valid native event. No context
+is generated or persisted here. No clock or local timezone is inferred.
+
+Optional inclusive `from_started_at` begins a new overlap pass. Within a pass,
+`next_scan` resumes indexed `(start_time,rowid)` pagination, including groups
+larger than a batch. It is transient and scoped to the supplied device/epoch/
+time bound, not a durable checkpoint or ACK. Discard it when restarting a pass
+or after database maintenance; overlap/deterministic identity handles repeats.
+Mutable snapshots and arbitrarily backdated insertions need later lifecycle/
+epoch/backfill handling; this module establishes no continuous-source receipt.
+
+Any invalid native row rejects the whole batch without continuation. Positive
+durations over86400 seconds are rejected without clamping or changing identity.
+Safe earlier/later dates use SQLite UTC conversion, avoiding host timezone and
+32-bit `os.date` limits. Close failure suppresses all collected results. Loading
+the module has no DB access; the normal plugin still invokes only diagnostics.

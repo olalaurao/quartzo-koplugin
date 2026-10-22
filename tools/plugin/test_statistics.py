@@ -69,19 +69,28 @@ class StatisticsTest(unittest.TestCase):
 
             def prepare(_, sql):
                 self.trace("query", sql)
-                cursor = conn.execute(sql)
-                cursors.append(cursor)
+                cursor = None
+                parameters = ()
+
+                def bind(_, *values):
+                    nonlocal parameters
+                    parameters = values
 
                 def step(_):
+                    nonlocal cursor
+                    if cursor is None:
+                        cursor = conn.execute(sql, parameters)
+                        cursors.append(cursor)
                     row = cursor.fetchone()
                     return self.lua.table_from(row) if row else None
 
                 def close_statement(_):
-                    cursor.close()
+                    if cursor is not None:
+                        cursor.close()
                     if cursor in cursors:
                         cursors.remove(cursor)
 
-                return self.lua.table(step=step, close=close_statement)
+                return self.lua.table(step=step, bind=bind, close=close_statement)
 
             def execute(_, sql):
                 self.trace("exec", sql)

@@ -67,6 +67,27 @@ class WireCodecTest(unittest.TestCase):
     def test_exact_upstream_pin(self):
         self.assertEqual(verify(), 6)
 
+    def test_event_construction_matches_actual_dart_reference_bytes(self):
+        reference = json.loads((ROOT / "dart_reference.json").read_text(encoding="utf-8"))
+        for case in reference["cases"]:
+            fields = json.loads(case["line"])
+            fields.pop("event_id")
+            self.assertEqual(self.codec[b"encode_event"](self.to_lua(fields)), case["line"].encode())
+
+    def test_event_construction_rejects_bad_native_fields_and_unknown_keys(self):
+        fields = json.loads(VECTOR["request"]["event_lines"][0])
+        fields.pop("event_id")
+        for changes in ({"duration_seconds": 0}, {"duration_seconds": 86401}, {"page": 0},
+                        {"book_row_id": 9007199254740992}, {"schema_version": 2},
+                        {"source": "reader"}, {"unexpected": "private"}, {"event_id": "forged"},
+                        {"started_at_utc": "2026-10-14T02:50:00.001Z"},
+                        {"observed_at_utc": "2026-02-30T00:00:00.000Z"},
+                        {"device_id": "\u2007"}):
+            with self.subTest(changes=changes):
+                self.rejected(self.codec[b"encode_event"](self.to_lua({**fields, **changes})))
+        fields.pop("total_pages")
+        self.rejected(self.codec[b"encode_event"](self.to_lua(fields)))
+
     def test_request_and_response_match_exact_canonical_vectors(self):
         self.assertEqual(self.encode(VECTOR["request"]), VECTOR["request_json"].encode())
         value = self.inspect(VECTOR["request"])

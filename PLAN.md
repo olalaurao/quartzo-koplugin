@@ -1,5 +1,11 @@
 # Quartzo ↔ KOReader — Product & Delivery Plan
 
+2026-10-22 PhaseC candidate0.0.3: bounded native extraction and book/digest
+enumeration reuse the Statistics snapshot owner and existing wire codec.
+Indexed transient same-second pagination preserves native event IDs; malformed
+rows block the batch. Fixture/native CI acceptance is pending. There is no
+persisted cursor,outbox,network/lifecycle caller or production effect. See STATUS.
+
 Current0.0.2 passed actual PW3 Gate2: diagnostic-only DB bytes/counts/dates
 unchanged, normal reading remained responsive and native events increased from
 5,726 to5,727 without plugin ingestion. Other plugin sources and own settings
