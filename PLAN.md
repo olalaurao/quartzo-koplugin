@@ -1,5 +1,14 @@
 # Quartzo ↔ KOReader — Product & Delivery Plan
 
+2026-10-23 current physical progress: actual PW3 offline synthetic outbox subtest
+passed six stage/backup/restore process-stop cases on v2026.07.1. Statistics/settings
+and 347 tracked Lua sources matched before/after; diagnostic cleanup is verified.
+See docs/evidence/outbox-offline-pw3-2026-10-23.json. This does not pass Gate4.
+The exact-source0.0.7 empty-state UI trial is now installed with0.0.2 rollback;
+human execution is pending. Source enrollment/current-generation verification,
+populated recovery UI, normal reading/restart and paired canonical receipt/replay
+remain obligations. Earlier prepared-only/no-device entries below are historical.
+
 2026-10-23 PhaseD validation correction: stage only pending-review descriptors
 that the SAME recovery owner can read. A synthetic accepted-then-unrecoverable
 batch reproduced the gap; shared validation now rejects it before transaction,

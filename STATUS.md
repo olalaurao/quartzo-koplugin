@@ -1,5 +1,35 @@
 # Implementation Status
 
+## 2026-10-23 Actual PW3 offline outbox subtest PASS; Gate4 remains OPEN
+
+The user executed the installed source-bound KUAL diagnostic on KOReader
+v2026.07.1 and reconnected USB. Same-bundle collection passed six native writer
+process-stop cases before/after stage, backup and restore commits, five raw
+receipt rejections, six entropy cases and seven native fingerprints. Independent
+SQL inspection used private copies of synthetic output only. All 31 synthetic
+files were archived; Statistics/settings and 347 tracked plugin Lua sources
+matched the preserved baseline. This includes 344 other-plugin Lua sources;
+the earlier 180-file inventory is historical, not the current source inventory.
+Installed0.0.2 remained unchanged throughout this offline subtest.
+
+The diagnostic was then removed manually after automatic cleanup was blocked;
+its absence was independently verified. No credential, listener or timed network
+session was created. See [bounded physical evidence](docs/evidence/outbox-offline-pw3-2026-10-23.json).
+This proves process interruption/recovery for the finite synthetic offline scope,
+not hardware power loss, source-generation enrollment or paired canonical ACK.
+The collector's host-only attestation fields remain untouched; the separate
+physical report records the human execution and actual mounted result.
+
+Next, the eight exact sources of unreleased0.0.7 were installed for the empty-state
+UI trial, after revalidating clean1f4d240/PR5 and successful exact-head CI409/no
+skips. Package SHA256 remains6aea1bb87d9312e46fa38f292c5f12c3d9053ed717c2c5d2986cfcccf50789e6.
+Exact0.0.2 rollback and private baselines were preserved. Statistics/settings and
+344 other-plugin Lua sources stayed identical during installation. The human
+UI request is pending; installation is not UI acceptance. No source enrollment,
+collector, networking or production registration was activated. PR5 stays draft;
+source lifecycle, populated recovery UI, normal reading/restart and paired
+receipt/prune/replay remain open. Full goal remains active at topic2 of7.
+
 ## 2026-10-23 — Reject unrecoverable review input before staging (host accepted; physical Gate4 OPEN)
 
 A synthetic host reproduction on 336a7a8 accepted a malformed pending-review

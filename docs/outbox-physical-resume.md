@@ -1,3 +1,24 @@
+# Current actual-device state, 2026-10-23
+
+The actual PW3 offline synthetic diagnostic passed six native stage/backup/restore
+process-stop cases; collection/private-copy verification and scoped cleanup are
+complete. See [bounded physical evidence](evidence/outbox-offline-pw3-2026-10-23.json).
+Statistics/settings and 347 tracked Lua sources were unchanged during that test.
+This is not source enrollment, paired ACK, hardware power loss or full Gate4 PASS.
+
+The exact-source0.0.7 candidate is now installed for an empty-state UI trial,
+with verified0.0.2 rollback retained privately. The human request is pending:
+Diagnostics must show0.0.7; Offline reading queue must show no queue/inactive sync,
+disabled Create recovery copy and no supported recovery copies, without reading
+a book or changing Wi-Fi. After USB reconnection compare the private installed
+baseline before claiming acceptance. No phone or timed session is needed.
+Do not repeat the completed offline diagnostic or replace current installation
+with an older artifact. Populated recovery UI and normal reading/restart need
+their own evidence; current-generation enrollment and paired receipt remain open.
+
+The preparation snapshots below retain historical source-bound context. Their
+availability/installation statements describe those earlier observations only.
+
 # Phase D physical resumption â€” not an active test request
 
 ## Current candidate: 0.0.7 manual recovery UI (not installed)
