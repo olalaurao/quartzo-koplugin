@@ -759,25 +759,33 @@ class NativeOutboxTest(OutboxTest):
 
     def test_actual_native_lfs_lists_only_supported_regular_copies_and_bounds_directory(self):
         leaf, _ = self.reviewed_backup()
-        self.runtime.filesystem = self.lua.execute('''
-            local root=...
-            return assert(package.loadlib(root.."/libs/libkoreader-lfs.so","luaopen_lfs"))()
-        ''', os.environ["READING_SQLITE_REFERENCE_DIR"])
-        self.runtime.attributes = None
-        # Metadata discovery must not follow a backup-looking symbolic link.
+        # Native LFS needs exported Lua C symbols from the official standalone
+        # executable; Lupa's private embedded VM cannot load this C extension.
         alias = "quartzo_sync_recovery_" + "42" * 16 + ".sqlite3"
         (self.root / alias).symlink_to(self.root / leaf)
-        before = list(self.calls)
-        listed = self.outbox.list_backups(str(self.root), self.runtime)
-        self.assertNotIsInstance(listed, tuple)
-        self.assertEqual([entry.leaf for entry in listed.backups.values()], [leaf])
-        self.assertEqual(listed.unsupported, 1)
-        self.assertEqual(self.calls, before)
-        for index in range(513):
-            (self.root / ("unrelated-" + str(index))).touch()
-        self.assertEqual(self.outbox.list_backups(str(self.root), self.runtime),
-                         (None, "outbox_recovery_list_limit"))
-        self.assertEqual(self.calls, before)
+        script = self.root / "native-list-test.lua"
+        script.write_text('''local ref,source,root,leaf=unpack(arg)
+            local fs=assert(package.loadlib(ref.."/libs/libkoreader-lfs.so","luaopen_lfs"))()
+            local owner=dofile(source)
+            local runtime={filesystem=fs,sqlite={open=function() error("unexpected DB open") end}}
+            local listed=assert(owner.list_backups(root,runtime))
+            assert(#listed.backups==1 and listed.backups[1].leaf==leaf)
+            assert(listed.unsupported==1 and listed.canonical_ack==false)
+            for index=1,513 do
+                local file=assert(io.open(root.."/unrelated-"..index,"wb"))
+                file:close()
+            end
+            local result,code=owner.list_backups(root,runtime)
+            assert(result==nil and code=="outbox_recovery_list_limit")
+            print("PASS: actual official LuaJIT/LFS bounded recovery discovery")
+        ''', encoding="utf-8")
+        reference = Path(os.environ["READING_SQLITE_REFERENCE_DIR"])
+        result = subprocess.run([str(reference / "luajit"), str(script), str(reference),
+                                 str(ROOT / "quartzo.koplugin/quartzo/outbox.lua"),
+                                 str(self.root), leaf], capture_output=True, text=True, timeout=10)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(result.stdout.strip(),
+                         "PASS: actual official LuaJIT/LFS bounded recovery discovery")
 
     def test_native_rw_attach_requires_an_explicitly_created_destination(self):
         destination=self.root/"owned-attach-fixture.sqlite3"

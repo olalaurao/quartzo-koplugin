@@ -1,6 +1,29 @@
 # Phase D physical resumption â€” not an active test request
 
-The user cannot operate the Kindle/phone now. There is no installed0.0.6 trial,
+## Current candidate: 0.0.7 manual recovery UI (not installed)
+
+The latest candidate adds manual queue status, confirmed backup and reviewed
+restore through the same owner. Its exact source and native CI must be accepted
+before any future trial; older0.0.6 and offline proofs remain historical. See
+STATUS and the private handoff for the current source-bound archive/manifest.
+There is no installation, active request, phone session or timer in this block.
+
+When availability returns, first revalidate the source/head/CI and preserve the
+installed0.0.2 rollback/settings/Statistics/other-plugin baseline. A fresh UI trial
+must confirm the menu, missing-state behavior, responsiveness, unchanged Wi-Fi
+and normal reading/restart. It must not create an identity for missing state.
+Populated backup/restore UI needs an explicitly isolated synthetic harness or an
+already proven owned state; never seed the user's canonical settings with fake
+reading facts. Existing/damaged primary must be preserved. Review changes must
+stop restore, and late failures must retain unregistered targets for review.
+Actual source enrollment, current-generation verification and paired receipt
+proof remain separate obligations. Host-only UI/SQLite/LFS tests do not pass them.
+
+The older source-bound offline procedure below is retained as a dependency/test
+outline. Regenerate its bundle from the current accepted source before use;
+never install an earlier artifact merely because its older host test passed.
+
+The user cannot operate the Kindle/phone now. There is no installed0.0.7 trial,
 pairing, listener, timer or one-time credential waiting. Do not ask the user to
 run a menu that has not been installed. Existing development0.0.2 stays unchanged.
 The [host report](evidence/outbox-host-2026-10-22.json) is not physical Gate4 PASS.
@@ -91,6 +114,6 @@ times separately from user reading. No user book metadata, real rows, credential
 network address, serial or private backup is published. Verify normal completion,
 revocation/listener absence, exact rollback and scoped cleanup before acceptance.
 
-Source-generation enrollment, restore/reset UX and full lifecycle integration
-remain explicit implementation obligations, not waived by this storage trial.
+Source-generation enrollment, reset/current-source UX, physical recovery-UI proof
+and full lifecycle integration remain explicit implementation obligations, not waived by this storage trial.
 Do not advance PhaseE or mark Gate4/full goal complete from the host report.

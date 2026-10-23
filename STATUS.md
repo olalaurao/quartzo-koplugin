@@ -32,6 +32,13 @@ Wire115:111 PASS/4 native-TLS skips (5.177s); transport34:32 PASS/2 POSIX skips
 and failed5 setup cases, not production criteria; preserved separately. Final
 exact-head CI must execute all native cases without these platform skips.
 
+Initial exact5ca8a9d CI39998229836 ran251 plugin cases:250 PASS/one test setup
+ERROR, no skips. The new LFS case could not resolve lua_gettop inside Lupa's
+private embedded VM. Its correction runs the SAME owner/assertions with actual
+official standalone LuaJIT/LFS, as existing native process probes do; no production
+logic or test criteria are weakened. Later transport/wire CI steps were skipped,
+not passed. The failed log is retained; repeat complete exact-head CI.
+
 Generation enrollment, reset/source lifecycle and physical Gate4 remain OPEN.
 No Kindle/phone access, installation, session, Wi-Fi change or production release
 was performed. Full seven-topic goal remains ACTIVE/topic2/7.

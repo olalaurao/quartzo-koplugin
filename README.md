@@ -12,9 +12,16 @@ Candidate0.0.5 extends that same owner with explicit validated recovery snapshot
 and restoration of the original identity. Native host CI passed357 cases; actual
 device/Gate4 acceptance is pending. Installed0.0.2 and production are untouched.
 
+Candidate0.0.7 adds manual offline queue status, confirmed recovery copies and
+reviewed restoration through that same owner. It initializes no missing state;
+source enrollment, synchronization and physical Gate4 remain open. The sole wire
+codec/SDK adapter now ship in the plugin namespace; no duplicate implementation.
+See STATUS for the exact current host checks and uninstalled artifact.
+
 The package and offline acceptance steps are documented in
 [tools/plugin](tools/plugin/README.md). The Quartzo Tools menu shows diagnostics
-and a separate Reading Statistics action. Neither starts synchronization.
+a separate Reading Statistics action and Offline reading queue. None starts
+synchronization.
 
 Independent Gate 0B client preparation and real-Lua-5.1 host logic tests are in
 [tools/transport_probe](tools/transport_probe/README.md). This is diagnostic-only,
