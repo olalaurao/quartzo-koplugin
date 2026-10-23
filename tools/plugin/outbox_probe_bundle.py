@@ -13,7 +13,7 @@ import probe_bundle as base
 NAME = "quartzo-outbox-probe"
 SOURCES = {"outbox.lua":"quartzo.koplugin/quartzo/outbox.lua",
     "paired_exchange.lua":"quartzo.koplugin/quartzo/paired_exchange.lua",
-    "codec.lua":"tools/reading_wire/codec.lua", "koreader_deps.lua":"tools/reading_wire/koreader_deps.lua",
+    "codec.lua":"quartzo.koplugin/quartzo/codec.lua", "koreader_deps.lua":"quartzo.koplugin/quartzo/koreader_deps.lua",
     "probe.lua":"tools/plugin/outbox_probe.lua", "kindle.lua":"tools/plugin/outbox_probe_kindle.lua",
     "run.sh":"tools/transport_probe/run.sh", "menu.json":"tools/plugin/outbox_probe_menu.json",
     "config.xml":"tools/plugin/outbox_probe_config.xml"}

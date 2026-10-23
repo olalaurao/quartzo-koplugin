@@ -1,5 +1,14 @@
 # Quartzo ↔ KOReader — Product & Delivery Plan
 
+2026-10-23 PhaseD0.0.7 adds manual backup/recovery controls through the existing
+outbox owner only. Confirmed operations show progress, preserve original identity
+and refuse an existing primary. Bounded metadata discovery and reviewed identity/
+count checks do not establish source generation or canonical acceptance. The sole
+codec/SDK adapter move unchanged into the runtime package. Finish exact-source
+host/native CI; defer device installation and Gate4 tests until user availability.
+Source-generation enrollment and later production phases remain gated/open.
+
+
 2026-10-22 PhaseD0.0.6 closes a reproduced recovery schema gap before the device
 trial: exact owner declarations now serve creation and recognition, preventing
 silent removal of unfamiliar constraints/generated columns/internal objects.

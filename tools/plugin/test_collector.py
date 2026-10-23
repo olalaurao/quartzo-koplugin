@@ -44,7 +44,7 @@ class CollectorTest(unittest.TestCase):
                               decode_json=wrap(lambda b: convert(json.loads(b))), kind=kind, null=self.null)
         deps.object=self.lua.eval("function(t) return setmetatable(t,{wire_kind='object'}) end")
         self.to_lua,self.codec_dependencies=convert,deps
-        self.codec = self.lua.execute((ROOT / "tools/reading_wire/codec.lua").read_text()).new(deps)
+        self.codec = self.lua.execute((ROOT / "quartzo.koplugin/quartzo/codec.lua").read_text()).new(deps)
 
     def collect(self, **options):
         fields = dict(device_id="qrd_fixture", source_epoch="db_epoch_fixture",

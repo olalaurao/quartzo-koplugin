@@ -18,8 +18,8 @@ from probe_bundle import (BASELINE, ROOT, encoded, hexadecimal, native_snapshot,
 NAME = 'quartzo-wire-tls-probe'
 REVISION = 'canonical-paired-sequence-v1'
 SOURCE_MAP = {
-    'codec.lua': 'tools/reading_wire/codec.lua',
-    'koreader_deps.lua': 'tools/reading_wire/koreader_deps.lua',
+    'codec.lua': 'quartzo.koplugin/quartzo/codec.lua',
+    'koreader_deps.lua': 'quartzo.koplugin/quartzo/koreader_deps.lua',
     'exchange.lua': 'quartzo.koplugin/quartzo/paired_exchange.lua',
     'sequence.lua': 'tools/reading_wire/paired_sequence.lua',
     'client.lua': 'tools/transport_probe/client.lua',

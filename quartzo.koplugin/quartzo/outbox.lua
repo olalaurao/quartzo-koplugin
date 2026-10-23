@@ -128,7 +128,7 @@ end
 local errors = {invalid_outbox_state=true,unsupported_outbox_schema=true,unsupported_outbox_file=true,
     outbox_capacity=true,outbox_exists=true,outbox_missing=true,outbox_scope_mismatch=true,
     outbox_native_conflict=true,outbox_entropy_unavailable=true,unverified_reading_receipt=true,
-    outbox_backup_missing=true}
+    outbox_backup_missing=true,outbox_backup_changed=true}
 local function operation(name, runtime, mode, callback)
     local conn
     local ok, value = pcall(function()
@@ -191,7 +191,17 @@ local function verify_contents(conn, codec, context)
     end
     stmt:close()
 end
-local function clone(conn, destination, runtime, context)
+local function check_review(conn, context, expected)
+    if expected == nil then return end
+    check(type(expected)=="table" and scope(expected.device_id) and scope(expected.source_epoch)
+        and integer(expected.pending) and expected.pending>=0
+        and integer(expected.review) and expected.review>=0
+        and expected.pending+expected.review<=CAP and expected.canonical_ack==false)
+    check(expected.device_id==context.device_id and expected.source_epoch==context.source_epoch
+        and expected.pending==count(conn,"pending") and expected.review==count(conn,"review"),
+        "outbox_backup_changed")
+end
+local function clone(conn, destination, runtime, context, expected)
     check(not regular(destination,runtime),"outbox_exists")
     -- Both databases are plugin-owned, in the same directory. SQLite's attached
     -- DELETE-journal transaction is the copy/recovery mechanism; no raw file copy.
@@ -220,6 +230,7 @@ local function clone(conn, destination, runtime, context)
     return transaction(conn,function()
         fresh()
         context_equal(own_schema(conn),context)
+        check_review(conn,context,expected)
         verify_contents(conn,runtime.codec,context)
         create_schema(conn,"recovery.")
         for _,name in ipairs({"identity","pending","review"}) do
@@ -419,7 +430,44 @@ function M.inspect_backup(root, backup_leaf, runtime)
             pending=count(conn,"pending"),review=count(conn,"review"),canonical_ack=false}
     end)
 end
-function M.restore(root, backup_leaf, runtime)
+function M.list_backups(root, runtime)
+    runtime=runtime or {}
+    local directory
+    local ok,result=pcall(function()
+        path(root)
+        local fs=runtime.filesystem or require("libs/libkoreader-lfs")
+        local iterator
+        iterator,directory=fs.dir(root)
+        check(type(iterator)=="function")
+        local entries,visited,unsupported={},0,0
+        for leaf in iterator,directory do
+            visited=visited+1
+            check(visited<=512,"outbox_recovery_list_limit")
+            if type(leaf)=="string" and leaf:match("^quartzo_sync_recovery_[a-f0-9]+%.sqlite3$") then
+                local valid,name=pcall(backup_path,root,leaf)
+                if valid then
+                    local info=(runtime.attributes or fs.symlinkattributes)(name)
+                    if info and info.mode=="file" then
+                        check(#entries<32,"outbox_recovery_list_limit")
+                        local modified=info.modification
+                        if type(modified)~="number" or modified~=modified or modified<0
+                            or modified>9007199254740991 then modified=nil end
+                        entries[#entries+1]={leaf=leaf,modified=modified}
+                    else unsupported=unsupported+1 end
+                end
+            end
+        end
+        table.sort(entries,function(a,b)
+            if (a.modified or 0)~=(b.modified or 0) then return (a.modified or 0)>(b.modified or 0) end
+            return a.leaf<b.leaf
+        end)
+        return {backups=entries,unsupported=unsupported,canonical_ack=false}
+    end)
+    if directory then pcall(function() directory:close() end) end
+    if ok then return result end
+    return nil,result=="outbox_recovery_list_limit" and result or "outbox_recovery_list_unavailable"
+end
+function M.restore(root, backup_leaf, runtime, expected)
     runtime=runtime or {}
     local ok,name=pcall(path,root)
     local valid,backup=pcall(backup_path,root,backup_leaf)
@@ -432,10 +480,13 @@ function M.restore(root, backup_leaf, runtime)
     if not exists then return nil,"outbox_backup_missing" end
     local restored,reason=operation(backup,runtime,"rw",function(conn)
         local context=own_schema(conn)
+        -- UI review is a precondition, not authority to mint an identity or ACK.
+        -- Recheck under the copy transaction as well as before target creation.
+        check_review(conn,context,expected)
         -- Validate before creating/attaching the destination; a malformed backup
         -- remains available for review and cannot silently become empty state.
         verify_contents(conn,runtime.codec,context)
-        return clone(conn,name,runtime,context)
+        return clone(conn,name,runtime,context,expected)
     end)
     if not restored then return nil,reason end
     local reopened,failure=M.open(root,runtime)

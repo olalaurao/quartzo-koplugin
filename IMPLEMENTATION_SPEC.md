@@ -1,5 +1,21 @@
 # Quartzo ↔ KOReader — Implementation Specification
 
+2026-10-23 PhaseD0.0.7 manual recovery controls:
+Expose the SAME outbox owner through Offline reading queue, without initializing
+state or enrolling a source. Load the sole codec/KOReader adapter lazily from the
+plugin namespace; their previous tools copies are moved, not duplicated. Confirm
+backup/restore, show progress next tick and guard repeated operations while busy.
+Native ButtonDialog renders title; fixed errors omit private paths/SQL/content.
+Metadata-only discovery visits at most512 entries and32 supported regular leaves;
+no automatic selection. File dates sort display only, never identify a generation.
+Restore supplies reviewed device/epoch/counts/canonical_ack=false, checked before
+target creation and again in the copy transaction. Validate all canonical content
+as before, retain original identity and refuse an existing primary. No full-snapshot
+signature/lease is implied; an interrupted destination remains unregistered for
+review. Schema-v1 CREATE bytes, ACK/cursor rules and source owner are unchanged.
+Source-generation enrollment/reset lifecycle and physical Gate4 remain incomplete.
+
+
 2026-10-22 PhaseD0.0.6 recovery validation correction:
 Use the SAME owner declaration strings for CREATE and validation of schema-v1
 identity/pending/review tables. Stored table_info alone cannot describe generated

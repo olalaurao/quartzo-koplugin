@@ -1,6 +1,7 @@
 """Owned SQLite outbox transactions. No device/canonical-delivery claim."""
 import json
 import hashlib
+import os
 from pathlib import Path
 import sqlite3
 import subprocess
@@ -49,6 +50,113 @@ class OutboxTest(unittest.TestCase):
         queue = self.outbox.open(str(self.root), self.runtime)
         self.assertNotIsInstance(queue, tuple)
         return queue
+
+    def reviewed_backup(self):
+        self.seed()
+        self.queue.stage(self.batch())
+        saved = self.queue.backup()
+        self.assertNotIsInstance(saved, tuple)
+        preview = self.outbox.inspect_backup(str(self.root), saved.backup_leaf, self.runtime)
+        self.assertNotIsInstance(preview, tuple)
+        return saved.backup_leaf, preview
+
+    def test_reviewed_restore_rejects_a_changed_identity_before_creating_primary(self):
+        leaf, preview = self.reviewed_backup()
+        preview.source_epoch = "different_reviewed_epoch"
+        self.owned.unlink()
+        backup = self.root / leaf
+        before = backup.read_bytes()
+        self.assertEqual(self.outbox.restore(str(self.root), leaf, self.runtime, preview),
+                         (None, "outbox_backup_changed"))
+        self.assertFalse(self.owned.exists())
+        self.assertEqual(backup.read_bytes(), before)
+
+    def test_reviewed_restore_rejects_changed_counts_before_creating_primary(self):
+        leaf, preview = self.reviewed_backup()
+        preview.pending += 1
+        self.owned.unlink()
+        self.assertEqual(self.outbox.restore(str(self.root), leaf, self.runtime, preview),
+                         (None, "outbox_backup_changed"))
+        self.assertFalse(self.owned.exists())
+
+    def test_reviewed_restore_preserves_selected_bytes_review_and_identity(self):
+        leaf, preview = self.reviewed_backup()
+        expected = dict(self.queue.context().items())
+        lines = list(self.queue.pending().event_lines.values())
+        source = self.path.read_bytes()
+        self.owned.unlink()
+        restored = self.outbox.restore(str(self.root), leaf, self.runtime, preview)
+        self.assertNotIsInstance(restored, tuple)
+        self.assertEqual(dict(restored.context().items()), expected)
+        self.assertEqual(list(restored.pending().event_lines.values()), lines)
+        self.assertEqual(restored.status().review, preview.review)
+        self.assertFalse(restored.status().canonical_ack)
+        self.assertIsNone(restored.status().source_watermark)
+        self.assertEqual(self.path.read_bytes(), source)
+
+    def test_reviewed_restore_rechecks_a_change_before_the_copy_transaction(self):
+        leaf, preview = self.reviewed_backup()
+        self.owned.unlink()
+        changed = []
+
+        def hook(operation, value):
+            if operation == "exec" and value == "BEGIN IMMEDIATE" and not changed:
+                conn = sqlite3.connect(self.root / leaf)
+                try:
+                    with conn:
+                        conn.execute("DELETE FROM review")
+                finally:
+                    conn.close()
+                changed.append(True)
+
+        self.query_hook = hook
+        self.assertEqual(self.outbox.restore(str(self.root), leaf, self.runtime, preview),
+                         (None, "outbox_backup_changed"))
+        self.query_hook = None
+        self.assertEqual(changed, [True])
+        # A late rejected target is preserved, but cannot become registered state.
+        self.assertTrue(self.owned.is_file())
+        self.assertEqual(self.outbox.open(str(self.root), self.runtime),
+                         (None, "unsupported_outbox_schema"))
+        preserved = self.outbox.inspect_backup(str(self.root), leaf, self.runtime)
+        self.assertEqual((preserved.pending, preserved.review), (2, 0))
+
+    def recovery_directory(self, names):
+        environment = self.lua.execute('''
+            local names=...
+            local environment={closed=false}
+            environment.filesystem={dir=function(root)
+                environment.root=root
+                local position=0
+                return function()
+                    position=position+1
+                    return names[position]
+                end, {close=function() environment.closed=true end}
+            end}
+            return environment
+        ''', self.lua.table_from(names))
+        self.runtime.filesystem = environment.filesystem
+        return environment
+
+    def test_recovery_list_is_bounded_metadata_only_and_closes_its_directory(self):
+        leaf, _ = self.reviewed_backup()
+        environment = self.recovery_directory(['.', '..', 'statistics.sqlite3', 'unrelated.lua', leaf])
+        before = list(self.calls)
+        listed = self.outbox.list_backups(str(self.root), self.runtime)
+        self.assertNotIsInstance(listed, tuple)
+        self.assertEqual([entry.leaf for entry in listed.backups.values()], [leaf])
+        self.assertFalse(listed.canonical_ack)
+        self.assertEqual(self.calls, before)
+        self.assertEqual(environment.root, str(self.root))
+        self.assertTrue(environment.closed)
+
+    def test_recovery_list_limit_closes_the_directory_without_opening_databases(self):
+        environment = self.recovery_directory(['unrelated'] * 513)
+        before = list(self.calls)
+        self.assertEqual(self.outbox.list_backups(str(self.root), self.runtime),
+                         (None, 'outbox_recovery_list_limit'))
+        self.assertTrue(environment.closed)
+        self.assertEqual(self.calls, before)
 
     def test_identity_pending_bytes_and_review_survive_reopen(self):
         self.seed()
@@ -648,6 +756,28 @@ class OutboxLuaJITTest(OutboxTest):
 class NativeOutboxTest(OutboxTest):
     lua_type=LuaJITRuntime
     make_sdk=statistics.NativeStatisticsTest.make_sdk
+
+    def test_actual_native_lfs_lists_only_supported_regular_copies_and_bounds_directory(self):
+        leaf, _ = self.reviewed_backup()
+        self.runtime.filesystem = self.lua.execute('''
+            local root=...
+            return assert(package.loadlib(root.."/libs/libkoreader-lfs.so","luaopen_lfs"))()
+        ''', os.environ["READING_SQLITE_REFERENCE_DIR"])
+        self.runtime.attributes = None
+        # Metadata discovery must not follow a backup-looking symbolic link.
+        alias = "quartzo_sync_recovery_" + "42" * 16 + ".sqlite3"
+        (self.root / alias).symlink_to(self.root / leaf)
+        before = list(self.calls)
+        listed = self.outbox.list_backups(str(self.root), self.runtime)
+        self.assertNotIsInstance(listed, tuple)
+        self.assertEqual([entry.leaf for entry in listed.backups.values()], [leaf])
+        self.assertEqual(listed.unsupported, 1)
+        self.assertEqual(self.calls, before)
+        for index in range(513):
+            (self.root / ("unrelated-" + str(index))).touch()
+        self.assertEqual(self.outbox.list_backups(str(self.root), self.runtime),
+                         (None, "outbox_recovery_list_limit"))
+        self.assertEqual(self.calls, before)
 
     def test_native_rw_attach_requires_an_explicitly_created_destination(self):
         destination=self.root/"owned-attach-fixture.sqlite3"

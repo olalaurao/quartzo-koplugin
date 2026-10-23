@@ -13,8 +13,8 @@ package.preload["libs/libkoreader-lfs"]=function()
 end
 package.preload.dkjson=function() return dofile(wire_ref.."/dkjson.lua") end
 package.preload["ffi/sha2"]=function() return dofile(wire_ref.."/sha2.lua") end
-local deps=assert(dofile(repo.."/tools/reading_wire/koreader_deps.lua").load(require))
-local codec=dofile(repo.."/tools/reading_wire/codec.lua").new(deps)
+local deps=assert(dofile(repo.."/quartzo.koplugin/quartzo/koreader_deps.lua").load(require))
+local codec=dofile(repo.."/quartzo.koplugin/quartzo/codec.lua").new(deps)
 package.loaded["quartzo/paired_exchange"]=dofile(repo.."/quartzo.koplugin/quartzo/paired_exchange.lua")
 local report=dofile(repo.."/tools/plugin/outbox_probe.lua").run(root.."/state",string.rep("a",32),
     dofile(repo.."/quartzo.koplugin/quartzo/outbox.lua"),codec,

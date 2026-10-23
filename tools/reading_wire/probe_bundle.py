@@ -13,8 +13,8 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 NAME = "quartzo-wire-probe"
 BASELINE = "v2026.07.1"
 SOURCE_MAP = {
-    "codec.lua": "tools/reading_wire/codec.lua",
-    "koreader_deps.lua": "tools/reading_wire/koreader_deps.lua",
+    "codec.lua": "quartzo.koplugin/quartzo/codec.lua",
+    "koreader_deps.lua": "quartzo.koplugin/quartzo/koreader_deps.lua",
     "probe.lua": "tools/reading_wire/probe.lua",
     "kindle.lua": "tools/reading_wire/probe_kindle.lua",
     "run.sh": "tools/transport_probe/run.sh",

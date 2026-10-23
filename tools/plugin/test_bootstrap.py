@@ -15,7 +15,7 @@ class BootstrapTest(unittest.TestCase):
     def setUp(self):
         self.lua = self.lua_type(unpack_returned_tuples=True)
         self.environment = self.lua.execute('''
-            local e = {registered = {}, shown = {}, settings_calls = 0}
+            local e = {registered = {}, shown = {}, closed = {}, ticks = {}, settings_calls = 0}
             local container = {}
             function container:extend(t)
                 t.__index = t
@@ -35,15 +35,27 @@ class BootstrapTest(unittest.TestCase):
                 end},
                 ["ui/widget/container/widgetcontainer"] = container,
                 ["ui/widget/infomessage"] = {new = function(_, t) return t end},
+                ["ui/widget/buttondialog"] = {new = function(_, t)
+                    -- Native v2026.07.1 renders title; an arbitrary text field is ignored.
+                    assert(t.title and not t.text, "unsupported ButtonDialog text")
+                    return t
+                end},
+                ["ui/widget/confirmbox"] = {new = function(_, t) return t end},
                 ["ui/uimanager"] = {show = function(_, message)
                     table.insert(e.shown, message)
-                end},
+                end, close = function(_, message) table.insert(e.closed, message) end,
+                    nextTick = function(_, callback) table.insert(e.ticks, callback) end},
             }
             require = function(name)
                 assert(modules[name], "unexpected dependency: " .. name)
                 return modules[name]
             end
             e.set_statistics = function(module) modules["quartzo/statistics"] = module end
+            e.set_delivery = function(module)
+                modules["quartzo/outbox"] = module
+                modules["quartzo/koreader_deps"] = {load = function() return {} end}
+                modules["quartzo/codec"] = {new = function() return {} end}
+            end
             e.ui = {menu = {registerToMainMenu = function(_, plugin)
                 table.insert(e.registered, plugin)
             end}}
@@ -81,7 +93,7 @@ class BootstrapTest(unittest.TestCase):
         self.assertEqual(items.quartzo.sorting_hint, "more_tools")
         self.assertEqual(items.quartzo.text, "Quartzo")
         self.assertEqual(len(self.environment.shown), 0)
-        self.assertEqual(len(items.quartzo.sub_item_table), 2)
+        self.assertEqual(len(items.quartzo.sub_item_table), 3)
         items.quartzo.sub_item_table[1].callback()
         self.assertEqual(len(self.environment.shown), 1)
         text = self.environment.shown[1].text
@@ -90,6 +102,88 @@ class BootstrapTest(unittest.TestCase):
         self.assertIn("Synchronization: inactive", text)
         self.assertNotIn("synthetic", text)
         self.assertEqual(self.environment.settings_calls, 1)
+
+    def delivery_owner(self, missing=False):
+        self.delivery_calls = []
+        self.delivery_preview = self.lua.table(device_id="qrd_fixture", source_epoch="epoch_fixture",
+                                                pending=2, review=1, canonical_ack=False)
+        self.delivery_error = None
+        leaf = "quartzo_sync_recovery_" + "41" * 16 + ".sqlite3"
+
+        def opened(root, runtime):
+            self.delivery_calls.append(("open", root))
+            return (None, "outbox_missing") if missing else queue
+
+        def backup():
+            self.delivery_calls.append(("backup",))
+            return self.lua.table(backup_leaf=leaf, pending=2, review=1)
+
+        def restore(root, selected, runtime, expected):
+            self.delivery_calls.append(("restore", root, selected, dict(expected.items())))
+            return (None, self.delivery_error) if self.delivery_error else queue
+
+        queue = self.lua.table(status=lambda: self.lua.table(pending=2, review=1), backup=backup)
+        owner = self.lua.table(open=opened,
+            list_backups=lambda root, runtime: self.lua.table(backups=self.lua.table_from([
+                self.lua.table(leaf=leaf)]), unsupported=0),
+            inspect_backup=lambda root, selected, runtime: self.delivery_preview, restore=restore)
+        self.environment.set_delivery(owner)
+        return leaf
+
+    def test_delivery_dependency_failure_is_safe_and_does_not_initialize_state(self):
+        instance = self.instance()
+        instance.showDeliveryState(instance)
+        self.assertIn("needs review", self.environment.shown[1].text)
+        self.assertNotIn("unexpected dependency", self.environment.shown[1].text)
+        self.assertNotIn("synthetic", self.environment.shown[1].text)
+
+    def test_missing_queue_keeps_backup_disabled_without_creating_or_scanning(self):
+        self.delivery_owner(missing=True)
+        instance = self.instance()
+        instance.showDeliveryState(instance)
+        dialog = self.environment.shown[1]
+        self.assertIn("No reading queue found", dialog.title)
+        self.assertIn("Synchronization: inactive", dialog.title)
+        self.assertFalse(dialog.buttons[1][1].enabled)
+        self.assertEqual(self.delivery_calls, [("open", "/synthetic/custom/settings")])
+
+    def test_backup_is_confirmed_deferred_visible_and_not_duplicated_while_busy(self):
+        self.delivery_owner()
+        instance = self.instance()
+        instance.showDeliveryState(instance)
+        self.environment.shown[1].buttons[1][1].callback()
+        confirmation = self.environment.shown[2]
+        self.assertIn("queued events", confirmation.text)
+        self.assertEqual(len(self.environment.ticks), 0)
+        confirmation.ok_callback()
+        self.assertTrue(instance.delivery_busy)
+        self.assertIn("Creating recovery copy", self.environment.shown[3].text)
+        self.assertNotIn(("backup",), self.delivery_calls)
+        confirmation.ok_callback()
+        self.assertEqual(len(self.environment.ticks), 1)
+        self.environment.ticks[1]()
+        self.assertFalse(instance.delivery_busy)
+        self.assertEqual(self.delivery_calls.count(("backup",)), 1)
+        self.assertIn("Recovery copy saved", self.environment.shown[4].text)
+
+    def test_restore_passes_the_reviewed_identity_counts_and_keeps_failure_visible(self):
+        leaf = self.delivery_owner(missing=True)
+        instance = self.instance()
+        instance.showRecoveryCopies(instance)
+        self.environment.shown[1].buttons[1][1].callback()
+        confirmation = self.environment.shown[2]
+        self.assertIn("current queue is absent", confirmation.text)
+        self.assertIn("Source setup still requires review", confirmation.text)
+        self.delivery_preview.source_epoch = "changed_after_review"
+        self.delivery_error = "outbox_backup_changed"
+        confirmation.ok_callback()
+        self.environment.ticks[1]()
+        call = self.delivery_calls[-1]
+        self.assertEqual(call[:3], ("restore", "/synthetic/custom/settings", leaf))
+        self.assertEqual(call[3], dict(device_id="qrd_fixture", source_epoch="epoch_fixture",
+                                     pending=2, review=1, canonical_ack=False))
+        self.assertIn("recovery copy changed", self.environment.shown[4].text)
+        self.assertFalse(instance.delivery_busy)
 
     def test_missing_statistics_sdk_is_a_sanitized_manual_diagnostic(self):
         instance = self.instance()

@@ -21,7 +21,7 @@ class OfflineProbeTest(unittest.TestCase):
     def setUp(self):
         self.lua = LuaRuntime(unpack_returned_tuples=True, encoding=None)
         self.deps, self.json, self.sha = provider_modules(self.lua)
-        self.codec = self.lua.execute((ROOT / "codec.lua").read_bytes())
+        self.codec = self.lua.execute((ROOT.parents[1] / "quartzo.koplugin/quartzo/codec.lua").read_bytes())
         self.probe = self.lua.execute((ROOT / "probe.lua").read_bytes())
         self.wire = self.deps[b"decode_json"]((ROOT / "upstream/transport_vectors.json").read_bytes().rstrip())
         self.reference = self.deps[b"decode_json"]((ROOT / "dart_reference.json").read_bytes().rstrip())

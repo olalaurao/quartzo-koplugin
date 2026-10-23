@@ -16,8 +16,8 @@ python tools/plugin/package.py --output /existing/output/directory/quartzo-boots
 ```
 
 Packaging exclusively creates a fresh uncompressed ZIP containing
-the six exact Lua sources in `package.py`'s allowlist: main,metadata,Statistics,
-collector,outbox and the unchanged paired owner. Its JSON
+the eight exact Lua sources in `package.py`'s allowlist: main,metadata,Statistics,
+collector,outbox,the unchanged paired owner and the sole codec/SDK adapter. Its JSON
 output records ZIP and individual source SHA-256 hashes.
 It never installs a plugin, replaces an archive or bundles diagnostics, fixtures,
 credentials, contract copies or private data.
@@ -93,7 +93,7 @@ Only bounded valid32-hex MD5 values accompany native IDs; titles,authors,paths,
 annotations and Reader identifiers are not projected. Groups describe only the
 rows in the current batch, not an authoritative whole-library association.
 
-Pass an explicit codec from the existing `tools/reading_wire/codec.lua` owner,
+Pass an explicit codec from the existing `quartzo.koplugin/quartzo/codec.lua` owner,
 device ID, database-generation epoch and canonical UTC observation. The codec
 constructs/validates canonical event bytes with the ratified native tuple, not
 MD5. Missing book/MD5 still permits an otherwise valid native event. No context
@@ -179,3 +179,27 @@ normal open/inspection. There is no automatic fallback, overwriting, pruning or
 directory-wide scan. A recovery snapshot is point-in-time: newer selected facts
 need their source or another verified recovery point; restored identity does
 not verify the current Statistics generation or issue canonical receipts.
+
+## Manual recovery controls (0.0.7 candidate; device proof pending)
+
+Tools / Quartzo / Offline reading queue opens only existing owned state. It shows
+pending/review counts and inactive synchronization. Create recovery copy requires
+confirmation and reopens the owner before copying. Missing state disables backup;
+there is no create/reset/enroll action. Review recovery copies lists at most32
+supported leaves within512 directory entries using native filesystem metadata,
+without DB opens. Choose explicitly; dates are informational and never establish
+Statistics generation. Unknown/symbolic/nonregular entries are preserved.
+
+Selected-copy inspection validates its bounded schema/content. Confirmation warns
+that only that point in time is recovered and requires absent primary. Reviewed
+identity/counts are copied and rechecked by restore, including inside its native
+transaction; original device/epoch/bytes/review remain. Existing damaged primary
+cannot be replaced. This is not a whole-snapshot cryptographic binding or source
+enrollment. A late interrupted copy can leave an unregistered target for review.
+
+UI fixtures cover missing SDK/state, confirmation/progress/coalescing, copied
+review preconditions and fixed failures on both Lua VMs. Linux CI additionally
+uses actual official LFS for bounded directory discovery and actual SQLite for
+restore. These do not establish PW3 menu rendering/restart or physical Gate4.
+Do not install/start a device session while the user is unavailable. Later manual
+acceptance must use a fresh source-bound artifact; older proofs do not pass0.0.7.

@@ -33,7 +33,7 @@ class WireCodecTest(unittest.TestCase):
         wrap = self.lua.eval("function(fn) return function(...) return fn(...) end end")
         dependencies = self.lua.table_from({b"sha256": wrap(lambda data: hashlib.sha256(data).hexdigest().encode("ascii")),
             b"decode_json": wrap(lambda data: self.to_lua(json.loads(data))), b"kind": kind, b"null": self.null})
-        self.module = self.lua.execute((ROOT / "codec.lua").read_text(encoding="utf-8"))
+        self.module = self.lua.execute((ROOT.parents[1] / "quartzo.koplugin/quartzo/codec.lua").read_text(encoding="utf-8"))
         self.dependencies = dependencies
         self.codec = self.module[b"new"](dependencies)
         self.binding = {key: VECTOR["request"][key] for key in ("binding_id", "vault_scope", "device_id", "source_epoch")}

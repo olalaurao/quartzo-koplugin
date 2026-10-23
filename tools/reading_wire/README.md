@@ -1,5 +1,11 @@
 # Pinned Reading wire consumer — Gate 0C
 
+The sole `codec.lua` and `koreader_deps.lua` now live at
+`quartzo.koplugin/quartzo/` for the manual recovery UI. They were moved unchanged;
+all diagnostic consumers load that same owner and retain their deployed bundle
+leaf names. No duplicate serializer, transport activation or production enrollment
+is introduced. Historical evidence paths remain bound to their original sources.
+
 ## Finite approved-pairing composition (G04, unregistered)
 
 `quartzo.koplugin/quartzo/paired_exchange.lua` (promoted byte-for-byte from this

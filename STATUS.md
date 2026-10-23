@@ -1,5 +1,42 @@
 # Implementation Status
 
+## 2026-10-23 — Manual recovery UI candidate (0.0.7, host checks in progress)
+
+Continues the open PhaseD on draftPR5; no device is available for operation in
+this block. The main menu now exposes the existing outbox owner's queue counts,
+confirmed recovery-copy creation and explicit selected-copy review/restoration.
+Startup only registers the menu and reserves paths. Missing state stays missing;
+no initial identity, source epoch, collector, network or production registration
+is created by this UI. Backup/restore displays progress on the next UI tick and
+coalesces repeated confirmation while busy; SQL remains bounded synchronous work.
+
+Discovery reads metadata only, at most512 directory entries/32 supported regular
+copy leaves, never opens Statistics or chooses a recovery copy automatically.
+File dates are display-only. Restoration retains original device/epoch/bytes and
+review; existing primary, including damaged state, cannot be overwritten. The UI
+passes copied reviewed identity/counts to the same owner, rechecked before target
+creation and inside the copy transaction. This is not a cryptographic snapshot
+binding, current-generation proof, durable ACK or source watermark. A late failed
+copy can leave its unregistered target for review, as the existing protocol does.
+
+The existing codec and KOReader dependency adapter move byte-for-byte from tools
+into the plugin namespace, with all active consumers updated. There is one codec
+and unchanged schema-v1; the deterministic package allowlist now has eight Lua
+sources. Version0.0.7 supersedes earlier packages only for this new candidate;
+previous physical/host proofs remain tied to their original sources. Native
+ButtonDialog displays title (not an arbitrary text field); host UI tests enforce
+that actual SDK boundary. Local configured Windows plugin suite248:172 PASS/76 explicit native-Linux
+skips (33.401s); the later transaction-race case passed separately on both VMs.
+Wire115:111 PASS/4 native-TLS skips (5.177s); transport34:32 PASS/2 POSIX skips
+(11.515s). Initial full plugin run lacked the required reference environment
+and failed5 setup cases, not production criteria; preserved separately. Final
+exact-head CI must execute all native cases without these platform skips.
+
+Generation enrollment, reset/source lifecycle and physical Gate4 remain OPEN.
+No Kindle/phone access, installation, session, Wi-Fi change or production release
+was performed. Full seven-topic goal remains ACTIVE/topic2/7.
+
+
 ## 2026-10-22 — Recovery schema preservation review (0.0.6, host accepted)
 
 Exact9f7c3a7 CI39730904884 passed373 cases/no skips:224 plugin (70 actual
