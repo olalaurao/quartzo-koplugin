@@ -2,9 +2,12 @@
 
 ## Current candidate: 0.0.7 manual recovery UI (not installed)
 
-The latest candidate adds manual queue status, confirmed backup and reviewed
-restore through the same owner. Exactc70a4e7 passed400 host/native cases without skips; see the
-[current host evidence](evidence/outbox-recovery-ui-host-2026-10-23.json).
+The current candidate retains manual recovery UI and shares review validation
+with staging so an accepted descriptor cannot make its recovery copy unreadable.
+Exact 4c99c7a passed 409 host/native cases without skips; see the
+[current host evidence](evidence/outbox-review-validation-host-2026-10-23.json).
+Fresh UI ZIP/offline bundles replace the historical 336a7a8 preparations; none
+are installed. Use the private handoff manifest and verify the final source/CI.
 Revalidate the final source/CI before any future trial; older0.0.6 and offline
 proofs remain historical. See
 STATUS and the private handoff for the current source-bound archive/manifest.

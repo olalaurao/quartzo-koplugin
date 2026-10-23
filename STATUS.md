@@ -1,6 +1,6 @@
 # Implementation Status
 
-## 2026-10-23 — Reject unrecoverable review input before staging (native CI pending)
+## 2026-10-23 — Reject unrecoverable review input before staging (host accepted; physical Gate4 OPEN)
 
 A synthetic host reproduction on 336a7a8 accepted a malformed pending-review
 record, then rejected its recovery copy as invalid_outbox_state. Six new baseline
@@ -16,13 +16,16 @@ receipt/cursor policy, source enrollment or runtime activation changed.
 
 All six focused regressions passed after the fix. The full configured Windows
 plugin suite ran 260 tests: 180 passed, 80 explicit native/POSIX skips, 28.678s.
-Native Linux CI must run the three new inherited SDK cases and the complete
-transport/wire suite without skips before source acceptance. PR5 stays draft;
+Exact 4c99c7a CI 40015457755 passed 409 cases/no skips: 260 plugin, 34
+transport, 115 wire, including the three new actual SDK cases. The 77,566-byte
+Windows ZIP matches native CI: 6aea1bb87d9312e46fa38f292c5f12c3d9053ed717c2c5d2986cfcccf50789e6.
+See [source-bound evidence](docs/evidence/outbox-review-validation-host-2026-10-23.json).
+Final documentation follow-ups require their own exact-head CI. PR5 stays draft;
 physical Gate4 and verified source-generation enrollment remain OPEN.
 
 The unreleased 0.0.7 candidate now has changed outbox source. All earlier UI ZIPs
 and offline bundles, including the prepared 336a7a8 bundle, remain historical;
-regenerate and bind fresh artifacts after exact-source native acceptance. No
+fresh UI/offline artifacts were prepared and source-verified from 4c99c7a. No
 device was accessed/installed, no source database written and no timed session
 started while the user cannot operate hardware. See PR5 for final source/CI proof.
 

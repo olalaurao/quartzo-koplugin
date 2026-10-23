@@ -4,8 +4,8 @@
 that the SAME recovery owner can read. A synthetic accepted-then-unrecoverable
 batch reproduced the gap; shared validation now rejects it before transaction,
 preserving existing queue/review/identity and valid neighbors. Schema and owners
-stay unchanged. Complete exact-source native CI, then regenerate both prepared
-0.0.7 UI/offline artifacts; no old bundle becomes current by version label alone.
+stay unchanged. Exact 4c99c7a native CI 40015457755 passed 409 cases/no skips. Fresh
+0.0.7 UI/offline artifacts were prepared only; old bundles remain historical.
 Physical Gate4/source-generation enrollment and later phases stay OPEN.
 
 
