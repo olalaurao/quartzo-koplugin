@@ -8,8 +8,8 @@ interruption cases. The77,357-byte Windows package matches native CI exactly:
 f48bc9a0bbed995dca85e20aeb92c25be66397ddcd63446082570bee7cb0b491.
 See [source-bound host evidence](docs/evidence/outbox-recovery-ui-host-2026-10-23.json).
 Artifact is prepared only, NOT installed. PR5 remains draft/open; no later gate
-or source generation is certified. Documentation-only acceptance follow-up still
-needs its final exact-head CI.
+or source generation is certified. Documentation-only acceptance follow-ups require
+their own exact-head CI; see the current PR5 checks.
 
 ### Implemented and tested scope
 
