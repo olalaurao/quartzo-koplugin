@@ -158,6 +158,19 @@ local function inspect(codec, line, context)
     context_equal(entry, context)
     return entry
 end
+local valid_review_types={integer=true,real=true,text=true,blob=true,["null"]=true}
+local function verify_review(row)
+    check(integer(tonumber(row[1])) and type(row[6])=="string" and #row[6]<=39)
+    local types={}
+    for value in row[6]:gmatch("[^,]+") do check(valid_review_types[value]);types[#types+1]=value end
+    check(#types==5 and types[3]=="integer" and table.concat(types,",")==row[6])
+    for j,source in ipairs({1,2,4,5}) do
+        local value=row[j+1]
+        check(type(value)=="string" and #value<=20)
+        if types[source]=="integer" then check(value:match("^%-?%d+$"))
+        else check(value=="") end
+    end
+end
 local function verify_contents(conn, codec, context)
     check(type(codec)=="table" and type(codec.inspect_event)=="function")
     local stmt=conn:prepare("SELECT "..bounded("event_id",68)..","..bounded("line",8192)
@@ -173,21 +186,11 @@ local function verify_contents(conn, codec, context)
     stmt=conn:prepare("SELECT CASE WHEN typeof(started_at)='integer' THEN started_at ELSE NULL END,"
         ..bounded("book_id",20)..","..bounded("page",20)..","..bounded("duration",20)..","
         ..bounded("pages",20)..","..bounded("types",39).." FROM review LIMIT 1001")
-    local valid_types={integer=true,real=true,text=true,blob=true,["null"]=true}
     for i=1,CAP+1 do
         local row=stmt:step()
         if not row then break end
         check(i<=CAP,"outbox_capacity")
-        check(integer(tonumber(row[1])) and type(row[6])=="string")
-        local types={}
-        for value in row[6]:gmatch("[^,]+") do check(valid_types[value]);types[#types+1]=value end
-        check(#types==5 and types[3]=="integer" and table.concat(types,",")==row[6])
-        for j,source in ipairs({1,2,4,5}) do
-            local value=row[j+1]
-            check(type(value)=="string")
-            if types[source]=="integer" then check(value:match("^%-?%d+$"))
-            else check(value=="") end
-        end
+        verify_review(row)
     end
     stmt:close()
 end
@@ -305,10 +308,13 @@ local function handle(name, runtime, context)
                 check(#item.field_types==5)
                 for j=1,5 do
                     local value=item.field_types[j]
-                    check(value=="integer" or value=="real" or value=="text" or value=="blob" or value=="null")
+                    check(valid_review_types[value])
                     types[j]=value
                 end
                 values[#values+1] = table.concat(types,",")
+                -- Accept only descriptors that the same recovery owner can read.
+                -- A malformed review must not poison already selected neighbors.
+                verify_review(values)
                 reviews[i]=values
             end
             return transaction(conn,function()

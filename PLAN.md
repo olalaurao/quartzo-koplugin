@@ -1,5 +1,14 @@
 # Quartzo ↔ KOReader — Product & Delivery Plan
 
+2026-10-23 PhaseD validation correction: stage only pending-review descriptors
+that the SAME recovery owner can read. A synthetic accepted-then-unrecoverable
+batch reproduced the gap; shared validation now rejects it before transaction,
+preserving existing queue/review/identity and valid neighbors. Schema and owners
+stay unchanged. Complete exact-source native CI, then regenerate both prepared
+0.0.7 UI/offline artifacts; no old bundle becomes current by version label alone.
+Physical Gate4/source-generation enrollment and later phases stay OPEN.
+
+
 Exactc70a4e7 native CI39998554809 accepted0.0.7 host scope:400 cases/no skips
 (251 plugin,34 transport,115 wire), with the same77,357-byte package on Linux and
 Windows. See docs/evidence/outbox-recovery-ui-host-2026-10-23.json. Physical Gate4,

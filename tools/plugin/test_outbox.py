@@ -182,6 +182,37 @@ class OutboxTest(unittest.TestCase):
         self.assertEqual((result.pending,result.review), (2,1))
         self.assertEqual(set(self.queue.pending().event_lines.values()), set(first.event_lines.values()))
 
+    def assert_invalid_review_batch_preserves_recoverable_state(self, mutation):
+        self.seed()
+        self.queue.stage(self.batch())
+        before = set(self.queue.pending().event_lines.values())
+        context = dict(self.queue.context().items())
+        self.mutate("INSERT INTO page_stat_data VALUES(1,3,103,20,10)")
+        batch = self.batch()
+        self.lua.eval(mutation)(batch.rejections[1])
+        statistics_before = self.path.read_bytes()
+        self.assertEqual(self.queue.stage(batch), (None, "invalid_outbox_state"))
+        reopened = self.reopen()
+        self.assertEqual(set(reopened.pending().event_lines.values()), before)
+        self.assertEqual(dict(reopened.context().items()), context)
+        self.assertEqual((reopened.status().pending, reopened.status().review), (2, 1))
+        saved = reopened.backup()
+        self.assertNotIsInstance(saved, tuple)
+        self.assertEqual((saved.pending, saved.review), (2, 1))
+        self.assertEqual(statistics_before, self.path.read_bytes())
+
+    def test_stage_rejects_review_missing_an_integer_source_value(self):
+        self.assert_invalid_review_batch_preserves_recoverable_state(
+            "function(row) row.integer_fields.book_row_id=nil end")
+
+    def test_stage_rejects_review_values_for_noninteger_source_fields(self):
+        self.assert_invalid_review_batch_preserves_recoverable_state(
+            "function(row) row.field_types[1]='text' end")
+
+    def test_stage_rejects_review_without_an_integer_start_type(self):
+        self.assert_invalid_review_batch_preserves_recoverable_state(
+            "function(row) row.field_types[3]='real' end")
+
     def test_native_payload_conflict_rolls_back_new_neighbors_and_preserves_original(self):
         self.seed()
         original = self.batch()

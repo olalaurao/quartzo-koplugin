@@ -1,5 +1,32 @@
 # Implementation Status
 
+## 2026-10-23 — Reject unrecoverable review input before staging (native CI pending)
+
+A synthetic host reproduction on 336a7a8 accepted a malformed pending-review
+record, then rejected its recovery copy as invalid_outbox_state. Six new baseline
+regressions failed across Lua 5.1/LuaJIT: missing integer source value, noninteger
+field with integer text, and noninteger start type. This is host API evidence,
+not a claim that actual user Statistics contains such descriptors.
+
+The existing outbox owner now shares its recovery review validation with staging,
+rejecting these batches before the write transaction. Existing selected bytes,
+identity and review remain recoverable; a valid neighboring new event cannot
+partially enter a rejected batch. No schema-v1 declaration, store, event identity,
+receipt/cursor policy, source enrollment or runtime activation changed.
+
+All six focused regressions passed after the fix. The full configured Windows
+plugin suite ran 260 tests: 180 passed, 80 explicit native/POSIX skips, 28.678s.
+Native Linux CI must run the three new inherited SDK cases and the complete
+transport/wire suite without skips before source acceptance. PR5 stays draft;
+physical Gate4 and verified source-generation enrollment remain OPEN.
+
+The unreleased 0.0.7 candidate now has changed outbox source. All earlier UI ZIPs
+and offline bundles, including the prepared 336a7a8 bundle, remain historical;
+regenerate and bind fresh artifacts after exact-source native acceptance. No
+device was accessed/installed, no source database written and no timed session
+started while the user cannot operate hardware. See PR5 for final source/CI proof.
+
+
 ## 2026-10-23 — Manual recovery UI 0.0.7 host accepted; physical Gate4 OPEN
 
 Exactc70a4e7 CI39998554809 passed400 cases/no skips:251 plugin,34 transport,
