@@ -16,7 +16,8 @@ Candidate0.0.7 adds manual offline queue status, confirmed recovery copies and
 reviewed restoration through that same owner. It initializes no missing state;
 source enrollment, synchronization and physical Gate4 remain open. The sole wire
 codec/SDK adapter now ship in the plugin namespace; no duplicate implementation.
-See STATUS for the exact current host checks and uninstalled artifact.
+Exactc70a4e7 passed400 host/native CI cases without skips. See STATUS for the
+source-bound evidence and uninstalled artifact.
 
 The package and offline acceptance steps are documented in
 [tools/plugin](tools/plugin/README.md). The Quartzo Tools menu shows diagnostics

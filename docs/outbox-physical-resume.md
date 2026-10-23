@@ -3,8 +3,10 @@
 ## Current candidate: 0.0.7 manual recovery UI (not installed)
 
 The latest candidate adds manual queue status, confirmed backup and reviewed
-restore through the same owner. Its exact source and native CI must be accepted
-before any future trial; older0.0.6 and offline proofs remain historical. See
+restore through the same owner. Exactc70a4e7 passed400 host/native cases without skips; see the
+[current host evidence](evidence/outbox-recovery-ui-host-2026-10-23.json).
+Revalidate the final source/CI before any future trial; older0.0.6 and offline
+proofs remain historical. See
 STATUS and the private handoff for the current source-bound archive/manifest.
 There is no installation, active request, phone session or timer in this block.
 

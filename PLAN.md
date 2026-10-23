@@ -1,5 +1,10 @@
 # Quartzo ↔ KOReader — Product & Delivery Plan
 
+Exactc70a4e7 native CI39998554809 accepted0.0.7 host scope:400 cases/no skips
+(251 plugin,34 transport,115 wire), with the same77,357-byte package on Linux and
+Windows. See docs/evidence/outbox-recovery-ui-host-2026-10-23.json. Physical Gate4,
+source generation and production registration remain OPEN; nothing is installed.
+
 2026-10-23 PhaseD0.0.7 adds manual backup/recovery controls through the existing
 outbox owner only. Confirmed operations show progress, preserve original identity
 and refuse an existing primary. Bounded metadata discovery and reviewed identity/

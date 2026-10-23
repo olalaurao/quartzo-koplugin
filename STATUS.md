@@ -1,6 +1,17 @@
 # Implementation Status
 
-## 2026-10-23 — Manual recovery UI candidate (0.0.7, host checks in progress)
+## 2026-10-23 — Manual recovery UI 0.0.7 host accepted; physical Gate4 OPEN
+
+Exactc70a4e7 CI39998554809 passed400 cases/no skips:251 plugin,34 transport,
+115 wire, including actual official standalone LFS and native SQLite restore/
+interruption cases. The77,357-byte Windows package matches native CI exactly:
+f48bc9a0bbed995dca85e20aeb92c25be66397ddcd63446082570bee7cb0b491.
+See [source-bound host evidence](docs/evidence/outbox-recovery-ui-host-2026-10-23.json).
+Artifact is prepared only, NOT installed. PR5 remains draft/open; no later gate
+or source generation is certified. Documentation-only acceptance follow-up still
+needs its final exact-head CI.
+
+### Implemented and tested scope
 
 Continues the open PhaseD on draftPR5; no device is available for operation in
 this block. The main menu now exposes the existing outbox owner's queue counts,
