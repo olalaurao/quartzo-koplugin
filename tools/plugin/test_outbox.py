@@ -577,7 +577,7 @@ class OutboxTest(unittest.TestCase):
         wire_root=ROOT/"tools/reading_wire"
         sys.path.insert(0,str(wire_root))
         import test_pinned_transport as pinned
-        self.lua.globals().carrier=self.lua.execute((ROOT/"tools/transport_probe/client.lua").read_text())
+        self.lua.globals().carrier=self.lua.execute((ROOT/"quartzo.koplugin/quartzo/transport.lua").read_text())
         binding=dict(self.queue.context().items())
         binding.update(binding_id="qrb_fixture",vault_scope="vault_fixture")
         self.lua.globals().config=self.to_lua(dict(endpoint="https://127.0.0.1:8443",

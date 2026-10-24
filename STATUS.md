@@ -1,5 +1,41 @@
 # Implementation Status
 
+## 2026-10-24 Single packaged shared TLS carrier, candidate0.0.13
+
+On feature/reading-shared-carrier from d289037, relocate the existing complete
+TLS carrier from tools/transport_probe/client.lua to
+quartzo.koplugin/quartzo/transport.lua with IDENTICAL normalized bytes (SHA256
+f29a14c9d785cc821eb946c38f01d777786cce8f41d45afdd757fd7cb3fdac27).
+The plugin package now includes it; existing diagnostic bundles and current tests
+read that SAME source, retaining client.lua only as their deployed leaf name.
+There is no copied second implementation, new crypto/HTTP engine, timeout owner,
+credential store/provider or Reader-plugin dependency. Existing diagnostic APIs
+stay explicit and grant no canonical receipt. Loading the module starts nothing.
+The existing paired owner still owns approved context and opaque receipts.
+
+Focused local validation: transport32PASS/two native-only skips; wire114PASS/ten
+native-only skips; selected persisted send12PASS/six native-only skips; exact
+package1PASS. Full pinned-native CI remains mandatory before merge; local SDK
+models do not prove new physical delivery. No APK, device install, timed session,
+source/queue/Statistics change or production caller was created. Candidate0.0.13
+is not installed; actual0.0.9 and its accepted993pending/seven-review proof remain.
+
+Review of the pinned v2026.07.1 SDK identifies its existing cancellable Trapper
+subprocess as the intended foreground execution mechanism. The existing carrier
+factory sets LuaSec TIMEOUT, so future UI must construct SDK/carrier/paired handles
+inside that child, never alter parent networking globals or serialize receipt
+capabilities across the process boundary. Approval must bind exact local handoff
+bytes/hash and original queue identity before child execution; return only fixed
+public outcome/counts and reopen status through the owner after completion/cancel.
+The actual foreground import/approval/send composition, native/physical lifecycle
+proof and source reconciliation remain OPEN under plugin Gate4/G08/topic2.
+
+Quartzo G03 and the finite G04 spike already have separate PASS audits. Do not
+reopen those gates because an old test PR was still draft. PR66 is now reconciled
+with merged PR91 ef9263f5; its four-stage actual-owner/synthetic-remote exchange
+passed at Quartzo1055de49/Companionf2db24cc without source changes. Current exact
+PR66 CI is pending. This historical test integration is not new hardware proof.
+
 ## 2026-10-24 Read-only original queue identity, candidate0.0.12
 
 PR6 merged209fa3fc from exact tested1258f39, native CI40128814038 passed632

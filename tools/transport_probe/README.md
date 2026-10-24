@@ -159,3 +159,9 @@ host session/bundle after verifying paths and retaining sanitized evidence.
 There is deliberately no recursive device cleanup command. Retrying needs a
 fresh session and explicit removal of the previous owned extension; never edit
 existing Reader, KOReader, SimpleUI or Statistics folders.
+
+
+The carrier source now lives at `../../quartzo.koplugin/quartzo/transport.lua`.
+Bundles still deploy that exact source as `client.lua`; the diagnostic retains
+its existing explicit synthetic-only operation and no canonical ACK authority.
+The old repository carrier file was moved, not copied into a second implementation.

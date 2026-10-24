@@ -2290,3 +2290,25 @@ to bypass Gate4/reconciliation or trust copied identifiers as source provenance.
 Keep synchronization inactive and the original IDs/facts unchanged. Test both
 Lua5.1 and LuaJIT, including no extra owner actions and unavailable legacy state;
 full native CI and later physical acceptance remain separate obligations.
+
+
+## 2026-10-24 Packaged single shared TLS carrier (candidate0.0.13)
+
+The existing carrier's only current implementation is now
+quartzo.koplugin/quartzo/transport.lua, relocated with identical normalized bytes
+from tools/transport_probe/client.lua. Include it in the plugin allowlist. Current
+diagnostic test/bundle readers use that same source; client.lua remains only the
+standalone bundle's deployed leaf. Preserve all existing wire/TLS checks, bounds,
+error redaction, pre-send leaf pinning and opaque transport delivery. No new
+network engine, public-CA policy, receipt/credential owner or protocol exists.
+Module loading is inert; existing diagnostic APIs never grant canonical ACK.
+
+The SDK/carrier factory's LuaSec timeout mutation must stay inside the future
+cancellable foreground child, using the pinned KOReader Trapper owner. Do not
+construct it in the UI parent or serialize receipt/session capabilities. Validate
+approved exact handoff bytes and original queue identity before execution; child
+uses the SAME outbox and paired owner for one bounded attempt. Only fixed public
+outcome/counts may return; parent status reopens through the existing outbox after
+completion/cancellation. Native process-stop recovery/actual UI acceptance remain
+separate proofs. No production caller is registered by packaging this dependency.
+Gate4/G08/source reconciliation and the full seven-topic objective remain open.
