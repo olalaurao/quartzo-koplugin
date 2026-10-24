@@ -32,6 +32,12 @@ local function execute()
         local manifest=decode(manifest_bytes)
         assert(manifest.probe_version==1 and manifest.run_id==session.run_id
             and manifest.koreader_baseline=="v2026.07.1" and hex(manifest.source_commit,40))
+        local source_mode=manifest.files["statistics.lua"]~=nil
+        if source_mode then
+            for _,name in ipairs({"statistics.lua","collector.lua","process_probe.lua"}) do
+                files[#files+1]=name
+            end
+        end
         local allowed={}
         for _,name in ipairs(files) do allowed[name]=true end
         for name in pairs(manifest.files) do assert(allowed[name]) end
@@ -44,9 +50,15 @@ local function execute()
         for key,path in pairs(native) do hashes[key]=deps.sha256(read(path,2097152)) end
         -- The same owner, without registration or a receipt issuer.
         package.loaded["quartzo/paired_exchange"]=dofile(directory.."/paired_exchange.lua")
+        local process
+        if source_mode then
+            package.loaded["quartzo/statistics"]=dofile(directory.."/statistics.lua")
+            package.loaded["quartzo/collector"]=dofile(directory.."/collector.lua")
+            process=dofile(directory.."/process_probe.lua")
+        end
         report=dofile(directory.."/probe.lua").run(directory.."/state",session.run_id,
             dofile(directory.."/outbox.lua"),dofile(directory.."/codec.lua").new(deps),
-            require("lua-ljsqlite3/init"),require("libs/libkoreader-lfs"))
+            require("lua-ljsqlite3/init"),require("libs/libkoreader-lfs"),process)
         assert(report.phase=="passed" and report.canonical_ack==false)
         for key,path in pairs(native) do assert(deps.sha256(read(path,2097152))==hashes[key]) end
         report.run_id,report.manifest_digest,report.source_commit=session.run_id,session.manifest_digest,manifest.source_commit

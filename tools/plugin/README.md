@@ -22,6 +22,28 @@ output records ZIP and individual source SHA-256 hashes.
 It never installs a plugin, replaces an archive or bundles diagnostics, fixtures,
 credentials, contract copies or private data.
 
+## Grouped synthetic source-lifecycle diagnostic
+
+The existing offline artifact owner also supports `--source-lifecycle` before
+the `prepare`, `install` or `collect` subcommand of
+`tools/plugin/outbox_probe_bundle.py`. Always use that same mode for all three
+operations. Preparation requires an exact committed source and a fresh host
+output; installation still requires a freshly verified device baseline and
+human availability. No installation or KUAL execution is requested by this doc.
+
+This mode packages the existing Statistics/collector/outbox modules plus a finite
+synthetic fixture through the same manifest/launcher/installation/collection
+owner. It creates Statistics-shaped data only inside the freshly owned diagnostic
+state root and uses the plugin's read-only source access against those files.
+It never opens the user's Statistics, settings or canonical outbox. Five groups
+combine collection process stops, same-second batches/review, same-identity
+recovery/replay, source transition refusal/acceptance and schema2 migration.
+The host verifies only private copies of those exact synthetic files. Unknown
+files, journals, altered native payloads, an advanced ACK marker or mismatched
+backups block collection without repairing/deleting anything. A matching report
+still cannot attest physical execution or close Gate4. See
+[the current physical handoff](../../docs/outbox-physical-resume.md).
+
 ## Source-bound Phase A Gate 1 proof
 
 Version0.0.1 completed the following script; see the committed

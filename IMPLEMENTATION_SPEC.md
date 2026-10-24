@@ -2170,3 +2170,24 @@ A backward clock step during a transient pass invalidates its continuation.
 This is not clock calibration or proof of real event-day accuracy. Arbitrary
 backdating/clock corrections that are not detectable from these observations
 still require explicit history rescan and the later time/provenance policy.
+
+
+## 2026-10-24 Isolated grouped source-lifecycle diagnostic
+
+The existing offline artifact owner supports explicit --source-lifecycle mode
+for prepare/install/collect, with the same bounded manifest, single-use launcher
+and scope-checked host collection. Only a new synthetic state root is writable.
+Statistics-shaped fixtures are created there, then read through the unchanged
+Statistics/collector/outbox owners. No real Statistics/settings/outbox, network,
+Wi-Fi control, canonical writer, source ACK or production registration is used.
+Five groups exercise changed collection/witness/progress commits around owned
+child SIGKILL, same-second continuation/review, exact same-identity restore and
+replay, nonempty-source refusal/empty-generation consent with backup, and schema2
+upgrade preserving its old backup. Reuse the existing native process helper;
+never stop KOReader or another process. Validate exact allowed files and their
+schema/native IDs/payloads/review/source/progress on bounded PRIVATE synthetic
+copies before accepting correlated observations. No mounted user database is
+SQLite-opened by the host. Unknown/partial artifacts remain preserved on failure.
+Reports never attest hardware or intrinsic source generation. Native host tests
+and a future actual PW3 run remain different proofs. Core plugin sources and
+wire/Companion contracts are unchanged; Gate4 stays OPEN.

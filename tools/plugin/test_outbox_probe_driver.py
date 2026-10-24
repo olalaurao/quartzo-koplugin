@@ -9,11 +9,12 @@ from test_native_provider import provider_modules
 
 
 class OutboxProbeDriverTest(unittest.TestCase):
-    def driver(self,mutate=None,native_change=False):
+    def driver(self,mutate=None,native_change=False,source_mode=False):
         lua=LuaRuntime(unpack_returned_tuples=True,encoding=None)
         deps,json_module,sha_module=provider_modules(lua)
+        sources=bundle.SOURCE_SOURCES if source_mode else bundle.SOURCES
         values={name:(bundle.base.ROOT/source).read_bytes().replace(b"\r\n",b"\n")
-                for name,source in bundle.SOURCES.items()}
+                for name,source in sources.items()}
         values["run.sh"]=values["run.sh"].replace(b"quartzo-transport-probe",bundle.NAME.encode())
         prefix=b"/mnt/us/extensions/quartzo-outbox-probe/"
         manifest=dict(probe_version=1,run_id="a"*32,koreader_baseline=bundle.base.BASELINE,source_commit="b"*40,
@@ -56,6 +57,7 @@ class OutboxProbeDriverTest(unittest.TestCase):
                 if name=='dkjson' then return json end
                 if name=='ffi/sha2' then return sha end
                 if name=='lua-ljsqlite3/init' or name=='libs/libkoreader-lfs' then return {} end
+                if name=='quartzo/statistics' then return assert(package.loaded[name]) end
                 error('unexpected_driver_module')
             end
             local function load(path)
@@ -63,9 +65,10 @@ class OutboxProbeDriverTest(unittest.TestCase):
                 if path==prefix..'probe.lua' then
                     -- Only the driver boundary is modeled here. Actual fork,
                     -- native SQLite and entropy run in the standalone fixture.
-                    return {run=function(root,run_id,outbox,codec,sdk,lfs)
+                    return {run=function(root,run_id,outbox,codec,sdk,lfs,process)
                         assert(root==prefix..'state' and run_id==string.rep('a',32))
                         output.probe_calls=(output.probe_calls or 0)+1
+                        output.source_mode=process~=nil
                         return {phase='passed',canonical_ack=false,driver_model_only=true}
                     end}
                 end
@@ -111,6 +114,18 @@ class OutboxProbeDriverTest(unittest.TestCase):
         self.assertEqual(report["phase"],"failed")
         self.assertEqual(output[b"exit_code"],1)
         self.assertEqual(output[b"probe_calls"],1)
+
+    def test_source_driver_requires_all_three_additional_pinned_modules(self):
+        report,reads,output=self.driver(source_mode=True)
+        self.assertEqual(report["phase"],"passed")
+        self.assertTrue(output[b"source_mode"])
+        prefix=b"/mnt/us/extensions/quartzo-outbox-probe/"
+        for name in (b"statistics.lua",b"collector.lua",b"process_probe.lua"):
+            self.assertIn(prefix+name,reads)
+            report,_,output=self.driver(source_mode=True,
+                mutate=lambda fs,path:fs.__setitem__(path+name,None))
+            self.assertEqual(report["phase"],"failed")
+            self.assertIsNone(output[b"probe_calls"])
 
 
 if __name__=="__main__": unittest.main()

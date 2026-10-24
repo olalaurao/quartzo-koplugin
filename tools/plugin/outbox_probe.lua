@@ -179,6 +179,8 @@ local function stop_child(system, fs, sdk, root, name, body)
     end
     check(ok)
 end
+-- Shared only by the isolated source-lifecycle diagnostic; loading is inert.
+M.stop_owned_child = stop_child
 function M.run(root, run_id, outbox, codec, sdk, fs)
     local report={probe_version=1,phase="failed",source_data="synthetic",uses_synthetic_clock=true,
         statistics_accessed=false,network_accessed=false,wifi_changed=false,source_cursor_changed=false,

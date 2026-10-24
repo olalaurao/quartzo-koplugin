@@ -1,5 +1,34 @@
 # Implementation Status
 
+## 2026-10-24 Grouped source-lifecycle diagnostic candidate, native proof pending
+
+The existing single-use offline outbox artifact owner now has an explicit
+`--source-lifecycle` mode. Five fresh synthetic groups exercise schema3 collection
+before/after actual owned-child SIGKILL, empty-source witness/event/progress
+atomicity, same-second continuation over251events, retained review resolution,
+content-reviewed same-identity restore/replay, refusal of a nonempty replacement,
+reviewed empty new-generation transition and schema2 upgrade with its old backup.
+The host collector validates exact allowed files, schemas, native IDs/payloads,
+review/source/progress and backup identity on private synthetic copies. It cannot
+attest hardware from report booleans. The native standalone fixture and report
+adversaries must pass before packaging the new mode.
+
+Local diagnostic tests:14cases,12PASS/two explicit standalone-native skips. The
+initial driver model lacked the new Statistics preload; it was corrected and
+all four driver cases pass. Native source execution remains pending CI, not PASS.
+No plugin runtime source, wire contract, Companion lock, production caller or
+device state changed. Candidate0.0.9/runtime d5bab06 remains byte-identical;
+installed0.0.7 is the latest physical observation. No APK or session was started.
+The updated grouped physical runbook at d0df842 passed585native host cases in
+CI40111598016; that earlier proof does not cover this new diagnostic mode.
+
+Upstream PR89 merged8db57c36 after exact74d9b157 CI40111424714 passed2921tests/
+eight explicit skips. Its source inventory is review-only; it cannot restore a
+lost identity or authorize reimport. Statistics lacks an intrinsic generation
+UUID, so state-loss/nonempty-history provenance remains a separate blocked
+production path. No sample-match shortcut was added. Gate4OPEN, goalACTIVE/topic2
+of7; next prove/package this isolated mode, then wait for device availability.
+
 ## 2026-10-24 Reviewed offline collection0.0.9: native accepted, physical OPEN
 
 Exactd5bab06 native CI40109125180 passed585/no skips (430 plugin,34 transport,
