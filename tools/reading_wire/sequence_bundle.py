@@ -25,7 +25,7 @@ SOURCE_MAP = {
     'sequence.lua': 'tools/reading_wire/paired_sequence.lua',
     'outbox.lua': 'quartzo.koplugin/quartzo/outbox.lua',
     'process.lua': 'tools/plugin/outbox_probe.lua',
-    'client.lua': 'tools/transport_probe/client.lua',
+    'client.lua': 'quartzo.koplugin/quartzo/transport.lua',
     'kindle.lua': 'tools/reading_wire/sequence_kindle.lua',
     'run.sh': 'tools/transport_probe/run.sh',
     'menu.json': 'tools/reading_wire/sequence_menu.json',

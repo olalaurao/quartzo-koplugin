@@ -84,7 +84,7 @@ class HostTlsTest(unittest.TestCase):
 
     def test_host_receipt_bytes_match_the_lua_diagnostic_contract(self):
         module = LuaRuntime(unpack_returned_tuples=True).execute(
-            pathlib.Path(__file__).with_name("client.lua").read_text(encoding="utf-8"))
+            (pathlib.Path(__file__).resolve().parents[2] / "quartzo.koplugin/quartzo/transport.lua").read_text(encoding="utf-8"))
         self.assertEqual(module.RECEIPT.encode("ascii"), RECEIPT)
 
     def test_runtime_directory_and_binding_are_explicit_and_confined(self):

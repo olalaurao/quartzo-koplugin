@@ -74,7 +74,9 @@ def prepare(session, output):
         raise ValueError("Only the exact synthetic payload is permitted")
     for name in SOURCES:
         # Normalize only repository source line endings for the Unix device.
-        values[name] = pathlib.Path(__file__).with_name(name).read_bytes().replace(b"\r\n", b"\n")
+        source = (pathlib.Path(__file__).resolve().parents[2] / "quartzo.koplugin/quartzo/transport.lua"
+                  if name == "client.lua" else pathlib.Path(__file__).with_name(name))
+        values[name] = source.read_bytes().replace(b"\r\n", b"\n")
     manifest = dict(probe_version=1, run_id=config["run_id"], koreader_baseline=BASELINE,
         source_data="synthetic", files={name: hashlib.sha256(value).hexdigest() for name, value in values.items()})
     output.mkdir(mode=0o700, exist_ok=False)

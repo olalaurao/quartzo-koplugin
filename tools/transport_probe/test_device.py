@@ -9,7 +9,7 @@ class DeviceHarnessTest(unittest.TestCase):
     def setUp(self):
         self.lua = LuaRuntime(unpack_returned_tuples=True)
         directory = pathlib.Path(__file__).parent
-        self.lua.globals().client = self.lua.execute((directory / "client.lua").read_text())
+        self.lua.globals().client = self.lua.execute((directory.parents[1] / "quartzo.koplugin/quartzo/transport.lua").read_text())
         self.harness = self.lua.execute((directory / "device.lua").read_text())
         self.deps, self.config, self.files, self.calls = self.lua.execute("""
           local config={endpoint='https://127.0.0.1:8443', token=string.rep('a',64),

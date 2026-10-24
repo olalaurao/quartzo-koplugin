@@ -20,7 +20,7 @@ class WireSequenceTest(unittest.TestCase):
         self.codec_module = self.lua.execute((ROOT.parents[1] / 'quartzo.koplugin/quartzo/codec.lua').read_bytes())
         self.codec = self.codec_module[b'new'](self.deps)
         self.exchange = self.lua.execute((ROOT / 'exchange.lua').read_bytes())
-        self.client = self.lua.execute((ROOT.parent / 'transport_probe' / 'client.lua').read_bytes())
+        self.client = self.lua.execute((ROOT.parents[1] / 'quartzo.koplugin/quartzo/transport.lua').read_bytes())
         self.sequence = self.lua.execute((ROOT / 'sequence.lua').read_bytes())
         self.fixture = self.deps[b'decode_json'](FIXTURE_BYTES)
         self.binding = self.fixture[b'binding']

@@ -16,7 +16,7 @@ class WireExchangeTest(unittest.TestCase):
         self.lua = self.reference.lua
         self.exchange = self.lua.execute((ROOT / 'exchange.lua').read_text(encoding='utf-8'))
         self.lua.globals()[b'carrier'] = self.lua.execute(
-            (ROOT.parent / 'transport_probe/client.lua').read_text(encoding='utf-8'))
+            (ROOT.parents[1] / 'quartzo.koplugin/quartzo/transport.lua').read_text(encoding='utf-8'))
         self.config = self.reference.to_lua(dict(endpoint='https://127.0.0.1:8443',
             binding_id=self.reference.binding['binding_id'], ca_file='/fixture/ca.pem',
             bad_ca_file='/fixture/bad-ca.pem'))

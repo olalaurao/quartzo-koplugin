@@ -262,3 +262,11 @@ after committing events+coverage+witnesses. Native CI repeats through the actual
 SQ3/SQLite ABI and shared paired owner; source_native_test.lua reopens persisted
 schema3 in a fresh official standalone process. These tests do not assert actual
 PW3 UI/source-provenance or physical power-loss acceptance.
+
+
+The package includes the single shared `quartzo/transport.lua` carrier, relocated
+without executable changes from the diagnostic source. Module loading is inert;
+there is no automatic network caller or Reader-plugin dependency. Existing
+pairing approval and outbox receipt owners remain mandatory. The native SDK
+factory must be created only in the future cancellable Trapper child, preserving
+the parent plugin's network globals. Packaging alone does not close Gate4/G08.

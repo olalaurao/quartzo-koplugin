@@ -102,7 +102,7 @@ class NativePinnedTlsTest(unittest.TestCase):
 
     def run_client(self, reason="ok", pin=None, ca="server.pem"):
         result = subprocess.run([
-            self.runtime, str(self.driver), str(ROOT.parent / "transport_probe/client.lua"),
+            self.runtime, str(self.driver), str(ROOT.parents[1] / "quartzo.koplugin/quartzo/transport.lua"),
             self.host.endpoint, str(self.host.directory / ca), pin or self.pin, reason,
         ], capture_output=True, timeout=20)
         # Never print stderr, which can contain temporary private input paths.

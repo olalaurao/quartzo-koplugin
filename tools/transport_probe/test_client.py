@@ -9,7 +9,7 @@ class ClientContractTest(unittest.TestCase):
     def setUp(self):
         self.lua = LuaRuntime(unpack_returned_tuples=True)
         self.assertEqual(self.lua.eval("_VERSION"), "Lua 5.1")
-        self.module = self.lua.execute(pathlib.Path(__file__).with_name("client.lua").read_text())
+        self.module = self.lua.execute((pathlib.Path(__file__).resolve().parents[2] / "quartzo.koplugin/quartzo/transport.lua").read_text())
         self.config = self.lua.table_from(dict(endpoint="https://127.0.0.1:8443", token="a" * 64,
             expired_token="b" * 64, run_id="c" * 32, expires_at=2000,
             ca_file="/fixture/ca.pem", bad_ca_file="/fixture/bad-ca.pem"))

@@ -242,7 +242,7 @@ there is no hidden retry, nonce generation, credential lookup or queue mutation.
 A later diagnostic runner must own its explicit bounded sequence and fresh
 request nonce for each retry; production outbox remains gated.
 
-`tools/transport_probe/client.lua.wire_transport(config, https, ltn12)` reuses
+`quartzo.koplugin/quartzo/transport.lua.wire_transport(config, https, ltn12)` reuses
 that diagnostic's one shared LuaSec carrier. It targets only the fixed
 `/reading/activity/v1` path on an explicit private IPv4 HTTPS endpoint, supplies
 the current 43-character bearer and captured binding in headers, and retains
@@ -392,3 +392,14 @@ symlink guard, changed native source, low storage, malformed metadata,
 incomplete/ACK-claiming reports and preservation of existing fixtures. These are
 tool safety/compatibility tests, not Statistics extraction, durable storage,
 production networking, performance-budget or release acceptance.
+
+
+The single carrier source is packaged at `quartzo.koplugin/quartzo/transport.lua`.
+It was relocated byte-for-byte; current diagnostics and native tests use that
+source, with `client.lua` retained only inside disposable bundles. There is no
+second transport implementation or Reader dependency. Its original diagnostic
+entry points remain opt-in and do not authorize canonical receipts. The existing
+paired owner retains all approved-binding and receipt authority. The future
+foreground caller must construct native SDK/carrier state only inside the existing
+cancellable Trapper child so LuaSec timeout changes cannot affect other plugins.
+No import/send UI or new physical acceptance is implied by this preparation.
