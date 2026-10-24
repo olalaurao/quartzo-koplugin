@@ -1,3 +1,76 @@
+# Current handoff, 2026-10-24: grouped validation still pending
+
+This section supersedes the installation, candidate and pending-test statements
+in the historical snapshots below. The latest observed installed plugin is
+0.0.7; no 0.0.8/0.0.9 installation or physical acceptance is claimed. No device,
+phone, listener, credential or timed session is in use while the user is
+unavailable. Gate 4 and Phase D remain open.
+
+The current candidate is 0.0.9, runtime commit
+`d5bab063dfea59aa82cbf75ebe700d48baa087c7`: eight runtime files, 130544-byte ZIP,
+SHA-256 `0d3eb413003fb4555ec15c2d834f3aa24a78529d3519428581f41d791641720b`.
+Native CI 40109125180 passed 585 cases without skips. Documentation head
+`9e6532003b300b0a6e7019662d872aeee6cb9af2` retains exactly those runtime blobs;
+its CI 40109410581 also passed 585 cases. The private manifest/current pointer
+identifies the archive. Earlier candidate archives are provenance, not installers.
+Any later runtime change requires fresh exact-source proof/package verification.
+
+Already accepted and not to be repeated without a relevant change: bootstrap
+install/removal, read-only Statistics and normal reading, six offline native
+stop/recovery cases, 0.0.7 empty-state UI/restart, and the grouped actual native
+outbox/Android receipt-loss/retry/partial/review trial. The latter passed on its
+recorded source: [paired evidence](evidence/outbox-paired-pw3-2026-10-23.json).
+It is not proof of the new collection/progress/source lifecycle implementation.
+
+## Block A: current plugin UI and real source, Kindle only
+
+Prepare everything before asking the user to disconnect USB. Reconfirm the
+current device/version and preserve a fresh private Statistics/settings/plugin
+baseline, current own state and rollback. Read SQLite only on private copies.
+Inspect existing own state/recovery artifacts before proposing enrollment;
+missing primary with prior identity evidence must enter recovery, never silently
+create a new identity. Verify the exact candidate bytes after installation.
+
+Group these observations into one prepared trial, with the book closed and the
+existing Wi-Fi state unchanged: Diagnostics 0.0.9; Reading source review and
+explicit enrollment only when its preconditions hold; one confirmed Collect
+reading into queue action; queue/review counts and inactive synchronization;
+Create recovery copy and review of that copy; close/reopen KOReader and confirm
+the same source identity/queue/copy remains usable. Collection includes existing
+history and may safely pause at its 1000-entry queue cap; this is not complete
+history import. Do not clear review entries or repeatedly collect to make a test
+appear complete. Do not reset/replace Statistics or delete an existing primary
+to simulate failure. Stop and preserve evidence if any source check fails.
+
+After USB returns, independently verify the selected native IDs/payloads and
+candidate scan progress on private copies, exact private schema and recovery
+bytes, unchanged Statistics/settings/other plugins, and actual timings. No ACK
+watermark may advance from collection. Separate any intentional normal reading
+from this no-reading baseline. Synthetic native tests do not substitute for
+these observed PW3 measurements or normal-use responsiveness.
+
+## Block B: isolated source lifecycle and receipt frontier
+
+Use one newly owned synthetic diagnostic root to exercise the changed schema-3
+collection/progress path on the PW3: source witness promotion from empty,
+same-second continuation, review blocking/exclusion, schema-2 upgrade with its
+verified backup, interruption/rollback, source-change refusal and reviewed empty
+new-generation transition. Never mutate actual Statistics or seed synthetic facts
+into the user's canonical outbox. These cases already pass native host fixtures;
+their physical scope and performance remain pending. Do not repeat unchanged
+transport-only or schema-1 stops under a new name.
+
+Only if needed for changed schema-3 ACK/frontier behavior, extend that same
+prepared trial to the isolated Android receiver and group lost receipt, replay
+and partial acceptance. Reuse the accepted APK when its critical source blobs
+match; rebuild only for relevant carrier changes. Start a finite pairing session
+only once both devices and the human action are available. Revoke it and verify
+cleanup before acceptance. Hardware power loss, lost-identity/nonempty-generation
+reconciliation, clock/day accuracy, production transport and release/performance
+gates remain separate; neither block closes them by implication.
+
+All sections below are retained historical source-bound snapshots.
+
 # Latest UI/reading acceptance, 2026-10-23
 
 The user completed the0.0.7 missing-state UI and normal reading/restart trial.
