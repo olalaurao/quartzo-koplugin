@@ -1,5 +1,15 @@
 # Quartzo ↔ KOReader — Product & Delivery Plan
 
+2026-10-23 paired physical subtest PASS: same native synthetic outbox identity,
+lost receipt, distinct seed/replay processes, exact pruning and retained review
+passed against the isolated Android canonical owner. Three unique facts/120s;
+Statistics/settings/all352Lua exact; credential/listener/app cleanup and both
+temporary roots verified. See docs/evidence/outbox-paired-pw3-2026-10-23.json.
+Reapply no completed offline/empty UI/normal reading trial for identical sources.
+Next implement the remaining source enrollment/reset/current-source lifecycle as
+one coherent block, then group populated recovery UI and applicable device proof.
+No production producer/watermark/transport activation or fullGate4 pass follows.
+
 2026-10-23 execution consolidation:645b4fa native CI passed413/no skips.
 Validate the complete existing-owner two-process paired bundle in one native CI
 block, then prepare one finite physical trial covering lost receipt, persisted

@@ -1,5 +1,35 @@
 # Implementation Status
 
+## 2026-10-23 Actual PW3 and Android paired outbox subtest PASS
+
+The user executed the consolidated KUAL diagnostic and reconnected USB. Exact
+25819d6 sources ran on ARM/v2026.07.1 against the isolated Android profile APK
+built from bdd95aa8, using host595a2d60. The SAME outbox/paired owners preserved
+the previously PW3-generated synthetic identity: a child staged three facts and
+retained review, checked/discarded a receipt and left three facts pending. Its
+parent reopened the persisted file; pending counts were3/2/1/1/0/0. Five raw
+receipt rejections pruned nothing; only opaque paired receipts pruned three facts.
+Independent private-copy inspection found zero pending and one retained review;
+the isolated canonical destination contained three unique events/120 seconds.
+
+Statistics/reserved settings and all352 tracked Lua files stayed exact (344 other
+plugins,8 installed Quartzo). The credential was revoked, our listener closed and
+the identity-checked isolated APK removed; production app metadata stayed exact.
+Both temporary diagnostic roots were manually removed and absence verified.
+See [bounded paired physical evidence](docs/evidence/outbox-paired-pw3-2026-10-23.json).
+Raw collector attestation/ACK fields remain untouched; this separately records
+the actual human/device execution. No cloud delivery, hardware power loss or
+verified Statistics generation is inferred from this synthetic scope.
+
+Exact25819d6 native CI40047639692 already passed415 cases/no skips. At the
+user's request, upstream Windows desktop suites are now manual; shared/Android
+contracts remain in one automatic hosted job. Existing accepted offline, empty UI
+and normal reading/restart proofs need no repetition for unchanged runtime bytes.
+Next consolidate generation enrollment/reset/current-source handling and populated
+recovery UI, using the existing owner. Those remain OPEN; no production producer,
+watermark/lifecycle/transport registration is enabled. Full Gate4 remains OPEN,
+PR5 DRAFT, full goal ACTIVE/topic2 of7. Candidate0.0.7 and its0.0.2 rollback remain.
+
 ## 2026-10-23 Consolidated paired outbox trial candidate
 
 Exact645b4fa native CI40045536903 passed413 cases without skips (260 plugin,
