@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "proof": "host_native_synthetic_source_lifecycle_diagnostic",
+  "source_commit": "b35f0606e0e61aea259210a2adb844ad036b41e5",
+  "ci_run": "https://github.com/olalaurao/quartzo-koplugin/actions/runs/40113545022",
+  "ci_conclusion": "success",
+  "native_reference": "hash-pinned official KOReader v2026.07.1 Linux x86_64 SDK, LuaJIT, SQLite and LFS",
+  "suite_tests_passed": {
+    "plugin": 434,
+    "transport": 34,
+    "wire": 121,
+    "total": 589
+  },
+  "suite_skips": 0,
+  "source_data": "synthetic",
+  "groups": [
+    "collection_before_commit",
+    "collection_after_commit",
+    "continuation",
+    "generation",
+    "upgrade"
+  ],
+  "observed_owned_child_sigkill_cases": 2,
+  "live_precommit_journal_checked": true,
+  "same_second_valid_events": 251,
+  "independent_private_synthetic_files_checked": 16,
+  "independent_checks": [
+    "exact file allowlist and bounds",
+    "schema versions and columns",
+    "canonical native event IDs, selected bytes and payload digests",
+    "retained review and explicit resolution without ACK",
+    "joined source witness and candidate scan progress",
+    "same-identity backup, restored queue and replay",
+    "refused nonempty replacement and backed-up empty generation transition",
+    "schema2 backup retained across explicit schema3 upgrade",
+    "forged ACK marker and corrupted pending bytes rejected"
+  ],
+  "plugin_runtime_changed": false,
+  "accepted_plugin_runtime_commit": "d5bab063dfea59aa82cbf75ebe700d48baa087c7",
+  "user_statistics_accessed": false,
+  "network_or_wifi_action": false,
+  "device_installation": false,
+  "phone_apk_built": false,
+  "physical_execution_attested": false,
+  "canonical_ack": false,
+  "source_epoch_verified": false,
+  "hardware_power_loss_proven": false,
+  "production_transport_registered": false,
+  "gate4_passed": false,
+  "limitations": [
+    "host native fixture is not PW3 runtime or performance proof",
+    "matched report envelopes do not attest hardware execution",
+    "nonempty replacement and unrecoverable-state provenance remain required",
+    "no production source identity restoration or transport activation"
+  ]
+}

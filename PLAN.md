@@ -1,5 +1,17 @@
 # Quartzo ↔ KOReader — Product & Delivery Plan
 
+## 2026-10-24 Grouped synthetic source-lifecycle proof prepared
+
+Exact b35f060 passed 589 native host tests/no skips in CI40113545022. The existing
+offline bundle now groups changed schema3 collection stops, 251 same-second events,
+review, same-identity recovery/replay, source-generation refusal/transition and
+schema2 upgrade with backup. The host independently verifies 16 synthetic files.
+The committed --source-lifecycle bundle is prepared privately, not installed;
+no phone or timed session is needed. Runtime 0.0.9 / d5bab06 is unchanged. Next wait
+for user/device availability, preserve a fresh baseline and execute the grouped
+Kindle-only proof. Source-loss/nonempty provenance and real performance remain
+OPEN; host reports do not close physical Gate4 or enable later production phases.
+
 
 ## 2026-10-24 Current reviewed-collection block
 

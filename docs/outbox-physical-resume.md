@@ -51,6 +51,17 @@ these observed PW3 measurements or normal-use responsiveness.
 
 ## Block B: isolated source lifecycle and receipt frontier
 
+The existing offline bundle now has an accepted `--source-lifecycle` mode at
+exact `b35f0606e0e61aea259210a2adb844ad036b41e5`, prepared privately and not
+installed. CI40113545022 passed 589 cases / no skips, including actual owned-child
+collection stops and independent validation of 16 synthetic files. See
+[host evidence](evidence/outbox-source-lifecycle-host-2026-10-24.json).
+Use that mode consistently for prepare/install/collect; use the recorded exact
+bundle, not an older six-stop bundle with the same extension name. No execution
+is requested while the user is unavailable. This finite block needs only Kindle,
+with Wi-Fi unchanged and no pairing session. The existing KUAL menu remains
+Quartzo offline outbox diagnostic -> Run synthetic offline outbox test.
+
 Use one newly owned synthetic diagnostic root to exercise the changed schema-3
 collection/progress path on the PW3: source witness promotion from empty,
 same-second continuation, review blocking/exclusion, schema-2 upgrade with its

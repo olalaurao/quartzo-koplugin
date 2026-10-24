@@ -1,11 +1,35 @@
 # Implementation Status
 
+## 2026-10-24 Grouped source-lifecycle diagnostic native PASS, physical OPEN
+
+Exact b35f060, CI40113545022: 589 PASS, no skips (434 plugin, 34 transport, 121 wire).
+The standalone official SDK fixture actually stopped its own child twice around
+schema3 collection commit and independently checked all 16 synthetic files. It
+verified 251 same-second events, retained/resolved review, same-identity recovery
+and replay, refused nonempty replacement, backed-up empty generation change and
+schema2 upgrade. Forged ACK progress and altered pending bytes failed collection.
+See [bounded host evidence](docs/evidence/outbox-source-lifecycle-host-2026-10-24.json).
+
+The exact committed --source-lifecycle bundle is prepared privately, NOT installed.
+It reuses the existing manifest/launcher/collector and native process helper;
+actual Statistics and all eight plugin runtime files remain untouched. Runtime
+d5bab06 / 0.0.9 package still applies. No phone, APK build, Wi-Fi action, listener,
+session or human request was started. Upstream post-merge CI40112480349 is also
+SUCCESS at 8db57c36; no extra Flutter run was requested for these diagnostic files.
+
+Next: after availability, take a fresh device baseline and install this exact
+accepted synthetic bundle for the grouped Kindle-only block. Correlated reports
+still need actual human/device execution and preservation verification. Do not
+repeat unchanged earlier offline/transport scopes. Real current-plugin UI/source
+proof, nonempty/state-loss provenance, time/performance and full Gate4 remain
+OPEN. PR5 DRAFT; full goal ACTIVE, topic 2 of 7, later production phases disabled.
+
 ## 2026-10-24 Grouped source-lifecycle diagnostic candidate, native proof pending
 
 The existing single-use offline outbox artifact owner now has an explicit
 `--source-lifecycle` mode. Five fresh synthetic groups exercise schema3 collection
 before/after actual owned-child SIGKILL, empty-source witness/event/progress
-atomicity, same-second continuation over251events, retained review resolution,
+atomicity, same-second continuation over 251 events, retained review resolution,
 content-reviewed same-identity restore/replay, refusal of a nonempty replacement,
 reviewed empty new-generation transition and schema2 upgrade with its old backup.
 The host collector validates exact allowed files, schemas, native IDs/payloads,
@@ -13,21 +37,21 @@ review/source/progress and backup identity on private synthetic copies. It canno
 attest hardware from report booleans. The native standalone fixture and report
 adversaries must pass before packaging the new mode.
 
-Local diagnostic tests:14cases,12PASS/two explicit standalone-native skips. The
+Local diagnostic tests: 14 cases, 12 PASS / two explicit standalone-native skips. The
 initial driver model lacked the new Statistics preload; it was corrected and
 all four driver cases pass. Native source execution remains pending CI, not PASS.
 No plugin runtime source, wire contract, Companion lock, production caller or
-device state changed. Candidate0.0.9/runtime d5bab06 remains byte-identical;
-installed0.0.7 is the latest physical observation. No APK or session was started.
-The updated grouped physical runbook at d0df842 passed585native host cases in
+device state changed. Candidate 0.0.9 / runtime d5bab06 remains byte-identical;
+installed 0.0.7 is the latest physical observation. No APK or session was started.
+The updated grouped physical runbook at d0df842 passed 585 native host cases in
 CI40111598016; that earlier proof does not cover this new diagnostic mode.
 
-Upstream PR89 merged8db57c36 after exact74d9b157 CI40111424714 passed2921tests/
+Upstream PR89 merged 8db57c36 after exact 74d9b157 CI40111424714 passed 2921 tests /
 eight explicit skips. Its source inventory is review-only; it cannot restore a
 lost identity or authorize reimport. Statistics lacks an intrinsic generation
 UUID, so state-loss/nonempty-history provenance remains a separate blocked
-production path. No sample-match shortcut was added. Gate4OPEN, goalACTIVE/topic2
-of7; next prove/package this isolated mode, then wait for device availability.
+production path. No sample-match shortcut was added. Gate 4 OPEN, goal ACTIVE, topic 2
+of 7; next prove/package this isolated mode, then wait for device availability.
 
 ## 2026-10-24 Reviewed offline collection0.0.9: native accepted, physical OPEN
 
