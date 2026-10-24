@@ -70,6 +70,16 @@ function M.run(deps,codec_module,paired,fixture,runtime)
             }))
             check(staged.pending==3 and staged.review==1 and staged.canonical_ack==false)
             report.outbox_initial_pending,report.outbox_review_retained,report.outbox_pruned=3,1,0
+            local selected=assert(queue.pending(10))
+            check(#selected.event_lines==3 and selected.canonical_ack==false)
+            local expected_lines={[batches[1].lines[1]]=true,[batches[2].lines[5]]=true,[batches[3].lines[3]]=true}
+            report.outbox_selected_sha256=deps.array({})
+            for _,line in ipairs(selected.event_lines) do
+                check(expected_lines[line]);expected_lines[line]=nil
+                report.outbox_selected_sha256[#report.outbox_selected_sha256+1]=deps.sha256(line)
+            end
+            check(next(expected_lines)==nil)
+            report.outbox_raw_receipt_rejections=0
         end
         local now,window,nonce=runtime.now,runtime.window,runtime.nonce
         session=assert(paired.open(runtime.document_bytes,runtime.approved_sha256,{
@@ -131,6 +141,7 @@ function M.run(deps,codec_module,paired,fixture,runtime)
                     report.checked_receipts=report.checked_receipts+1
                     if queue then
                         check(not queue.consume_receipt(session,{},bytes))
+                        report.outbox_raw_receipt_rejections=report.outbox_raw_receipt_rejections+1
                         local result=assert(queue.consume_receipt(session,receipt,bytes))
                         check(result.canonical_ack==false and result.source_watermark==nil
                             and result.review_retained==1)

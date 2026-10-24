@@ -1,5 +1,28 @@
 # Implementation Status
 
+## 2026-10-23 Consolidated paired outbox trial candidate
+
+Exact645b4fa native CI40045536903 passed413 cases without skips (260 plugin,
+34 transport,119 wire). The SQLite reference environment correction is accepted.
+The next coherent change extends the EXISTING paired bundle/driver/collector:
+one KUAL execution seeds an explicitly supplied empty synthetic outbox in a
+child process, discards a checked receipt, then reopens the same file in its
+parent for six idempotent attempts. The existing outbox/process/receipt owners
+are reused; no production startup, source enrollment or schema is added.
+
+Collection checks distinct process IDs, request bindings, selected digests,
+pending counts3/2/1/1/0/0, retained review and final private-copy SQL. Two new
+Linux SDK/TLS process regressions require native CI; Windows skips them explicitly.
+Host response models remain models and cannot attest physical execution or ACK.
+The actual paired device trial and populated recovery/source lifecycle remain
+OPEN. No timed session or new installation has started; PR5 stays draft.
+
+Validation is consolidated per the user's request: reuse exact-source successful
+proof, run changed-path regressions and required CI, and group physical cases.
+Upstream Quartzo bdd95aa8 hosted CI40044743609 passed2915 tests/8 skips; the
+redundant local full Windows run was intentionally canceled, not marked PASS.
+Remaining required Windows checks must still pass before upstream merge.
+
 ## 2026-10-23 Paired outbox sequence candidate; native CI pending
 
 Initial exacte6ec004 CI40045291562 passed plugin260 and transport34, then

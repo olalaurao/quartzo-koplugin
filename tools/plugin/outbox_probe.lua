@@ -96,6 +96,9 @@ local function process_system()
     system.restore=function() check(C.signal(17,previous)~=failure) end
     return system
 end
+-- The paired diagnostic reuses this same bounded native process setup. Merely
+-- loading this module has no process or filesystem effect.
+M.native_process_system = process_system
 local function stop_child(system, fs, sdk, root, name, body)
     local ffi=system.ffi
     local marker=root.."/gate.ready"

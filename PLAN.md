@@ -1,5 +1,12 @@
 # Quartzo ↔ KOReader — Product & Delivery Plan
 
+2026-10-23 execution consolidation:645b4fa native CI passed413/no skips.
+Validate the complete existing-owner two-process paired bundle in one native CI
+block, then prepare one finite physical trial covering lost receipt, persisted
+replay and exact pruning. Reuse accepted offline/UI/normal-reading evidence;
+do not repeat unchanged full local suites. Required CI, populated recovery UI,
+verified generation enrollment/lifecycle and full Gate4 acceptance stay required.
+
 2026-10-23 current UI proof: actual0.0.7 empty-state UI and normal reading/restart
 passed. Empty-state execution left Statistics/settings and352Lua unchanged. Normal
 reading added2nativeeventkeys, removed0 and changed0existingvalues; all352Lua and

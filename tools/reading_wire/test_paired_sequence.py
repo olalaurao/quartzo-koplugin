@@ -240,6 +240,9 @@ class NativeOutboxPairedSequenceTest(unittest.TestCase):
         self.assertEqual(report[b'phase'],b'paired_receipts_checked')
         self.assertEqual(report[b'outbox_pruned'],3)
         self.assertEqual(report[b'outbox_final_pending'],0)
+        self.assertEqual(report[b'outbox_raw_receipt_rejections'],5)
+        self.assertEqual(set(report[b'outbox_selected_sha256'].values()),
+            {hashlib.sha256(line.encode()).hexdigest().encode() for line in expected})
         self.assertTrue(report[b'outbox_identity_preserved'])
         self.assertEqual([step[b'outbox_pending'] for step in report[b'steps'].values()],
             [3,2,1,1,0,0])

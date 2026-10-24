@@ -1,11 +1,18 @@
 """Owned fake mount/export safety tests, never physical or canonical ACK proof."""
 import base64
+import datetime
 import json
 import pathlib
+import os
 import shutil
+import sqlite3
+import ssl
+import subprocess
+import sys
 import tempfile
 import time
 import unittest
+from http.server import BaseHTTPRequestHandler
 from unittest import mock
 
 import sequence_bundle as bundle
@@ -179,3 +186,167 @@ class SequenceBundleTest(unittest.TestCase):
         unfinished.write_bytes(b'partial evidence')
         with self.assertRaises(ValueError): self.collect()
         self.assertEqual(unfinished.read_bytes(), b'partial evidence')
+
+
+@unittest.skipUnless(sys.platform=='linux','Actual standalone KOReader native SDK requires Linux')
+class NativeOutboxBundleTest(unittest.TestCase):
+    installed=SequenceBundleTest.installed
+    collect=SequenceBundleTest.collect
+
+    def setUp(self):
+        SequenceBundleTest.setUp(self)
+        import test_pinned_tls_native as tls
+        self.model=driver_reference.paired_reference.NativeOutboxPairedSequenceTest()
+        self.model.setUp()
+        self.addCleanup(self.model.doCleanups)
+        model=self.model
+
+        class PairedHost(tls.WireHost):
+            def _handler_class(owner):
+                class Handler(BaseHTTPRequestHandler):
+                    def log_message(self,*args):pass
+                    def do_POST(self):
+                        length=int(self.headers.get('Content-Length','0'))
+                        if self.path!='/reading/activity/v1' or not 0<length<=16384:
+                            self.send_error(400);return
+                        raw=self.rfile.read(length)
+                        model.case.current_time=datetime.datetime.now(datetime.timezone.utc).isoformat(
+                            timespec='milliseconds').replace('+00:00','Z').encode()
+                        status,response=model.case.transport(raw,
+                            self.headers.get('Authorization','').removeprefix('Bearer ').encode(),b'good')
+                        self.send_response(status)
+                        self.send_header('Content-Length',str(len(response)))
+                        self.send_header('Connection','close')
+                        self.end_headers()
+                        self.wfile.write(response)
+                return Handler
+
+        openssl=shutil.which('openssl')
+        self.assertIsNotNone(openssl)
+        self.host=PairedHost(self.root/'tls-session','127.0.0.1',pathlib.Path(openssl))
+        self.host.start()
+        self.host_closed=False
+        self.addCleanup(self.close_host)
+        self.fixture=json.loads(json.dumps(model.native_fixture))
+        self.fixture['binding']=dict(model.document['binding'])
+        now=int(time.time())
+        _,pairing=driver_reference.paired_reference.fixture_and_pairing(now)
+        pairing.update(endpoint=self.host.endpoint,binding=self.fixture['binding'],
+            certificate_pem=(self.host.directory/'server.pem').read_text())
+        pairing['peer_certificate_sha256']=bundle.sha(ssl.PEM_cert_to_DER_cert(pairing['certificate_pem']))
+        for name,value in {'private-pairing.json':bundle.encoded(pairing),
+                'server.pem':pairing['certificate_pem'].encode(),
+                'synthetic-fixture.json':bundle.encoded(self.fixture)}.items():
+            (self.session/name).write_bytes(value)
+        # Remap only the fixed diagnostic I/O root. Runtime architecture stays
+        # genuinely x64; no ARM run is attested by this loopback response model.
+        self.values['kindle.lua']=self.values['kindle.lua'].replace(
+            b'/mnt/us/extensions/quartzo-wire-tls-probe',str(self.target).encode())
+        self.output=self.root/'native-bundle'
+        self.manifest=bundle.prepare(self.session,self.output,'a'*40,outbox_seed=model.source)
+        reference=pathlib.Path(os.environ['READING_SQLITE_REFERENCE_DIR'])
+        wire=pathlib.Path(os.environ['READING_WIRE_REFERENCE_DIR'])
+        for key,relative in bundle.OUTBOX_NATIVE.items():
+            source=wire/('dkjson.lua' if key=='dkjson' else 'sha2.lua') if key in ('dkjson','sha2') else reference/relative
+            destination=self.mount/'koreader'/relative
+            destination.parent.mkdir(parents=True,exist_ok=True)
+            shutil.copy2(source,destination)
+        self.bootstrap=self.root/'native-bootstrap.lua'
+        self.bootstrap.write_text('''
+local ref,wire,driver=unpack(arg)
+package.path=ref..'/?.lua;'..ref..'/common/?.lua;/usr/share/lua/5.1/?.lua;/usr/share/lua/5.1/?/init.lua;'..package.path
+package.cpath='/usr/lib/x86_64-linux-gnu/lua/5.1/?.so;'..package.cpath
+bit=require('bit')
+local ffi=require('ffi')
+ffi.loadlib=function(name,version)
+  assert(name=='sqlite3' and version=='0')
+  return ffi.load(ref..'/libs/libsqlite3.so.0')
+end
+package.preload['setupkoenv']=function() return true end
+package.preload['libs/libkoreader-lfs']=function()
+  return assert(package.loadlib(ref..'/libs/libkoreader-lfs.so','luaopen_lfs'))()
+end
+package.preload.dkjson=function() return dofile(wire..'/dkjson.lua') end
+package.preload['ffi/sha2']=function() return dofile(wire..'/sha2.lua') end
+dofile(driver)
+''',encoding='utf-8')
+        self.reference,self.wire=reference,wire
+
+    def close_host(self):
+        if not self.host_closed:
+            self.host.close()
+            self.host_closed=True
+
+    def tearDown(self):
+        self.close_host()
+        SequenceBundleTest.tearDown(self)
+
+    def completed(self):
+        self.installed()
+        with mock.patch.object(driver_reference.paired_reference.legacy,'FIXTURE',self.fixture):
+            result=subprocess.run([str(self.mount/'koreader/luajit'),str(self.bootstrap),str(self.reference),
+                str(self.wire),str(self.target/'kindle.lua')],cwd=self.mount/'koreader',
+                capture_output=True,timeout=60)
+        self.assertEqual(result.returncode,0,'Actual native two-process driver failed')
+        report=bundle.parse((self.target/'device-observation.json').read_bytes())
+        seed=bundle.parse((self.target/'seed-observation.json').read_bytes())
+        self.assertEqual(report['jit_arch'],'x64')
+        self.assertNotEqual(report['source_process_id'],report['seed_process_id'])
+        self.assertEqual(seed['source_process_id'],report['seed_process_id'])
+        self.assertEqual(report['outbox_pruned'],3)
+        self.assertEqual(len(self.model.case.sent),7)
+        nonces=[json.loads(item[0])['request_id'] for item in self.model.case.sent]
+        self.assertEqual(len(set(nonces)),7)
+        self.assertTrue(nonces[0].endswith('0000000000000007'))
+        self.assertEqual(self.host.tls_versions,{'TLSv1.2'})
+        (self.target/'run.lock').mkdir()
+        (self.target/'launcher-status.txt').write_bytes(b'completed\n')
+        # A forged ARM label is used ONLY to test the correlation collector:
+        # it must still return physical_execution_attested=False and no ACK.
+        report['jit_arch']='arm'
+        (self.target/'device-observation.json').write_bytes(bundle.encoded(report))
+        phone=dict(probe_revision='canonical-paired-wire-v1',phase='completed',run_id=self.fixture['run_id'],
+            source_data='synthetic',synthetic_account=True,credential_cleanup_failed=False,unique_events=3,native_seconds=120,
+            pending_queue_actions=7,canonical_ack=False,source_cursor_changed=False,statistics_accessed=False,
+            wifi_changed=False,physical_execution_attested=False,credential_revoked=True,control_failed=False,
+            production_registered=False,cloud_delivery_proven=False,
+            canonical_paths=[item['path'] for item in self.fixture['expected_shards']])
+        (self.android/'completed.json').write_bytes(bundle.encoded(phone))
+        for shard in self.fixture['expected_shards']:
+            path=self.android/'vault'/shard['path']
+            path.parent.mkdir(parents=True,exist_ok=True)
+            path.write_bytes(base64.b64decode(shard['bytes_base64'],validate=True))
+        return report,seed
+
+    def test_actual_two_process_native_sqlite_tls_replay_and_bounded_collection(self):
+        self.completed()
+        report=self.collect()
+        self.assertTrue(report['paired_outbox_observations_match'])
+        self.assertEqual(report['outbox_pending'],0)
+        self.assertEqual(report['outbox_review_retained'],1)
+        self.assertFalse(report['physical_execution_attested'])
+        self.assertFalse(report['canonical_ack'])
+        self.assertFalse(report['gate4_passed'])
+
+    def test_bad_process_seed_or_retained_review_preserves_and_rejects_evidence(self):
+        report,seed=self.completed()
+        path=self.target/'device-observation.json'
+        bad=dict(report,source_process_id=report['seed_process_id'])
+        path.write_bytes(bundle.encoded(bad))
+        with self.assertRaises(ValueError):self.collect()
+        path.write_bytes(bundle.encoded(report))
+        seed_path=self.target/'seed-observation.json'
+        bad_seed=json.loads(json.dumps(seed))
+        bad_seed['steps'][0]['request_sha256']='0'*64
+        seed_path.write_bytes(bundle.encoded(bad_seed))
+        with self.assertRaises(ValueError):self.collect()
+        seed_path.write_bytes(bundle.encoded(seed))
+        state=self.target/'outbox-state/quartzo_sync_state.sqlite3'
+        conn=sqlite3.connect(state)
+        try:
+            conn.execute("UPDATE review SET duration='11'")
+            conn.commit()
+        finally:conn.close()
+        altered=state.read_bytes()
+        with self.assertRaises(ValueError):self.collect()
+        self.assertEqual(state.read_bytes(),altered)
