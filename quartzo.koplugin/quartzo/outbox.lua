@@ -151,7 +151,8 @@ local errors = {invalid_outbox_state=true,unsupported_outbox_schema=true,unsuppo
     outbox_native_conflict=true,outbox_entropy_unavailable=true,unverified_reading_receipt=true,
     outbox_backup_missing=true,outbox_backup_changed=true,statistics_source_changed=true,
     statistics_source_unverifiable=true,statistics_source_review_required=true,statistics_busy=true,statistics_unavailable=true,
-    statistics_read_failed=true,unsupported_statistics_schema=true}
+    statistics_read_failed=true,unsupported_statistics_schema=true,invalid_statistics_collection=true,
+    invalid_statistics_event=true,invalid_statistics_data=true}
 local function operation(name, runtime, mode, callback)
     local conn
     local ok, value = pcall(function()
@@ -338,6 +339,20 @@ local function handle(name, runtime, context)
             if not preview then error(code,0) end
             source_reviews[preview.review]={name=name,context=context}
             return preview
+        end)
+    end
+    function api.preview_source(statistics_path,observed_at_utc,after,limit)
+        return access(false,function()
+            check(context.source_checkpoint~=nil,"statistics_source_review_required")
+            -- Reuse the sole collector inside the SAME guarded native snapshot.
+            -- Scope comes only from this existing queue, never caller fields.
+            -- This bounded dry run stages nothing and advances no checkpoint.
+            local batch,code=require("quartzo/collector").collect_reviewed(statistics_path,
+                {device_id=context.device_id,source_epoch=context.source_epoch,
+                    observed_at_utc=observed_at_utc,after=after,limit=limit},
+                codec,context.source_checkpoint,runtime)
+            if not batch then error(code,0) end
+            return batch
         end)
     end
     function api.renew_source(review)

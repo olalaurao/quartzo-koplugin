@@ -2049,3 +2049,14 @@ SQLite must run in native CI. Remaining PW3 proof is grouped for the changed0.0.
 setup/populated recovery/reconfirmation paths; prior exact0.0.7 empty UI, normal
 reading/restart and paired outbox proofs remain valid only for their recorded
 sources. No new device session is started while the user is unavailable.
+
+
+### Owner-bound source preview (same candidate block)
+
+The existing collector loop also runs inside Statistics.with_source_snapshot.
+The outbox owner's preview_source supplies its own persisted device/epoch and
+source guards, returning a bounded read-only dry run. It neither stages history
+nor advances state/ACK. Legacy/unreviewed or changed sources and foreign transient
+continuations fail closed before scanning raw events. This avoids a separate
+extractor or a guard check detached from the actual source snapshot. No producer,
+UI collection action or lifecycle registration is enabled by this API.

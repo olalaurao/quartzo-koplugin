@@ -1,6 +1,7 @@
 -- Test-owned Linux fixtures only. Actual official SDK, LFS and OS entropy.
 local mode,root,source,sqlite_ref,wire_ref,repo=unpack(arg)
 package.path=sqlite_ref.."/?.lua;"..package.path
+package.path=repo.."/quartzo.koplugin/?.lua;"..package.path
 bit=require("bit")
 local ffi=require("ffi")
 ffi.loadlib=function(name,version)
@@ -24,10 +25,8 @@ if mode=="enroll" then
     local reviewed=assert(owner.review_source(root,source,runtime))
     assert(not fs.attributes(root.."/quartzo_sync_state.sqlite3"))
     queue=assert(owner.enroll(root,reviewed.review,runtime))
-    local fields=queue.context()
-    fields.observed_at_utc="2026-10-24T00:00:00.000Z"
-    local collector=dofile(repo.."/quartzo.koplugin/quartzo/collector.lua")
-    local selected=assert(collector.collect(source,fields,codec,sdk))
+    local selected=assert(queue.preview_source(source,"2026-10-24T00:00:00.000Z"))
+    assert(assert(queue.status()).pending==0 and selected.canonical_ack==false)
     assert(assert(queue.stage(selected)).pending==2)
     local saved=assert(queue.backup())
     local reviewed_copy=assert(owner.inspect_backup(root,saved.backup_leaf,runtime))

@@ -20,6 +20,11 @@ the copy transaction. Schema1/2 recovery preserves its original version/context.
 UI0.0.8 adds manual Reading source setup/check/reconfirmation and keeps sync
 inactive. Nothing is installed; actual0.0.7 remains the latest installed proof.
 The implementation addendum records precise authority and remaining limits.
+The same collector loop now supports an owner-bound read-only preview inside
+the guarded native snapshot. Its device/epoch come from existing state; legacy/
+changed sources and foreign continuations fail closed. Preview stages nothing
+and creates no lifecycle/ACK authority. This follow-up requires its own native
+CI before replacing the prepared701 package; no new device request is made.
 
 Exact701bd12 native CI40100324573 passed493 cases without skips (338 plugin,
 34 transport,121 wire), including official LFS/entropy/SQ3 and fresh-process

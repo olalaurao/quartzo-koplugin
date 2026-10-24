@@ -20,6 +20,7 @@ class EnrollmentTest(unittest.TestCase):
 
     def setUp(self):
         collector.CollectorTest.setUp(self)
+        self.lua.globals().package.loaded["quartzo/collector"] = self.collector
         self.outbox = self.lua.execute((collector.ROOT / "quartzo.koplugin/quartzo/outbox.lua").read_text(encoding="utf-8"))
         self.root = Path(self.temp.name) / "owned"
         self.root.mkdir()
@@ -90,6 +91,38 @@ class EnrollmentTest(unittest.TestCase):
         self.assertEqual(self.outbox.enroll(str(self.root), review.review, self.runtime),
                          (None, "statistics_source_changed"))
         self.assertFalse(self.owned.exists())
+
+    def test_source_preview_uses_owned_scope_without_staging_or_advancing_state(self):
+        queue = self.enroll()
+        source_before, owned_before = self.path.read_bytes(), self.owned.read_bytes()
+        preview = queue.preview_source(str(self.path), collector.OBSERVED, None, 1)
+        self.assertNotIsInstance(preview, tuple)
+        self.assertEqual(preview.scanned_count, 1)
+        self.assertFalse(preview.complete)
+        fields = json.loads(preview.event_lines[1])
+        self.assertEqual((fields["device_id"], fields["source_epoch"]),
+                         (queue.context().device_id, queue.context().source_epoch))
+        later = queue.preview_source(str(self.path), collector.OBSERVED, preview.next_scan, 1)
+        self.assertTrue(later.complete)
+        self.assertNotEqual(preview.event_lines[1], later.event_lines[1])
+        self.assertFalse(preview.canonical_ack)
+        self.assertEqual((queue.status().pending, queue.status().review), (0, 0))
+        self.assertIsNone(queue.status().source_watermark)
+        self.assertEqual((self.path.read_bytes(), self.owned.read_bytes()), (source_before, owned_before))
+
+    def test_source_preview_rejects_changed_source_before_raw_scan_and_foreign_continuation(self):
+        queue = self.enroll()
+        preview = queue.preview_source(str(self.path), collector.OBSERVED, None, 1)
+        preview.next_scan.source_epoch = "foreign_epoch"
+        self.assertEqual(queue.preview_source(str(self.path), collector.OBSERVED, preview.next_scan, 1),
+                         (None, "invalid_statistics_collection"))
+        self.identity["ino"] += 1
+        self.calls.clear()
+        self.assertEqual(queue.preview_source(str(self.path), collector.OBSERVED, None, 1),
+                         (None, "statistics_source_changed"))
+        self.assertFalse(any(operation == "query" and value.startswith("SELECT rowid")
+                             for operation, value in self.calls))
+        self.assertEqual(queue.status().pending, 0)
 
     def test_existing_primary_or_recovery_prevents_fresh_enrollment(self):
         queue = self.enroll()
@@ -162,6 +195,8 @@ class EnrollmentTest(unittest.TestCase):
         context = dict(queue.context().items())
         source_queries = len(self.calls)
         self.assertEqual(queue.check_source(str(self.path)).source_state, "review_required")
+        self.assertEqual(queue.preview_source(str(self.path), collector.OBSERVED),
+                         (None, "statistics_source_review_required"))
         self.assertFalse(any(operation == "open" and value == "ro" for operation, value in self.calls[source_queries:]))
         before = self.owned.read_bytes()
         self.assertEqual(self.reopen().status().source_state, "review_required")
