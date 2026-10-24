@@ -2274,3 +2274,19 @@ retry, authentication/retryable failures and session close after I/O. Injected H
 SDK fixtures are not physical delivery proof. This independent composition is
 inactive: it does not assume source reconciliation/Gate4 completion, register
 production transport or authorize later backfill/lifecycle/effect gates.
+
+
+## 2026-10-24 Original queue identity is a read-only view (candidate0.0.12)
+
+Use the SAME validated outbox status to display the enrolled queue's original
+device ID and source epoch. Enable the view only for an enrolled supported queue;
+legacy/review/unavailable states cannot supply guessed identity. The queue view
+must explicitly say that retained identity does not verify a changed Statistics
+source. It performs no Statistics check, enrollment, renewal, network or write.
+Reading source may show IDs only after its existing current-source guard succeeds.
+
+This is independent UI preparation for manual controlled transfer, not approval
+to bypass Gate4/reconciliation or trust copied identifiers as source provenance.
+Keep synchronization inactive and the original IDs/facts unchanged. Test both
+Lua5.1 and LuaJIT, including no extra owner actions and unavailable legacy state;
+full native CI and later physical acceptance remain separate obligations.

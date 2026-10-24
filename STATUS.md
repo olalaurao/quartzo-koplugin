@@ -1,5 +1,29 @@
 # Implementation Status
 
+## 2026-10-24 Read-only original queue identity, candidate0.0.12
+
+PR6 merged209fa3fc from exact tested1258f39, native CI40128814038 passed632
+with no skips; merge tree equals that source. Candidate0.0.11 was not installed.
+On feature/reading-source-identity-view, the existing queue status owner now
+supplies a read-only Reading identity view for the enrolled queue's original
+device/epoch. It opens no Statistics query, creates/renews no identity and grants
+no changed-history authority. Reading source displays IDs only after its existing
+source guard succeeds; review/legacy failures cannot masquerade as source proof.
+The queue view explicitly distinguishes retained identity from Statistics trust.
+
+Local bootstrap Lua5.1/LuaJIT checks passed46/no skips. Exact-source full native
+CI remains required. Metadata0.0.12 is not installed/released; actual0.0.9,
+993pending/seven-review queue, original recovery copy and Statistics are untouched.
+The corrected human restart confirmation and exact comparison already passed;
+the temporary outbox diagnostic is absent after manual cleanup. No new device
+session or test request is needed for this UI-only preparation.
+
+This exposes existing authority for the independently gated foreground transfer
+preparation in Quartzo. It adds no credential/transport UI, automatic sync, source
+reconciliation, ACK or later-phase effect. Gate4 and topic2 remain OPEN. Finish
+approved-pairing import/explicit send and original-identity reconciliation, then
+run one coherent controlled physical block instead of repeating accepted tests.
+
 ## 2026-10-24 One-batch queued delivery composition, inactive candidate0.0.11
 
 PR5 merged as f0db4ea after exact cd60a98 CI40127851668 passed608/no skips;

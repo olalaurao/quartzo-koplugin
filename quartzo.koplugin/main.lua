@@ -10,6 +10,10 @@ local Quartzo = WidgetContainer:extend{
     name = "quartzo",
     is_doc_only = false,
 }
+local function identityText(identity)
+    return _("Device ID:").."\n"..identity.device_id
+        .."\n\n".._("Source epoch:").."\n"..identity.source_epoch
+end
 
 function Quartzo:init()
     -- Locate paths without opening files. Our config/state remain untouched.
@@ -56,9 +60,13 @@ function Quartzo:showReadingSource()
                 return nil,reason
             end
             if not source then return nil,code end
-            UIManager:show(InfoMessage:new{ text=source.source_state=="matches_enrollment"
+            local text=source.source_state=="matches_enrollment"
                 and _("Reading Statistics matches the source reviewed during setup. Historical import and synchronization are inactive.")
-                or _("The existing reading identity was preserved. Source setup needs review before collection can be enabled. Synchronization is inactive.") })
+                or _("The existing reading identity was preserved. Source setup needs review before collection can be enabled. Synchronization is inactive.")
+            if source.source_state=="matches_enrollment" then
+                text=text.."\n\n"..identityText(queue.context())
+            end
+            UIManager:show(InfoMessage:new{ text=text })
             return true
         end
         if code~="outbox_missing" then return nil,code end
@@ -352,10 +360,29 @@ function Quartzo:showDeliveryState()
                     UIManager:close(dialog)
                     self:showQueueUpgrade()
                 end}},
+                {{text=_("Reading identity"),enabled=status and status.source_state=="enrolled" or false,callback=function()
+                    UIManager:close(dialog)
+                    self:showReadingIdentity()
+                end}},
                 {{text=_("Close"),callback=function() UIManager:close(dialog) end}},
             },
         }
         UIManager:show(dialog)
+        return true
+    end)
+end
+
+function Quartzo:showReadingIdentity()
+    if self.delivery_busy then return end
+    self:deliveryRequest(function(owner,runtime)
+        local queue,code=owner.open(self.state_root,runtime)
+        if not queue then return nil,code end
+        local status
+        status,code=queue.status()
+        if not status then return nil,code end
+        if status.source_state~="enrolled" then return nil,"statistics_source_review_required" end
+        UIManager:show(InfoMessage:new{ text=_("Identity of the preserved reading queue. This does not verify a changed Statistics source.")
+            .."\n\n"..identityText(queue.context()) })
         return true
     end)
 end
