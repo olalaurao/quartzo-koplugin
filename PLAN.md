@@ -1,5 +1,15 @@
 # Quartzo ↔ KOReader — Product & Delivery Plan
 
+## 2026-10-24 Recovery safeguards on the same owner
+
+Candidate0.0.10 also rejects fresh enrollment when the primary is absent but
+legacy state, orphan sidecars, preserved own state or malformed own recovery
+names remain. The existing metadata-only bounded listing supplies this guard;
+both review and confirmation recheck it. No file repair or new identity store.
+Local32PASS/17native-only skips for enrollment; final native CI/package pending.
+The actual installed0.0.9 and its accepted physical proof stay unchanged.
+Unrecoverable identity/nonempty-history reconciliation and fullGate4 remain open.
+
 ## 2026-10-24 Grouped PW3 source/storage proof accepted
 
 Installed0.0.9/d5bab06 passed real bounded collection and populated recovery:

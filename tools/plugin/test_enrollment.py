@@ -135,6 +135,38 @@ class EnrollmentTest(unittest.TestCase):
                          (None, "outbox_recovery_review_required"))
         self.assertFalse(self.owned.exists())
 
+    def test_orphaned_or_legacy_own_state_blocks_new_identity_before_source_or_entropy_access(self):
+        leaves=("quartzo_sync_state.lua", "quartzo_sync_state.lua.old",
+            "quartzo_sync_state.sqlite3-journal", "quartzo_sync_state.sqlite3-wal",
+            "quartzo_sync_state.sqlite3-shm", "quartzo_sync_state.sqlite3.old",
+            "quartzo_sync_recovery_broken.sqlite3", "quartzo_sync_recovery_"+"a"*31+".sqlite3",
+            "quartzo_sync_recovery_"+"A"*32+".sqlite3",
+            "QUARTZO_SYNC_RECOVERY_"+"a"*32+".sqlite3", "QUARTZO_SYNC_STATE.SQLITE3-JOURNAL")
+        for leaf in leaves:
+            with self.subTest(leaf=leaf):
+                preview=self.review()
+                artifact=self.root/leaf
+                original=b"synthetic earlier identity or interrupted state; preserve"
+                artifact.write_bytes(original)
+                before=self.path.read_bytes()
+                self.calls.clear()
+                self.assertEqual(self.outbox.review_source(str(self.root),str(self.path),self.runtime),
+                    (None,"outbox_recovery_review_required"))
+                # A review minted before the artifact appeared cannot bypass it.
+                self.assertEqual(self.outbox.enroll(str(self.root),preview.review,self.runtime),
+                    (None,"outbox_recovery_review_required"))
+                self.assertEqual(self.calls,[])
+                self.assertFalse(self.owned.exists())
+                self.assertEqual(artifact.read_bytes(),original)
+                self.assertEqual(self.path.read_bytes(),before)
+                artifact.unlink()  # This test's newly owned private fixture only.
+
+    def test_unrelated_settings_do_not_claim_an_earlier_reading_identity(self):
+        for leaf in ("unrelated.sqlite3-wal","another-plugin-state.lua","quartzo.lua"):
+            (self.root/leaf).write_bytes(b"synthetic unrelated settings")
+        self.assertNotIsInstance(self.review(),tuple)
+        self.assertFalse(self.owned.exists())
+
     def test_reset_or_replaced_source_preserves_old_pending_identity_and_recovery(self):
         queue = self.enroll()
         self.stage(queue)

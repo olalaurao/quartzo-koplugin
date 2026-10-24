@@ -945,7 +945,8 @@ function M.list_backups(root, runtime)
         for leaf in iterator,directory do
             visited=visited+1
             check(visited<=512,"outbox_recovery_list_limit")
-            if type(leaf)=="string" and leaf:match("^quartzo_sync_recovery_[a-f0-9]+%.sqlite3$") then
+            local own_leaf=type(leaf)=="string" and leaf:lower() or ""
+            if own_leaf:match("^quartzo_sync_recovery_") then
                 local valid,name=pcall(backup_path,root,leaf)
                 if valid then
                     local info=(runtime.attributes or fs.symlinkattributes)(name)
@@ -956,7 +957,12 @@ function M.list_backups(root, runtime)
                             or modified>9007199254740991 then modified=nil end
                         entries[#entries+1]={leaf=leaf,modified=modified}
                     else unsupported=unsupported+1 end
-                end
+                else unsupported=unsupported+1 end
+            elseif own_leaf~=FILE and own_leaf:match("^quartzo_sync_state[._-]") then
+                -- Legacy state, orphan journals and preserved/partial primaries
+                -- are evidence to review, never permission for a new identity.
+                -- Discovery stays metadata-only and does not repair/open them.
+                unsupported=unsupported+1
             end
         end
         table.sort(entries,function(a,b)

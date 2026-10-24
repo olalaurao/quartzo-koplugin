@@ -2209,3 +2209,23 @@ No state schema, receipt, network or automatic lifecycle changes. Installed0.0.9
 has separate real collection/recovery/restart proof; this new source is not
 installed or physically accepted. Remaining identity reconciliation and Gate4
 obligations are not waived by this UI correction.
+
+
+### Missing-primary artifacts are recovery evidence, not fresh enrollment
+
+The SAME bounded metadata-only list_backups owner must count recognizable
+quartzo_sync_state legacy/sidecar/preserved names and malformed
+quartzo_sync_recovery_ names as unsupported recovery artifacts. Classify the
+own ASCII namespace case-insensitively for FAT discovery; strict supported
+backup leaves still pass the original exact validator. The current primary
+name remains handled by the existing presence/type check. Do not open, repair,
+migrate, remove or reinterpret unknown artifacts. Existing directory/file/count
+bounds and close/finalizer behavior remain in force.
+
+Both review_source and enroll already recheck enrollment_available; their
+existing recovery-required result now covers these residues too. An artifact
+appearing after a source review blocks confirmation before source SQL or entropy.
+Unrelated settings and the ordinary quartzo.lua configuration do not establish
+an earlier reading identity. No second registry, file scanner, schema or reset
+capability is introduced. This prevents an unsafe new namespace but cannot
+reconstruct an identity when every authoritative copy is lost.

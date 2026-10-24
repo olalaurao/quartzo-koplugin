@@ -1,5 +1,26 @@
 # Implementation Status
 
+## 2026-10-24 Missing-primary enrollment preserves earlier identity artifacts
+
+Candidate0.0.10 now treats recognizable legacy state, orphan SQLite sidecars,
+preserved/partial own primaries and malformed own recovery leaves as requiring
+review. The SAME bounded metadata-only recovery listing reports unsupported
+artifacts; it never opens, repairs, migrates or removes them. Discovery recognizes
+ASCII case variants on FAT while strict supported recovery filenames stay exact.
+Fresh source review AND enrollment confirmation both reject these artifacts,
+including artifacts appearing after a review. Unrelated settings remain ignored.
+No new identity registry, store, cursor, schema or receipt path was added.
+
+Eleven residue-name variants reproduced the unsafe fresh-review path before
+the fix. Local source-enrollment suites now report32PASS/17explicit native-only
+Windows skips; actual native CI is required for the final source. The preceding
+UI-only fix e2d3995 passed CI40125236031, but that run does not certify these new
+outbox changes. Installed0.0.9 and its993pending/seven-review queue remain intact.
+Earlier0.0.10 packages are superseded; package the final accepted source only.
+Missing every authoritative identity copy or nonempty replacement history still
+requires provenance reconciliation; these guards prevent unsafe reenrollment,
+not reconstruction of an unknown identity. Gate4/full topic2 remain OPEN.
+
 ## 2026-10-24 Actual PW3 collection/recovery/restart accepted; recovery access fix
 
 Exact installed 0.0.9 / d5bab06 collected 1,000 real native positions: 993

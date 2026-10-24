@@ -27,6 +27,13 @@ or physically accepted. Before any later changed-runtime trial, verify its exact
 native CI/package and preserve current0.0.9 rollback plus the real queue/recovery.
 Group any required new physical checks with the next coherent integration block.
 
+The final0.0.10 candidate additionally guards missing-primary enrollment using
+the same bounded metadata discovery: legacy state, orphan journals/WAL/SHM,
+preserved own primaries and malformed own recovery leaves require review, including
+case variants. Both fresh review and confirmation recheck this; nothing is opened,
+deleted or silently assigned a new identity. The earlier UI-only0.0.10 package is
+superseded. Revalidate final native CI and exact source before any installation.
+
 Gate4/PhaseD remain OPEN for unresolved identity/nonempty-generation recovery
 reconciliation. Production transport, full history, lifecycle, real latency and
 release gates remain separate. The following sections are historical snapshots.
