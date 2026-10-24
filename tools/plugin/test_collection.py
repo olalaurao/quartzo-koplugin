@@ -275,6 +275,25 @@ class CollectionTest(unittest.TestCase):
         self.assertEqual((self.reopen().status().source_watermark, self.queue.status().pending,
                           self.queue.status().review), (109, 0, 999))
 
+    def test_clock_rollback_reviews_full_history_without_skipping_earlier_new_fact(self):
+        self.queue = self.enroll()
+        self.capture()
+        self.acknowledge(self.receipt_owner())
+        self.mutate("INSERT INTO page_stat_data VALUES(1,3,50,20,10)")
+        preview = self.queue.review_collection(str(self.path), "1970-01-01T00:00:50.000Z", 100)
+        self.assertTrue(preview.clock_reset)
+        self.assertEqual(preview.event_count, 3)
+        self.assertEqual(self.queue.status().source_watermark, 109)  # Consent has not happened.
+        self.assertEqual(self.queue.stage_collection(preview["pass"]).pending, 3)
+        self.assertIsNone(self.queue.status().source_watermark)
+
+    def test_backward_clock_during_transient_pass_requires_fresh_review(self):
+        self.queue = self.enroll()
+        preview, _ = self.capture(1)
+        self.assertEqual(self.queue.next_collection(preview["pass"], "1970-01-01T00:00:50.000Z"),
+                         (None, "outbox_collection_changed"))
+        self.assertEqual(self.queue.status().pending, 1)
+
     def test_new_generation_commit_failure_keeps_identity_and_mandatory_backup(self):
         self.queue = self.enroll()
         context = dict(self.queue.context().items())

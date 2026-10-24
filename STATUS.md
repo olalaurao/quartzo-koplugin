@@ -35,7 +35,10 @@ neighbor in frontier calculation. The new comparison verifies its event ID and
 native digest before ACK progress; failure rolls back prune+marker. Its local
 regression passes (44 collection cases/22 native-only skips); exact new native
 CI and repackaging are required. The prior efbb artifact is superseded and must
-not be used for the final trial. Repo base3cff94d was clean with
+not be used for the final trial. The collection pass also validates observation
+UTC, reviews a same-identity rescan when the clock is earlier than the ACK
+boundary, and rejects backward clock changes within a pass. This retains data;
+it does not certify real-world dates or replace later time/provenance gates. Repo base3cff94d was clean with
 exact CI40101783788 SUCCESS499/no skips. Gate4 and full goal stay OPEN/ACTIVE,
 topic2of7. No device, timed session, listener or human request was started.
 

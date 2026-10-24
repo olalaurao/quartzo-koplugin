@@ -2161,3 +2161,12 @@ The ACK frontier validates each remaining pending row's event ID and native
 payload digest against its canonical line, just as delivery selection does.
 An internally inconsistent neighbor rejects/rolls back another event's local
 prune and marker update; a valid receipt does not certify unrelated local rows.
+
+
+A collection review validates observation UTC through the existing codec parser.
+If that observation is earlier than the confirmed boundary, review offers an
+explicit same-identity history rescan; progress is untouched until confirmation.
+A backward clock step during a transient pass invalidates its continuation.
+This is not clock calibration or proof of real event-day accuracy. Arbitrary
+backdating/clock corrections that are not detectable from these observations
+still require explicit history rescan and the later time/provenance policy.

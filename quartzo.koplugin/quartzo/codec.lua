@@ -238,6 +238,9 @@ local function create(deps)
         return result
     end
     local api = {}
+    function api.utc_seconds(value)
+        return guarded(function() return timestamp(value).seconds end)
+    end
     function api.inspect_event(line)
         return guarded(function()
             local entry = inspect_event(line)

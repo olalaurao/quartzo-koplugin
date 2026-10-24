@@ -127,9 +127,10 @@ function Quartzo:showCollection(all_history)
         end
         local pass=preview.pass
         UIManager:show(ConfirmBox:new{
-            text=all_history
+            text=(preview.clock_reset and _("The device clock is earlier than the confirmed reading boundary. A history rescan is needed.").."\n\n" or "")
+                ..((all_history or preview.clock_reset)
                 and _("Rescan all reading history using this same identity? Earlier scan progress will be restarted; queued events stay intact. Previously delivered events keep their identity for retry. If Statistics was merged, replaced or reset, review its source first. Collection is bounded. No data is sent.")
-                or _("Collect existing and new reading events from this Statistics source into the offline queue? This includes reading history. If Quartzo was used before, recover its original identity first. Collection is bounded and pauses safely at the queue limit. Invalid entries remain for review. No data is sent."),
+                or _("Collect existing and new reading events from this Statistics source into the offline queue? This includes reading history. If Quartzo was used before, recover its original identity first. Collection is bounded and pauses safely at the queue limit. Invalid entries remain for review. No data is sent.")),
             ok_text=_("Collect reading"),
             ok_callback=function() self:runCollection(pass) end,
         })

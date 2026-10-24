@@ -570,6 +570,9 @@ local function handle(name, runtime, context)
         end)
     end
     local function read_collection(saved,observed_at)
+        local observed=codec.utc_seconds(observed_at)
+        check(integer(observed),"invalid_statistics_collection")
+        check(not saved.observed_seconds or observed>=saved.observed_seconds,"outbox_collection_changed")
         local batch,code=require("quartzo/collector").collect_reviewed(saved.path,
             {device_id=context.device_id,source_epoch=context.source_epoch,observed_at_utc=observed_at,
                 from_started_at=saved.lower,after=saved.after,limit=saved.limit},
@@ -580,9 +583,10 @@ local function handle(name, runtime, context)
     end
     local function pass_preview(pass,saved,batch,observed)
         saved.batch,saved.observed,saved.cookie=batch,observed,batch.snapshot_schema_cookie
+        saved.observed_seconds=codec.utc_seconds(observed)
         saved.ready=true
         return {pass=pass,scanned_count=batch.scanned_count,event_count=#batch.event_lines,
-            review_count=#batch.rejections,complete=batch.complete,canonical_ack=false}
+            review_count=#batch.rejections,complete=batch.complete,clock_reset=saved.clock_reset or false,canonical_ack=false}
     end
     function api.review_collection(statistics_path,observed_at_utc,limit,mode)
         return access(false,function(conn)
@@ -591,6 +595,9 @@ local function handle(name, runtime, context)
             local pass={}
             local saved={name=name,context=context,path=statistics_path,
                 lower=progress(conn,3).ack,limit=limit,restart=mode=="all_history"}
+            local observed=codec.utc_seconds(observed_at_utc)
+            check(integer(observed),"invalid_statistics_collection")
+            if saved.lower and observed<saved.lower then saved.restart,saved.clock_reset=true,true end
             if saved.restart then saved.lower=nil end
             local batch=read_collection(saved,observed_at_utc)
             collection_passes[pass]=saved
