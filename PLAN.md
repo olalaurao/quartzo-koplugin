@@ -7,7 +7,8 @@ Candidate0.0.8 adds explicit source enrollment/continuity review through the SAM
 Statistics/outbox owners and content-bound manual recovery. Original schema1
 remains unchanged; only fresh reviewed enrollment uses schema2. No automatic
 production collector, historical import, reset epoch rollover or network startup
-is enabled. Exact701bd12 native CI40100324573 passed493/no skips. ONE grouped
+is enabled. Exact0689d4a native CI40101594161 passed499/no skips, including
+owner-bound guarded preview with no staging. ONE grouped
 PW3 trial remains for changed setup/populated recovery/reconfirmation paths.
 Reuse unchanged accepted proofs.
 Full reset/new-generation reconciliation and production source proof remain OPEN;

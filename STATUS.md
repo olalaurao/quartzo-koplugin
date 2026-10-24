@@ -23,8 +23,11 @@ The implementation addendum records precise authority and remaining limits.
 The same collector loop now supports an owner-bound read-only preview inside
 the guarded native snapshot. Its device/epoch come from existing state; legacy/
 changed sources and foreign continuations fail closed. Preview stages nothing
-and creates no lifecycle/ACK authority. This follow-up requires its own native
-CI before replacing the prepared701 package; no new device request is made.
+and creates no lifecycle/ACK authority. Exact0689d4a native CI40101594161
+passed499/no skips (344 plugin,34 transport,121 wire), including the guarded
+preview through actual SQ3/LFS in the standalone fixture. Its fresh private
+0.0.8 package supersedes the701 package; all eight source hashes match Git.
+No new device request or installation is made.
 
 Exact701bd12 native CI40100324573 passed493 cases without skips (338 plugin,
 34 transport,121 wire), including official LFS/entropy/SQ3 and fresh-process
