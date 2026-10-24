@@ -294,13 +294,17 @@ function Quartzo:showDeliveryState()
     if self.delivery_busy then return end
     self:deliveryRequest(function(owner,runtime)
         local queue,code=owner.open(self.state_root,runtime)
-        if not queue and code~="outbox_missing" then return nil,code end
+        local unavailable=not queue and code~="outbox_missing"
         local status
         if queue then
             status,code=queue.status()
-            if not status then return nil,code end
+            if not status then queue,unavailable=nil,true end
         end
-        local text=status and (_("Queued events:").." "..status.pending.."\n"
+        -- Recovery review must remain reachable when the primary cannot open.
+        -- No writable action is enabled without a successfully inspected queue;
+        -- the existing restore owner still refuses an existing/damaged primary.
+        local text=unavailable and _("The reading queue needs review. Existing files were preserved. Recovery copies can be reviewed below.")
+            or status and (_("Queued events:").." "..status.pending.."\n"
             .._("Needs review:").." "..(status.unresolved_review or status.review))
             or _("No reading queue found. Existing recovery copies can be reviewed below.")
         local dialog

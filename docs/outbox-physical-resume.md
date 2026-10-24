@@ -1,4 +1,37 @@
-# Current handoff, 2026-10-24: grouped validation still pending
+# Latest actual-device handoff, 2026-10-24: grouped offline proof accepted
+
+This section supersedes installation/availability/pending-trial statements below.
+Installed0.0.9/d5bab06 passed the grouped real source/collection/populated backup
+and later explicit KOReader restart: 993pending plus seven unresolved review.
+Private-copy/native reconstruction and post-latest-restart USB hashes preserve
+the same queue, recovery identity/bytes/progress, Statistics and all957Lua files.
+The user corrected an earlier report before actually restarting; use the latest
+explicit confirmation and subsequent byte comparison. Real UI duration is not
+measured. Normal root KOReader settings rewrites are separately recorded.
+See [collection proof](evidence/outbox-reviewed-collection-pw3-2026-10-24.json).
+
+The same installed b35f060 --source-lifecycle bundle passed all five actual ARM
+groups, two owned child stops and16independent synthetic files in2.021544CPU
+seconds. This is not real UI latency, hardware power-loss, source-generation
+provenance or canonical delivery proof. See
+[source lifecycle proof](evidence/outbox-source-lifecycle-pw3-2026-10-24.json).
+Raw collector attestation/ACK flags remain intact. Evidence is privately archived.
+USB inspection verified D:\extensions\quartzo-outbox-probe is absent after
+the cleanup reply. Preserve the real queue/recovery and installed Quartzo plugin. No phone session,
+listener, token or timer is active. Do not rerun either accepted offline block.
+
+Candidate0.0.10 changes recovery UI access only: unreadable primary/failed status
+must still allow existing copy review, with primary mutations disabled. The
+restore owner continues refusing an existing/damaged primary. It is not installed
+or physically accepted. Before any later changed-runtime trial, verify its exact
+native CI/package and preserve current0.0.9 rollback plus the real queue/recovery.
+Group any required new physical checks with the next coherent integration block.
+
+Gate4/PhaseD remain OPEN for unresolved identity/nonempty-generation recovery
+reconciliation. Production transport, full history, lifecycle, real latency and
+release gates remain separate. The following sections are historical snapshots.
+
+# Previous handoff, 2026-10-24: grouped validation still pending
 
 This section supersedes the installation, candidate and pending-test statements
 in the historical snapshots below. The latest observed installed plugin is

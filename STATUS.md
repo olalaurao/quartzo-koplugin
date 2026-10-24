@@ -1,5 +1,67 @@
 # Implementation Status
 
+## 2026-10-24 Actual PW3 collection/recovery/restart accepted; recovery access fix
+
+Exact installed 0.0.9 / d5bab06 collected 1,000 real native positions: 993
+pending events and seven unresolved review entries. Independent private-copy
+inspection reconstructed every selected native ID/payload/digest, source guards
+and candidate progress. The recovery copy retained exactly the same identity,
+pending bytes, review and progress; acknowledged progress stayed NULL. The user
+corrected an initial restart report, then explicitly performed the restart and
+confirmed the same queue/copy remained responsive. A subsequent USB comparison
+verified unchanged primary, recovery, Statistics and all 957 installed Lua files
+(949 unrelated, eight Quartzo). No new crash-log bytes appeared. Root KOReader
+settings were normally rewritten and are not claimed byte-identical. UI timing
+was not measured. See [real collection proof](docs/evidence/outbox-reviewed-collection-pw3-2026-10-24.json).
+
+Exact b35f060 source-lifecycle diagnostic also passed on actual ARM/v2026.07.1:
+two owned-child commit stops, 251 same-second valid events and 16 independently
+verified synthetic files covering restore/replay, retained review, generation
+refusal/empty transition and schema2 upgrade. CPU time was 2.021544s for the
+synthetic diagnostic only, not real UI latency. See
+[physical source-lifecycle proof](docs/evidence/outbox-source-lifecycle-pw3-2026-10-24.json).
+Its original collector flags remain unchanged. The user acknowledged cleanup;
+USB inspection verified the diagnostic extension is absent. No phone APK,
+listener, credential or timer is active.
+
+Review found a recovery-access defect: an unreadable primary or failed status
+hid the existing recovery-copy controls. Candidate 0.0.10 keeps their read-only
+review reachable, disables primary mutations without valid status and retains
+the owner's refusal to overwrite an existing primary. The new Lua5.1/LuaJIT
+regressions failed before the fix; all 44 bootstrap cases now pass locally.
+No store/schema/identity/receipt/network change. The 130925-byte0.0.10 package
+is prepared privately; it is NOT installed and native CI is pending. The 0.0.9
+physical proof remains source-specific.
+
+Gate4/PhaseD and full topic2 remain OPEN for the remaining lost-identity/nonempty
+history reconciliation and applicable receipt/lifecycle integration. Later
+production transport, real canonical ingestion, resumable full backfill and
+optional lifecycle work are not claimed complete by this bounded offline proof.
+Preserve the real queue/copy; do not repeat accepted collection or reset it.
+
+## 2026-10-24 Current candidate installed; grouped PW3 execution requested
+
+User availability returned for both devices. Exact runtime d5bab06 / 0.0.9
+was installed from its verified 130544-byte package after preserving a fresh
+private Statistics/settings baseline and the exact installed 0.0.7 rollback.
+All 949 other installed plugin Lua sources and tracked settings stayed exact.
+KOReader git-rev remains v2026.07.1. No mounted Statistics database was SQL-opened.
+
+The exact b35f060 --source-lifecycle bundle was installed through the existing
+artifact owner; its manifest digest matches the accepted prepared bundle.
+One grouped Kindle-only execution was requested: synthetic KUAL lifecycle cases,
+real source setup, one bounded collection, populated recovery-copy review and
+KOReader restart. Human observations and independent USB/private-copy collection
+remain PENDING. No phone APK, listener, credential or timed session was started;
+Wi-Fi stays under user control. CI40113853878 remains SUCCESS / 589 native cases.
+Upstream post-merge CI40116226677 also completed SUCCESS at 51cebff3.
+
+This installation is not physical acceptance or full topic2 completion. Gate4
+and PR5 remain OPEN/DRAFT. Preserve failures and partial evidence; do not rerun
+in place or silently recreate an identity. After USB returns, independently
+check selected native IDs/payloads, retained review, source/progress and recovery
+identity, synthetic outputs and unrelated source/settings preservation.
+
 ## 2026-10-24 Grouped source-lifecycle diagnostic native PASS, physical OPEN
 
 Exact b35f060, CI40113545022: 589 PASS, no skips (434 plugin, 34 transport, 121 wire).

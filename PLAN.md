@@ -1,5 +1,23 @@
 # Quartzo ↔ KOReader — Product & Delivery Plan
 
+## 2026-10-24 Grouped PW3 source/storage proof accepted
+
+Installed0.0.9/d5bab06 passed real bounded collection and populated recovery:
+993 pending, seven unresolved review, all selected native bytes exact, same
+identity/progress in backup and after the user's later explicit restart. Private
+USB comparison kept Statistics and all957Lua sources exact. The b35f060 synthetic
+source-lifecycle diagnostic passed its five ARM groups/16 independent files.
+See the two new source-bound physical reports in docs/evidence. Diagnostic
+cleanup is verified; do not repeat these scopes and preserve the real queue/copy.
+
+Candidate0.0.10 fixes a newly reproduced recovery UI gap: failed primary open or
+status must not hide valid backup review. Existing owner overwrite refusal and
+all schema/identity/receipt behavior stay unchanged. Local bootstrap44PASS;
+package prepared, full native CI pending, not installed. Gate4 remains OPEN for the
+remaining reconciliation obligations; topic2 still includes production manual
+transport, canonical ingestion, complete bounded/resumable history and lifecycle
+integration. A 1,000-position offline selection is not complete history import.
+
 ## 2026-10-24 Grouped synthetic source-lifecycle proof prepared
 
 Exact b35f060 passed 589 native host tests/no skips in CI40113545022. The existing

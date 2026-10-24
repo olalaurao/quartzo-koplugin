@@ -2191,3 +2191,21 @@ SQLite-opened by the host. Unknown/partial artifacts remain preserved on failure
 Reports never attest hardware or intrinsic source generation. Native host tests
 and a future actual PW3 run remain different proofs. Core plugin sources and
 wire/Companion contracts are unchanged; Gate4 stays OPEN.
+
+
+## 2026-10-24 Recovery review remains reachable with an unreadable primary
+
+Candidate0.0.10 changes the existing UI only. If the outbox owner cannot open
+the current primary, or cannot obtain its validated status, show an unavailable
+queue with synchronization inactive and all primary mutation controls disabled.
+Keep the existing Review recovery copies action reachable through the SAME
+owner. Inspecting or cancelling copy review creates no queue or identity. The
+existing restore owner still refuses any present/damaged primary; review never
+grants overwrite, reset, migration or native source-generation authority.
+If the dependency itself cannot load, retain the sanitized failure behavior.
+Lua5.1/LuaJIT regressions must demonstrate the previously hidden recovery path,
+failed status, disabled writes and refused restore over an existing primary.
+No state schema, receipt, network or automatic lifecycle changes. Installed0.0.9
+has separate real collection/recovery/restart proof; this new source is not
+installed or physically accepted. Remaining identity reconciliation and Gate4
+obligations are not waived by this UI correction.

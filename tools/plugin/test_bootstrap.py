@@ -111,6 +111,8 @@ class BootstrapTest(unittest.TestCase):
         self.delivery_preview = self.lua.table(device_id="qrd_fixture", source_epoch="epoch_fixture",
                                                 pending=2, review=1, selection_key="reviewed_content", canonical_ack=False)
         self.delivery_error = None
+        self.delivery_open_error = None
+        self.delivery_status_error = None
         self.source_reconfirmation = False
         self.empty_generation = False
         self.collection_stages = [dict(pending=2, review=1, complete=True)]
@@ -119,6 +121,8 @@ class BootstrapTest(unittest.TestCase):
 
         def opened(root, runtime):
             self.delivery_calls.append(("open", root))
+            if self.delivery_open_error:
+                return None, self.delivery_open_error
             return (None, "outbox_missing") if missing else queue
 
         def backup():
@@ -175,7 +179,8 @@ class BootstrapTest(unittest.TestCase):
             self.delivery_calls.append(("upgrade_queue", reviewed))
             return self.lua.table(queue=queue)
 
-        queue = self.lua.table(status=lambda: self.lua.table(pending=2, review=1, unresolved_review=1,
+        queue = self.lua.table(status=lambda: (None,self.delivery_status_error) if self.delivery_status_error
+                              else self.lua.table(pending=2, review=1, unresolved_review=1,
                               collection_supported=source_state=="matches_enrollment"), backup=backup,
             review_source_change=review_change, renew_source=renew,
             review_new_generation=review_generation, begin_new_generation=begin_generation,
@@ -228,6 +233,49 @@ class BootstrapTest(unittest.TestCase):
         self.assertFalse(instance.delivery_busy)
         self.assertEqual(self.delivery_calls.count(("backup",)), 1)
         self.assertIn("Recovery copy saved", self.environment.shown[4].text)
+
+    def test_unreadable_primary_keeps_recovery_review_accessible_without_replacing_state(self):
+        for error in ("invalid_outbox_state", "unsupported_outbox_file"):
+            with self.subTest(error=error):
+                self.setUp()
+                self.delivery_owner()
+                self.delivery_open_error=error
+                instance=self.instance()
+                instance.showDeliveryState(instance)
+                dialog=self.environment.shown[1]
+                self.assertIsNotNone(dialog.title)
+                self.assertIn("needs review",dialog.title)
+                self.assertIn("Synchronization: inactive",dialog.title)
+                self.assertFalse(dialog.buttons[1][1].enabled)
+                self.assertFalse(dialog.buttons[3][1].enabled)
+                dialog.buttons[2][1].callback()
+                self.environment.shown[2].buttons[1][1].callback()
+                confirmation=self.environment.shown[3]
+                self.assertIn("current queue is absent",confirmation.text)
+                self.assertEqual([c[0] for c in self.delivery_calls],["open"])
+                self.delivery_error="outbox_exists"
+                confirmation.ok_callback()
+                self.environment.ticks[1]()
+                self.assertEqual(self.delivery_calls[-1][0],"restore")
+                self.assertIn("current reading queue was preserved",self.environment.shown[5].text)
+                self.assertFalse(instance.delivery_busy)
+
+    def test_failed_status_keeps_recovery_review_available_and_mutations_disabled(self):
+        self.delivery_owner()
+        self.delivery_status_error="invalid_outbox_state"
+        instance=self.instance()
+        instance.showDeliveryState(instance)
+        dialog=self.environment.shown[1]
+        self.assertIsNotNone(dialog.title)
+        self.assertIn("needs review",dialog.title)
+        self.assertFalse(dialog.buttons[1][1].enabled)
+        self.assertFalse(dialog.buttons[3][1].enabled)
+        self.assertFalse(dialog.buttons[4][1].enabled)
+        self.assertFalse(dialog.buttons[5][1].enabled)
+        self.assertFalse(dialog.buttons[6][1].enabled)
+        dialog.buttons[2][1].callback()
+        self.assertEqual(self.environment.shown[2].title.split("\n")[0],"Recovery copies")
+        self.assertEqual([c[0] for c in self.delivery_calls],["open"])
 
     def test_restore_passes_the_reviewed_identity_counts_and_keeps_failure_visible(self):
         leaf = self.delivery_owner(missing=True)
