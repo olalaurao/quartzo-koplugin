@@ -3,6 +3,7 @@
 local M = {}
 local FILE = "quartzo_sync_state.sqlite3"
 local CAP = 1000
+local source_reviews=setmetatable({}, {__mode="k"})
 local function check(value, code)
     if not value then error(code or "invalid_outbox_state", 0) end
 end
@@ -77,25 +78,31 @@ local definitions = {
     review="(started_at INTEGER NOT NULL,book_id TEXT NOT NULL,page TEXT NOT NULL,"
         .."duration TEXT NOT NULL,pages TEXT NOT NULL,types TEXT NOT NULL,"
         .."PRIMARY KEY(started_at,book_id,page,duration,pages,types))",
+    source="(id INTEGER PRIMARY KEY CHECK(id=1),volume TEXT NOT NULL,inode TEXT NOT NULL,"
+        .."book_sequence TEXT NOT NULL,first_event TEXT NOT NULL,last_event TEXT NOT NULL,history_boundary TEXT NOT NULL)",
 }
-local function create_schema(conn, prefix)
+local source_fields={"volume","inode","book_sequence","first_event","last_event","history_boundary"}
+local function tables(version)
+    return version==2 and {"identity","pending","review","source"} or {"identity","pending","review"}
+end
+local function create_schema(conn, prefix, version)
     check(prefix=="" or prefix=="recovery.")
-    for _,name in ipairs({"identity","pending","review"}) do
+    for _,name in ipairs(tables(version)) do
         conn:exec("CREATE TABLE "..prefix..name..definitions[name])
     end
 end
-local function check_schema(conn)
+local function check_schema(conn,version)
     local indexes={sqlite_autoindex_pending_1="pending",sqlite_autoindex_review_1="review"}
     local objects=conn:prepare("SELECT name,type,tbl_name,"
         .."CASE WHEN typeof(sql)='text' AND length(CAST(sql AS BLOB))<=1024 THEN sql ELSE NULL END "
-        .."FROM sqlite_master LIMIT 6")
+        .."FROM sqlite_master LIMIT 7")
     local seen={}
-    for _=1,6 do
+    for _=1,7 do
         local row=objects:step()
         if not row then break end
         local name=row[1]
         check(not seen[name])
-        if definitions[name] then
+        if definitions[name] and (name~="source" or version==2) then
             check(row[2]=="table" and row[3]==name and row[4]=="CREATE TABLE "..name..definitions[name])
         else
             check(indexes[name] and row[2]=="index" and row[3]==indexes[name] and row[4]==nil)
@@ -106,6 +113,7 @@ local function check_schema(conn)
     for _,name in ipairs({"identity","pending","review","sqlite_autoindex_pending_1","sqlite_autoindex_review_1"}) do
         check(seen[name])
     end
+    if version==2 then check(seen.source) end
 end
 local function configured(conn)
     conn:set_busy_timeout(1000)
@@ -116,19 +124,34 @@ local function configured(conn)
     conn:exec("PRAGMA temp_store=MEMORY")
 end
 local function own_schema(conn)
-    check(tonumber(conn:rowexec("PRAGMA user_version")) == 1, "unsupported_outbox_schema")
+    local version=tonumber(conn:rowexec("PRAGMA user_version"))
+    check(version==1 or version==2, "unsupported_outbox_schema")
     check(conn:rowexec("PRAGMA quick_check(1)") == "ok", "invalid_outbox_state")
-    check_schema(conn)
+    check_schema(conn,version)
     check(tonumber(conn:rowexec("SELECT COUNT(*) FROM (SELECT 1 FROM identity LIMIT 2)"))==1)
     local row = query(conn, "SELECT "..bounded("device_id",128)..","..bounded("source_epoch",128).." FROM identity WHERE id=1")
     check(row and scope(row[1]) and scope(row[2]))
     check(count(conn, "pending") + count(conn, "review") <= CAP, "outbox_capacity")
-    return {device_id=row[1], source_epoch=row[2]}
+    local checkpoint
+    if version==2 then
+        check(tonumber(conn:rowexec("SELECT COUNT(*) FROM (SELECT 1 FROM source LIMIT 2)"))==1)
+        local columns={}
+        for _,field in ipairs(source_fields) do columns[#columns+1]=bounded(field,104) end
+        local saved=query(conn,"SELECT "..table.concat(columns,",").." FROM source WHERE id=1")
+        check(saved~=nil)
+        local value={}
+        for index,field in ipairs(source_fields) do value[field]=saved[index] end
+        checkpoint=require("quartzo/statistics").validate_source_checkpoint(value)
+        check(checkpoint~=nil)
+    end
+    return {device_id=row[1], source_epoch=row[2],schema_version=version,source_checkpoint=checkpoint}
 end
 local errors = {invalid_outbox_state=true,unsupported_outbox_schema=true,unsupported_outbox_file=true,
     outbox_capacity=true,outbox_exists=true,outbox_missing=true,outbox_scope_mismatch=true,
     outbox_native_conflict=true,outbox_entropy_unavailable=true,unverified_reading_receipt=true,
-    outbox_backup_missing=true,outbox_backup_changed=true}
+    outbox_backup_missing=true,outbox_backup_changed=true,statistics_source_changed=true,
+    statistics_source_unverifiable=true,statistics_source_review_required=true,statistics_busy=true,statistics_unavailable=true,
+    statistics_read_failed=true,unsupported_statistics_schema=true}
 local function operation(name, runtime, mode, callback)
     local conn
     local ok, value = pcall(function()
@@ -150,6 +173,15 @@ local function transaction(conn, callback)
 end
 local function context_equal(a, b)
     check(a.device_id == b.device_id and a.source_epoch == b.source_epoch, "outbox_scope_mismatch")
+end
+local function source_equal(a,b)
+    check(a.schema_version==b.schema_version,"outbox_scope_mismatch")
+    if a.source_checkpoint then
+        check(b.source_checkpoint~=nil,"outbox_scope_mismatch")
+        for _,field in ipairs(source_fields) do
+            check(a.source_checkpoint[field]==b.source_checkpoint[field],"outbox_scope_mismatch")
+        end
+    end
 end
 local function inspect(codec, line, context)
     check(type(line) == "string" and #line <= 8192)
@@ -173,35 +205,51 @@ local function verify_review(row)
 end
 local function verify_contents(conn, codec, context)
     check(type(codec)=="table" and type(codec.inspect_event)=="function")
+    -- Bind a manual review to the selected bytes, not just its row counts.
+    -- Entries are bounded and sorted; hashes come from the existing wire codec.
+    -- Review descriptors contain only integers and fixed type names, so these
+    -- separators are unambiguous. No private event bodies enter this key.
+    local selection={"quartzo-outbox-review-v1"}
+    if context.source_checkpoint then
+        selection[#selection+1]="source-v2"
+        for _,field in ipairs(source_fields) do selection[#selection+1]=context.source_checkpoint[field] end
+    end
     local stmt=conn:prepare("SELECT "..bounded("event_id",68)..","..bounded("line",8192)
-        ..","..bounded("native_digest",64).." FROM pending LIMIT 1001")
+        ..","..bounded("native_digest",64).." FROM pending ORDER BY event_id LIMIT 1001")
     for i=1,CAP+1 do
         local row=stmt:step()
         if not row then break end
         check(i<=CAP,"outbox_capacity")
         local entry=inspect(codec,row[2],context)
         check(entry.event_id==row[1] and entry.native_digest==row[3])
+        selection[#selection+1]="p:"..entry.event_id..":"..entry.line_digest
     end
     stmt:close()
     stmt=conn:prepare("SELECT CASE WHEN typeof(started_at)='integer' THEN started_at ELSE NULL END,"
         ..bounded("book_id",20)..","..bounded("page",20)..","..bounded("duration",20)..","
-        ..bounded("pages",20)..","..bounded("types",39).." FROM review LIMIT 1001")
+        ..bounded("pages",20)..","..bounded("types",39).." FROM review "
+        .."ORDER BY started_at,book_id,page,duration,pages,types LIMIT 1001")
     for i=1,CAP+1 do
         local row=stmt:step()
         if not row then break end
         check(i<=CAP,"outbox_capacity")
         verify_review(row)
+        row[1]=string.format("%.0f",tonumber(row[1]))
+        selection[#selection+1]="r:"..table.concat(row,":")
     end
     stmt:close()
+    return table.concat(selection,"\n")
 end
-local function check_review(conn, context, expected)
+local function check_review(conn, context, expected, selection)
     if expected == nil then return end
     check(type(expected)=="table" and scope(expected.device_id) and scope(expected.source_epoch)
         and integer(expected.pending) and expected.pending>=0
         and integer(expected.review) and expected.review>=0
-        and expected.pending+expected.review<=CAP and expected.canonical_ack==false)
+        and expected.pending+expected.review<=CAP and expected.canonical_ack==false
+        and type(expected.selection_key)=="string" and #expected.selection_key<=200000)
     check(expected.device_id==context.device_id and expected.source_epoch==context.source_epoch
-        and expected.pending==count(conn,"pending") and expected.review==count(conn,"review"),
+        and expected.pending==count(conn,"pending") and expected.review==count(conn,"review")
+        and expected.selection_key==selection,
         "outbox_backup_changed")
 end
 local function clone(conn, destination, runtime, context, expected)
@@ -232,14 +280,16 @@ local function clone(conn, destination, runtime, context, expected)
     check(tonumber(conn:rowexec("PRAGMA recovery.synchronous"))==3)
     return transaction(conn,function()
         fresh()
-        context_equal(own_schema(conn),context)
-        check_review(conn,context,expected)
-        verify_contents(conn,runtime.codec,context)
-        create_schema(conn,"recovery.")
-        for _,name in ipairs({"identity","pending","review"}) do
+        local current=own_schema(conn)
+        context_equal(current,context)
+        source_equal(current,context)
+        local selection=verify_contents(conn,runtime.codec,context)
+        check_review(conn,context,expected,selection)
+        create_schema(conn,"recovery.",context.schema_version)
+        for _,name in ipairs(tables(context.schema_version)) do
             conn:exec("INSERT INTO recovery."..name.." SELECT * FROM main."..name)
         end
-        conn:exec("PRAGMA recovery.user_version=1")
+        conn:exec("PRAGMA recovery.user_version="..context.schema_version)
         return {device_id=context.device_id,source_epoch=context.source_epoch,
             pending=count(conn,"pending"),review=count(conn,"review"),canonical_ack=false}
     end)
@@ -254,7 +304,9 @@ local function handle(name, runtime, context)
         -- Existing owned state may need SQLite hot-journal recovery even on read.
         -- rw never creates a missing file; Statistics is a separate ro owner.
         return operation(name, runtime, "rw", function(conn)
-            context_equal(own_schema(conn), context)
+            local current=own_schema(conn)
+            context_equal(current, context)
+            source_equal(current,context)
             if write then configured(conn) end
             return callback(conn)
         end)
@@ -266,7 +318,55 @@ local function handle(name, runtime, context)
     function api.status()
         return access(false, function(conn)
             return {pending=count(conn,"pending"), review=count(conn,"review"), capacity=CAP,
+                source_state=context.source_checkpoint and "enrolled" or "review_required",
                 source_watermark=nil, canonical_ack=false}
+        end)
+    end
+    function api.check_source(statistics_path)
+        return access(false,function()
+            if not context.source_checkpoint then return {source_state="review_required",canonical_ack=false} end
+            local result,code=require("quartzo/statistics").with_source_snapshot(statistics_path,context.source_checkpoint,runtime,
+                function() return {source_state="matches_enrollment",canonical_ack=false} end)
+            if not result then error(code,0) end
+            return result
+        end)
+    end
+    function api.review_source_change(statistics_path)
+        return access(false,function()
+            check(context.source_checkpoint~=nil,"statistics_source_review_required")
+            local preview,code=require("quartzo/statistics").review_source(statistics_path,runtime,context.source_checkpoint)
+            if not preview then error(code,0) end
+            source_reviews[preview.review]={name=name,context=context}
+            return preview
+        end)
+    end
+    function api.renew_source(review)
+        return access(true,function(conn)
+            check(context.source_checkpoint~=nil,"statistics_source_review_required")
+            local reviewed=source_reviews[review]
+            check(reviewed and reviewed.name==name,"statistics_source_review_required")
+            context_equal(reviewed.context,context)
+            source_equal(reviewed.context,context)
+            source_reviews[review]=nil
+            local renewed,code=require("quartzo/statistics").accept_source_review(review,function(checkpoint)
+                -- Refresh only native file continuity after explicit review.
+                -- A reset/different history cannot silently mint an epoch or
+                -- move the original import boundary through this operation.
+                for _,field in ipairs(source_fields) do
+                    if field~="volume" and field~="inode" then
+                        check(checkpoint[field]==context.source_checkpoint[field],"statistics_source_changed")
+                    end
+                end
+                return transaction(conn,function()
+                    local current=own_schema(conn)
+                    context_equal(current,context)
+                    source_equal(current,context)
+                    execute(conn,"UPDATE source SET volume=?,inode=? WHERE id=1",checkpoint.volume,checkpoint.inode)
+                    return handle(name,runtime,own_schema(conn))
+                end)
+            end)
+            if not renewed then error(code,0) end
+            return renewed
         end)
     end
     function api.backup()
@@ -384,10 +484,10 @@ local function handle(name, runtime, context)
     return api
 end
 
-function M.create(root, source_epoch, runtime)
+local function create(root, source_epoch, runtime, checkpoint)
     runtime=runtime or {}
     local ok,name=pcall(path,root)
-    if not ok or not scope(source_epoch) then return nil,"invalid_outbox_state" end
+    if not ok or (not checkpoint and not scope(source_epoch)) then return nil,"invalid_outbox_state" end
     local checked,exists=pcall(regular,name,runtime)
     if not checked then return nil,"unsupported_outbox_file" end
     if exists then return nil,"outbox_exists" end
@@ -402,12 +502,47 @@ function M.create(root, source_epoch, runtime)
         configured(conn)
         return transaction(conn,function()
             fresh()
-            local context={device_id=generated_device(runtime),source_epoch=source_epoch}
-            create_schema(conn,"")
+            local context={device_id=generated_device(runtime),source_epoch=source_epoch
+                or ("qse_"..generated_device(runtime):sub(5)),schema_version=checkpoint and 2 or 1,
+                source_checkpoint=checkpoint}
+            create_schema(conn,"",context.schema_version)
             execute(conn,"INSERT INTO identity VALUES(1,?,?)",context.device_id,context.source_epoch)
-            conn:exec("PRAGMA user_version=1")
+            if checkpoint then
+                execute(conn,"INSERT INTO source VALUES(1,?,?,?,?,?,?)",checkpoint.volume,checkpoint.inode,
+                    checkpoint.book_sequence,checkpoint.first_event,checkpoint.last_event,checkpoint.history_boundary)
+            end
+            conn:exec("PRAGMA user_version="..context.schema_version)
             return handle(name,runtime,context)
         end)
+    end)
+end
+function M.create(root,source_epoch,runtime)
+    -- Retained for existing explicit synthetic diagnostics, not production setup.
+    return create(root,source_epoch,runtime)
+end
+local function enrollment_available(root,runtime)
+    local ok,name=pcall(path,root)
+    if not ok then return nil,"invalid_outbox_state" end
+    local checked,exists=pcall(regular,name,runtime)
+    if not checked then return nil,"unsupported_outbox_file" end
+    if exists then return nil,"outbox_exists" end
+    local listing,code=M.list_backups(root,runtime)
+    if not listing then return nil,code end
+    if #listing.backups>0 or listing.unsupported>0 then return nil,"outbox_recovery_review_required" end
+    return true
+end
+function M.review_source(root,statistics_path,runtime)
+    runtime=runtime or {}
+    local ready,code=enrollment_available(root,runtime)
+    if not ready then return nil,code end
+    return require("quartzo/statistics").review_source(statistics_path,runtime)
+end
+function M.enroll(root,review,runtime)
+    runtime=runtime or {}
+    local ready,code=enrollment_available(root,runtime)
+    if not ready then return nil,code end
+    return require("quartzo/statistics").accept_source_review(review,function(checkpoint)
+        return create(root,nil,runtime,checkpoint)
     end)
 end
 function M.open(root, runtime)
@@ -431,9 +566,9 @@ function M.inspect_backup(root, backup_leaf, runtime)
     return operation(name,runtime,"rw",function(conn)
         conn:exec("BEGIN DEFERRED")
         local context=own_schema(conn)
-        verify_contents(conn,runtime.codec,context)
+        local selection=verify_contents(conn,runtime.codec,context)
         return {device_id=context.device_id,source_epoch=context.source_epoch,
-            pending=count(conn,"pending"),review=count(conn,"review"),canonical_ack=false}
+            pending=count(conn,"pending"),review=count(conn,"review"),selection_key=selection,canonical_ack=false}
     end)
 end
 function M.list_backups(root, runtime)
@@ -488,10 +623,10 @@ function M.restore(root, backup_leaf, runtime, expected)
         local context=own_schema(conn)
         -- UI review is a precondition, not authority to mint an identity or ACK.
         -- Recheck under the copy transaction as well as before target creation.
-        check_review(conn,context,expected)
         -- Validate before creating/attaching the destination; a malformed backup
         -- remains available for review and cannot silently become empty state.
-        verify_contents(conn,runtime.codec,context)
+        local selection=verify_contents(conn,runtime.codec,context)
+        check_review(conn,context,expected,selection)
         return clone(conn,name,runtime,context,expected)
     end)
     if not restored then return nil,reason end

@@ -203,3 +203,23 @@ uses actual official LFS for bounded directory discovery and actual SQLite for
 restore. These do not establish PW3 menu rendering/restart or physical Gate4.
 Do not install/start a device session while the user is unavailable. Later manual
 acceptance must use a fresh source-bound artifact; older proofs do not pass0.0.7.
+
+
+## Explicit source controls (0.0.8 candidate; no physical proof)
+
+See the2026-10-24 PhaseD addendum in `IMPLEMENTATION_SPEC.md` for source review,
+private schema2, conservative continuity guards and preserved schema1 recovery.
+The Statistics/outbox owners are reused. New setup and same-history reconfirmation
+require opaque one-use reviews and manual confirmation; startup, collection,
+historical import and synchronization remain inactive. Reset/new-generation
+reconciliation and actual source provenance are still gated.
+
+Recovery confirmation now binds selected line digests, review descriptors and
+source metadata as well as identity/counts, before creation and inside the copy
+transaction. This local key is not a remote receipt.
+
+`test_source.py`, `test_enrollment.py` and updated bootstrap/recovery regressions
+cover those paths on both Lua engines. Native CI additionally exercises official
+SQ3 INTEGER cdata and `source_native_test.lua`: actual LFS, OS entropy, v2 backup/
+restore and a fresh standalone process reopen. These synthetic host proofs do
+not certify a Statistics generation on PW3 or pass the grouped0.0.8 device gate.

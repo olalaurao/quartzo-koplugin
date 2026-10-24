@@ -1994,3 +1994,58 @@ Primary technical references reviewed during planning:
   - upstream lock
 
 These references inform the plan but do not override current upstream canonical docs at implementation time.
+
+
+## 2026-10-24 Phase D source review and recovery binding addendum (candidate0.0.8)
+
+The existing Statistics and outbox owners implement explicit setup only. Plugin
+startup remains inert and collection, historical import and network synchronization
+are not registered. This addendum does not close Gate4 or authorize later phases.
+
+Statistics schema20221111 has no intrinsic database-generation UUID. An opaque,
+one-use review is minted from a validated short native read-only snapshot and
+rechecked on confirmation. Counts, titles, dates, MD5, file hashes and caller
+booleans never mint a review or prove a database generation. Fresh setup requires
+an absent primary and no discoverable recovery copies; otherwise recover/review
+existing state. It creates independent OS-random qrd_/qse_ values through the
+same SQLite owner. Existing history is not imported by setup.
+
+Fresh explicitly enrolled state uses private outbox schema2, adding one source
+row to the unchanged schema1 tables. It stores bounded native file device/inode,
+book AUTOINCREMENT sequence, two indexed immutable native-event witnesses and
+the observed historical time boundary. These are conservative continuity guards,
+not whole-database equality, an intrinsic generation identity or a canonical ACK.
+File identity is checked before/after the read snapshot, native witnesses must
+remain exact, and the book sequence cannot regress. Unknown/changed sources
+preserve queued facts, review, identities and recovery copies. Existing schema1
+state and recovery copies remain readable/restorable without automatic migration
+or reassignment; they require separate source review before any production use.
+
+Native file identity must not be assumed stable across filesystem maintenance or
+reboots. Explicit reconfirmation of the SAME history can refresh only device/inode
+when retained witnesses and sequence still match. This requires another one-use
+review bound to that exact queue identity, confirmed by the user. It preserves
+qrd_,qse_,all selected bytes,the original witnesses and original history boundary.
+A missing witness, regressed sequence, initial empty-history enrollment or
+indeterminate source fails closed. This cannot silently adopt a reset/different
+history or mint a replacement epoch. Indistinguishable clones cannot be certified
+by these guards; a full reset/new-generation/backfill reconciliation workflow
+and real source/provenance evidence remain required before production collection.
+The stored history boundary grants neither permission to skip older native facts
+nor permission to reupload them under a new namespace. No watermark is advanced.
+
+SQLite backup/restore copies the complete recognized schema version, including
+source guards. Manual recovery review now binds the exact selected event lines
+using the existing codec's line digests, all retained review descriptors and source
+metadata, in deterministic bounded order. Identity/count equality alone is not
+sufficient. Recheck both before destination creation and within the copy transaction;
+preserve existing files and partial unregistered targets on failure. This local
+review key is transient and is never a wire receipt or remote acceptance signal.
+
+Host/native fixtures must cover explicit consent, stale/forged/foreign reviews,
+new state and legacy recovery, native INTEGER cdata, reset/replacement and commit
+failures, preserved pending data and fresh-process reopen. Actual LFS, entropy and
+SQLite must run in native CI. Remaining PW3 proof is grouped for the changed0.0.8
+setup/populated recovery/reconfirmation paths; prior exact0.0.7 empty UI, normal
+reading/restart and paired outbox proofs remain valid only for their recorded
+sources. No new device session is started while the user is unavailable.

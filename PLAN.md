@@ -1,5 +1,18 @@
 # Quartzo ↔ KOReader — Product & Delivery Plan
 
+
+## 2026-10-24 Current source-review implementation block
+
+Candidate0.0.8 adds explicit source enrollment/continuity review through the SAME
+Statistics/outbox owners and content-bound manual recovery. Original schema1
+remains unchanged; only fresh reviewed enrollment uses schema2. No automatic
+production collector, historical import, reset epoch rollover or network startup
+is enabled. Native CI and then ONE grouped PW3 trial must validate the changed
+setup/populated recovery/reconfirmation paths. Reuse unchanged accepted proofs.
+Full reset/new-generation reconciliation and production source proof remain OPEN;
+then implement bounded lifecycle/overlap/backfill through the same owner. Gate4
+and later phases stay open. Do all host work before requesting device availability.
+
 2026-10-23 paired physical subtest PASS: same native synthetic outbox identity,
 lost receipt, distinct seed/replay processes, exact pruning and retained review
 passed against the isolated Android canonical owner. Three unique facts/120s;

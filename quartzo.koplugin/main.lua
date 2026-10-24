@@ -26,10 +26,74 @@ function Quartzo:showDeliveryError(code)
         outbox_exists = _("The current reading queue was preserved. Restore is available only when it is absent."),
         outbox_backup_changed = _("The recovery copy changed. Review it again before restoring. Existing files were preserved."),
         outbox_recovery_list_limit = _("There are too many files to list recovery copies safely. Existing files were preserved."),
+        outbox_recovery_review_required = _("Recovery copies already exist. Review them before setting up a new reading identity. Existing files were preserved."),
+        statistics_source_changed = _("Reading Statistics changed since source review or setup. The reading queue and its identity were preserved. Synchronization is inactive."),
+        statistics_source_unverifiable = _("The Reading Statistics source could not be checked safely. No new identity was created. Synchronization is inactive."),
     }
     UIManager:show(InfoMessage:new{
         text = messages[code] or _("The reading queue needs review. Existing files were preserved. Synchronization is inactive."),
     })
+end
+
+function Quartzo:showReadingSource()
+    if self.delivery_busy then return end
+    self:deliveryRequest(function(owner,runtime)
+        local queue,code=owner.open(self.state_root,runtime)
+        if queue then
+            local source
+            source,code=queue.check_source(self.statistics_path)
+            if not source and code=="statistics_source_changed" then
+                return self:reviewSourceChange(queue)
+            end
+            if not source then return nil,code end
+            UIManager:show(InfoMessage:new{ text=source.source_state=="matches_enrollment"
+                and _("Reading Statistics matches the source reviewed during setup. Historical import and synchronization are inactive.")
+                or _("The existing reading identity was preserved. Source setup needs review before collection can be enabled. Synchronization is inactive.") })
+            return true
+        end
+        if code~="outbox_missing" then return nil,code end
+        local preview
+        preview,code=owner.review_source(self.state_root,self.statistics_path,runtime)
+        if not preview then return nil,code end
+        -- Keep only the owner's opaque, one-use review. The confirmation cannot
+        -- manufacture a generation from display counts, dates or a boolean.
+        local review=preview.review
+        UIManager:show(ConfirmBox:new{
+            text=_("Set up a new reading identity for this Reading Statistics source? If Quartzo was used before, recover its earlier queue first. Existing history will not be imported. Historical import and synchronization remain inactive."),
+            ok_text=_("Set up source"),
+            ok_callback=function()
+                self:deliveryChange(_("Setting up reading source…"),function(current,current_runtime)
+                    local enrolled,reason=current.enroll(self.state_root,review,current_runtime)
+                    if not enrolled then return nil,reason end
+                    UIManager:show(InfoMessage:new{ text=_("Reading source set up. Existing history was not imported. Synchronization remains inactive.") })
+                    return true
+                end)
+            end,
+        })
+        return true
+    end)
+end
+
+function Quartzo:reviewSourceChange(queue)
+    local preview,code=queue.review_source_change(self.statistics_path)
+    if not preview then return nil,code end
+    local review=preview.review
+    UIManager:show(ConfirmBox:new{
+        text=_("The Statistics file changed, but the retained history checks still match. Confirm only if this is the same Statistics history, for example after restoring its copy. Keep the existing reading identity? A reset or a different database needs separate review. Existing history will not be imported and synchronization remains inactive."),
+        ok_text=_("Keep existing identity"),
+        ok_callback=function()
+            self:deliveryChange(_("Reviewing reading source…"),function(owner,runtime)
+                local current,reason=owner.open(self.state_root,runtime)
+                if not current then return nil,reason end
+                local renewed
+                renewed,reason=current.renew_source(review)
+                if not renewed then return nil,reason end
+                UIManager:show(InfoMessage:new{ text=_("Source review saved. The reading identity, queued events and history boundary were retained. Synchronization remains inactive.") })
+                return true
+            end)
+        end,
+    })
+    return true
 end
 
 function Quartzo:deliveryRequest(action)
@@ -141,7 +205,7 @@ function Quartzo:showRecoveryCopy(leaf)
         local preview,code=owner.inspect_backup(self.state_root,leaf,runtime)
         if not preview then return nil,code end
         local expected={device_id=preview.device_id,source_epoch=preview.source_epoch,
-            pending=preview.pending,review=preview.review,canonical_ack=false}
+            pending=preview.pending,review=preview.review,selection_key=preview.selection_key,canonical_ack=false}
         UIManager:show(ConfirmBox:new{
             text=_("Queued events:").." "..preview.pending.."\n".._("Needs review:").." "..preview.review
                 .."\n\n".._("Restore this point-in-time copy only if the current queue is absent? It retains its original identity and cannot recover later events. Source setup still requires review. Synchronization remains inactive."),
@@ -210,6 +274,7 @@ function Quartzo:addToMainMenu(menu_items)
             { text = _("Diagnostics"), callback = function() self:showDiagnostics() end },
             { text = _("Reading Statistics"), callback = function() self:showStatistics() end },
             { text = _("Offline reading queue"), callback = function() self:showDeliveryState() end },
+            { text = _("Reading source"), callback = function() self:showReadingSource() end },
         },
     }
 end

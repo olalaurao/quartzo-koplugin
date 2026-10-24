@@ -79,6 +79,38 @@ class OutboxTest(unittest.TestCase):
                          (None, "outbox_backup_changed"))
         self.assertFalse(self.owned.exists())
 
+    def test_reviewed_restore_rejects_valid_changed_bytes_with_same_identity_and_counts(self):
+        leaf, preview = self.reviewed_backup()
+        self.owned.unlink()
+        with statistics.closing(sqlite3.connect(self.root / leaf)) as conn, conn:
+            event_id, original = conn.execute("SELECT event_id,line FROM pending LIMIT 1").fetchone()
+            raw = json.loads(original)
+            raw.pop("event_id")
+            raw["observed_at_utc"] = "2026-10-18T12:00:00.000Z"
+            changed = self.codec.encode_event(self.to_lua(raw))
+            info = self.codec.inspect_event(changed)
+            self.assertEqual(info.event_id, event_id)
+            conn.execute("UPDATE pending SET line=?,native_digest=? WHERE event_id=?",
+                         (changed, info.native_digest, event_id))
+        # The replacement is valid, and its native identity/payload are unchanged.
+        current = self.outbox.inspect_backup(str(self.root), leaf, self.runtime)
+        self.assertEqual((current.pending, current.review), (preview.pending, preview.review))
+        self.assertNotEqual(current.selection_key, preview.selection_key)
+        before = (self.root / leaf).read_bytes()
+        self.assertEqual(self.outbox.restore(str(self.root), leaf, self.runtime, preview),
+                         (None, "outbox_backup_changed"))
+        self.assertFalse(self.owned.exists())
+        self.assertEqual((self.root / leaf).read_bytes(), before)
+
+    def test_reviewed_restore_rejects_changed_review_descriptor_with_same_counts(self):
+        leaf, preview = self.reviewed_backup()
+        self.owned.unlink()
+        with statistics.closing(sqlite3.connect(self.root / leaf)) as conn, conn:
+            conn.execute("UPDATE review SET duration='21'")
+        self.assertEqual(self.outbox.restore(str(self.root), leaf, self.runtime, preview),
+                         (None, "outbox_backup_changed"))
+        self.assertFalse(self.owned.exists())
+
     def test_reviewed_restore_preserves_selected_bytes_review_and_identity(self):
         leaf, preview = self.reviewed_backup()
         expected = dict(self.queue.context().items())
@@ -94,7 +126,7 @@ class OutboxTest(unittest.TestCase):
         self.assertIsNone(restored.status().source_watermark)
         self.assertEqual(self.path.read_bytes(), source)
 
-    def test_reviewed_restore_rechecks_a_change_before_the_copy_transaction(self):
+    def test_reviewed_restore_rechecks_same_count_content_change_before_copy_transaction(self):
         leaf, preview = self.reviewed_backup()
         self.owned.unlink()
         changed = []
@@ -104,7 +136,7 @@ class OutboxTest(unittest.TestCase):
                 conn = sqlite3.connect(self.root / leaf)
                 try:
                     with conn:
-                        conn.execute("DELETE FROM review")
+                        conn.execute("UPDATE review SET duration='21'")
                 finally:
                     conn.close()
                 changed.append(True)
@@ -119,7 +151,7 @@ class OutboxTest(unittest.TestCase):
         self.assertEqual(self.outbox.open(str(self.root), self.runtime),
                          (None, "unsupported_outbox_schema"))
         preserved = self.outbox.inspect_backup(str(self.root), leaf, self.runtime)
-        self.assertEqual((preserved.pending, preserved.review), (2, 0))
+        self.assertEqual((preserved.pending, preserved.review), (2, 1))
 
     def recovery_directory(self, names):
         environment = self.lua.execute('''

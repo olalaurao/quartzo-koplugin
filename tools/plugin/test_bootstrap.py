@@ -93,7 +93,7 @@ class BootstrapTest(unittest.TestCase):
         self.assertEqual(items.quartzo.sorting_hint, "more_tools")
         self.assertEqual(items.quartzo.text, "Quartzo")
         self.assertEqual(len(self.environment.shown), 0)
-        self.assertEqual(len(items.quartzo.sub_item_table), 3)
+        self.assertEqual(len(items.quartzo.sub_item_table), 4)
         items.quartzo.sub_item_table[1].callback()
         self.assertEqual(len(self.environment.shown), 1)
         text = self.environment.shown[1].text
@@ -103,11 +103,13 @@ class BootstrapTest(unittest.TestCase):
         self.assertNotIn("synthetic", text)
         self.assertEqual(self.environment.settings_calls, 1)
 
-    def delivery_owner(self, missing=False):
+    def delivery_owner(self, missing=False, source_state="matches_enrollment"):
         self.delivery_calls = []
         self.delivery_preview = self.lua.table(device_id="qrd_fixture", source_epoch="epoch_fixture",
-                                                pending=2, review=1, canonical_ack=False)
+                                                pending=2, review=1, selection_key="reviewed_content", canonical_ack=False)
         self.delivery_error = None
+        self.source_reconfirmation = False
+        self.source_review = self.lua.table()
         leaf = "quartzo_sync_recovery_" + "41" * 16 + ".sqlite3"
 
         def opened(root, runtime):
@@ -122,11 +124,31 @@ class BootstrapTest(unittest.TestCase):
             self.delivery_calls.append(("restore", root, selected, dict(expected.items())))
             return (None, self.delivery_error) if self.delivery_error else queue
 
-        queue = self.lua.table(status=lambda: self.lua.table(pending=2, review=1), backup=backup)
+        def review_source(root, source, runtime):
+            self.delivery_calls.append(("review_source", root, source))
+            return self.lua.table(review=self.source_review, has_history=True, canonical_ack=False)
+
+        def enroll(root, reviewed, runtime):
+            self.delivery_calls.append(("enroll", root, reviewed))
+            return (None, self.delivery_error) if self.delivery_error else queue
+
+        def review_change(source):
+            self.delivery_calls.append(("review_source_change", source))
+            return self.lua.table(review=self.source_review) if self.source_reconfirmation else (None, self.delivery_error)
+
+        def renew(reviewed):
+            self.delivery_calls.append(("renew_source", reviewed))
+            return (None, self.delivery_error) if self.delivery_error else queue
+
+        queue = self.lua.table(status=lambda: self.lua.table(pending=2, review=1), backup=backup,
+            review_source_change=review_change, renew_source=renew,
+            check_source=lambda source: (None, self.delivery_error) if self.delivery_error
+                         else self.lua.table(source_state=source_state))
         owner = self.lua.table(open=opened,
             list_backups=lambda root, runtime: self.lua.table(backups=self.lua.table_from([
                 self.lua.table(leaf=leaf)]), unsupported=0),
-            inspect_backup=lambda root, selected, runtime: self.delivery_preview, restore=restore)
+            inspect_backup=lambda root, selected, runtime: self.delivery_preview, restore=restore,
+            review_source=review_source, enroll=enroll)
         self.environment.set_delivery(owner)
         return leaf
 
@@ -175,15 +197,73 @@ class BootstrapTest(unittest.TestCase):
         self.assertIn("current queue is absent", confirmation.text)
         self.assertIn("Source setup still requires review", confirmation.text)
         self.delivery_preview.source_epoch = "changed_after_review"
+        self.delivery_preview.selection_key = "changed_content_after_review"
         self.delivery_error = "outbox_backup_changed"
         confirmation.ok_callback()
         self.environment.ticks[1]()
         call = self.delivery_calls[-1]
         self.assertEqual(call[:3], ("restore", "/synthetic/custom/settings", leaf))
         self.assertEqual(call[3], dict(device_id="qrd_fixture", source_epoch="epoch_fixture",
-                                     pending=2, review=1, canonical_ack=False))
+                                     pending=2, review=1, selection_key="reviewed_content", canonical_ack=False))
         self.assertIn("recovery copy changed", self.environment.shown[4].text)
         self.assertFalse(instance.delivery_busy)
+
+    def test_source_setup_is_manual_confirmed_deferred_and_passes_only_owner_review(self):
+        self.delivery_owner(missing=True)
+        instance = self.instance()
+        self.assertEqual(self.delivery_calls, [])
+        instance.showReadingSource(instance)
+        confirmation = self.environment.shown[1]
+        self.assertIn("recover its earlier queue first", confirmation.text)
+        self.assertIn("Existing history will not be imported", confirmation.text)
+        self.assertFalse(any(call[0] == "enroll" for call in self.delivery_calls))
+        confirmation.ok_callback()
+        confirmation.ok_callback()
+        self.assertEqual(len(self.environment.ticks), 1)
+        self.assertFalse(any(call[0] == "enroll" for call in self.delivery_calls))
+        self.environment.ticks[1]()
+        self.assertEqual(self.delivery_calls[-1][:2], ("enroll", "/synthetic/custom/settings"))
+        self.assertTrue(self.lua.eval("function(a,b) return rawequal(a,b) end")(
+            self.delivery_calls[-1][2], self.source_review))
+        self.assertIn("Synchronization remains inactive", self.environment.shown[3].text)
+
+    def test_existing_source_view_never_creates_or_replaces_identity_and_keeps_failure_visible(self):
+        self.delivery_owner()
+        instance = self.instance()
+        instance.showReadingSource(instance)
+        self.assertIn("matches the source reviewed", self.environment.shown[1].text)
+        self.assertEqual(self.delivery_calls, [("open", "/synthetic/custom/settings")])
+        self.delivery_error = "statistics_source_changed"
+        instance.showReadingSource(instance)
+        self.assertIn("identity were preserved", self.environment.shown[2].text)
+        self.assertEqual([call[0] for call in self.delivery_calls], ["open", "open", "review_source_change"])
+
+    def test_source_reconfirmation_preserves_identity_and_uses_explicit_owner_review(self):
+        self.delivery_owner()
+        self.delivery_error = "statistics_source_changed"
+        self.source_reconfirmation = True
+        instance = self.instance()
+        instance.showReadingSource(instance)
+        confirmation = self.environment.shown[1]
+        self.assertIn("same Statistics history", confirmation.text)
+        self.assertIn("reset or a different database needs separate review", confirmation.text)
+        self.assertFalse(any(call[0] == "renew_source" for call in self.delivery_calls))
+        self.delivery_error = None
+        confirmation.ok_callback()
+        self.environment.ticks[1]()
+        self.assertEqual(self.delivery_calls[-2][0], "open")
+        self.assertEqual(self.delivery_calls[-1][0], "renew_source")
+        self.assertTrue(self.lua.eval("function(a,b) return rawequal(a,b) end")(
+            self.delivery_calls[-1][1], self.source_review))
+        self.assertIn("history boundary were retained", self.environment.shown[3].text)
+
+    def test_legacy_source_state_does_not_offer_automatic_epoch_or_schema_migration(self):
+        self.delivery_owner(source_state="review_required")
+        instance = self.instance()
+        instance.showReadingSource(instance)
+        self.assertIn("existing reading identity was preserved", self.environment.shown[1].text)
+        self.assertIn("needs review", self.environment.shown[1].text)
+        self.assertEqual([call[0] for call in self.delivery_calls], ["open"])
 
     def test_missing_statistics_sdk_is_a_sanitized_manual_diagnostic(self):
         instance = self.instance()

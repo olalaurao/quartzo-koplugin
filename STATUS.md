@@ -1,5 +1,33 @@
 # Implementation Status
 
+## 2026-10-24 Explicit source review and content-bound recovery candidate0.0.8
+
+The existing Statistics owner now mints one-use native RO source reviews. Explicit
+fresh setup through the existing outbox owner creates independent random qrd_/qse_
+values and private schema2 source guards; startup remains inert. Existing schema1
+identity/selected bytes are not migrated or regenerated. Known recovery copies
+block fresh setup. Native file changes/reset observations preserve pending data.
+Explicit same-history reconfirmation can refresh file continuity only, retaining
+identity, original witnesses and history boundary; missing witnesses/unknown
+history fail closed. Guards do not certify indistinguishable clones or establish
+an intrinsic database-generation UUID. No production collection, backfill,
+watermark or transport registration is enabled. Full reset/new-generation
+reconciliation and actual source enrollment proof remain OPEN.
+
+Recovery review now binds selected line digests, retained review descriptors and
+source metadata, not just counts. Same-count changes are checked again inside
+the copy transaction. Schema1/2 recovery preserves its original version/context.
+UI0.0.8 adds manual Reading source setup/check/reconfirmation and keeps sync
+inactive. Nothing is installed; actual0.0.7 remains the latest installed proof.
+The implementation addendum records precise authority and remaining limits.
+
+Base dd4c93f/PR5 remains draft. Native CI for this candidate is required before
+any installation; local changed-path regressions pass on Lua5.1 and LuaJIT.
+The official native LFS/entropy/SQ3 fresh-process fixture is CI-only. Upstream
+main8375fc63 CI40053124500 retry passed2915 tests/8 skips; initial attempt failed
+reference preparation before tests. No hash pin was relaxed. Windows suites
+remain manual per the user's instruction. Goal ACTIVE/topic2of7; Gate4 OPEN.
+
 ## 2026-10-23 Actual PW3 and Android paired outbox subtest PASS
 
 The user executed the consolidated KUAL diagnostic and reconnected USB. Exact
