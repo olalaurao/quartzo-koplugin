@@ -2,6 +2,13 @@
 
 ## 2026-10-23 Paired outbox sequence candidate; native CI pending
 
+Initial exacte6ec004 CI40045291562 passed plugin260 and transport34, then
+failed all four new native wire setups: that step did not receive the already
+prepared READING_SQLITE_REFERENCE_DIR. The workflow now passes the SAME pinned
+directory to that step; tests still require verification and do not skip missing
+references on Linux. No sequence/runtime criterion was relaxed. Full native CI
+must be repeated; the failed log is preserved privately.
+
 The existing paired sequence now supports a strictly shaped synthetic native
 context only with an existing outbox. A seed-only pass stages three selected
 canonical facts plus retained review, validates and deliberately discards the
