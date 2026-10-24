@@ -26,7 +26,7 @@ function Quartzo:showDeliveryError(code)
         outbox_exists = _("The current reading queue was preserved. Restore is available only when it is absent."),
         outbox_backup_changed = _("The recovery copy changed. Review it again before restoring. Existing files were preserved."),
         outbox_recovery_list_limit = _("There are too many files to list recovery copies safely. Existing files were preserved."),
-        outbox_recovery_review_required = _("Earlier reading state or recovery artifacts were found. Recover or review them before setting up a new reading identity. Existing files were preserved."),
+        outbox_recovery_review_required = _("Earlier reading state or recovery files need review before this operation. Existing files were preserved."),
         statistics_source_changed = _("Reading Statistics changed since source review or setup. The reading queue and its identity were preserved. Synchronization is inactive."),
         statistics_source_unverifiable = _("The Reading Statistics source could not be checked safely. No new identity was created. Synchronization is inactive."),
         outbox_capacity = _("The offline queue is full. Queued events were kept and collection paused. Synchronization is inactive."),

@@ -349,6 +349,58 @@ class OutboxTest(unittest.TestCase):
         self.assertEqual(before,self.owned.read_bytes())
         self.assertEqual(saved,backup.read_bytes())
 
+    def test_restore_refuses_orphan_destination_sidecars_before_any_sqlite_open(self):
+        for suffix in ("-journal","-wal","-shm"):
+            with self.subTest(suffix=suffix):
+                self.setUp()
+                self.seed()
+                self.queue.stage(self.batch())
+                snapshot,backup=self.snapshot()
+                saved=backup.read_bytes()
+                self.owned.unlink()  # This test's private state-loss fixture.
+                orphan=Path(str(self.owned)+suffix)
+                original=b"" if suffix=="-shm" else b"synthetic interrupted state; preserve rather than recover into a new file"
+                orphan.write_bytes(original)
+                self.calls.clear()
+                self.assertEqual(self.outbox.restore(str(self.root),snapshot.backup_leaf,self.runtime),
+                                 (None,"outbox_recovery_review_required"))
+                self.assertEqual(self.calls,[])
+                self.assertFalse(self.owned.exists())
+                self.assertEqual(orphan.read_bytes(),original)
+                self.assertEqual(backup.read_bytes(),saved)
+
+    def test_backup_refuses_destination_sidecars_without_creating_or_attaching_target(self):
+        for suffix in ("-journal","-wal","-shm"):
+            with self.subTest(suffix=suffix):
+                self.setUp()
+                self.seed()
+                self.queue.stage(self.batch())
+                before=self.owned.read_bytes()
+                target=self.root/("quartzo_sync_recovery_"+"41"*16+".sqlite3")
+                orphan=Path(str(target)+suffix)
+                orphan.write_bytes(b"synthetic orphan; never implicitly replace")
+                self.calls.clear()
+                self.assertEqual(self.queue.backup(),(None,"outbox_recovery_review_required"))
+                self.assertFalse(target.exists())
+                self.assertEqual(orphan.read_bytes(),b"synthetic orphan; never implicitly replace")
+                self.assertEqual(self.owned.read_bytes(),before)
+                self.assertFalse(any(op=="open" and value=="rwc" for op,value in self.calls))
+                self.assertFalse(any(op=="query" and value.startswith("ATTACH") for op,value in self.calls))
+
+    def test_explicit_create_refuses_orphan_sidecars_without_new_identity_or_sqlite_open(self):
+        for suffix in ("-journal","-wal","-shm"):
+            with self.subTest(suffix=suffix):
+                self.setUp()
+                self.owned.unlink()  # This test's private fixture only.
+                orphan=Path(str(self.owned)+suffix)
+                orphan.write_bytes(b"synthetic interrupted earlier state")
+                self.calls.clear()
+                self.assertEqual(self.outbox.create(str(self.root),"another_epoch",self.runtime),
+                                 (None,"outbox_recovery_review_required"))
+                self.assertEqual(self.calls,[])
+                self.assertFalse(self.owned.exists())
+                self.assertEqual(orphan.read_bytes(),b"synthetic interrupted earlier state")
+
     def test_backup_collision_never_replaces_the_older_snapshot(self):
         self.seed()
         self.queue.stage(self.batch())

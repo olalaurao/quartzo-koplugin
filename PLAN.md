@@ -1,5 +1,15 @@
 # Quartzo ↔ KOReader — Product & Delivery Plan
 
+## 2026-10-24 Recovery destination safety
+
+Candidate0.0.10 refuses fresh create/backup/restore destinations with orphan
+SQLite journal/WAL/SHM files, even empty ones. The existing primary-open path
+still delegates hot-journal recovery to the same SDK. Local six PASS / three
+native-only skips; the actual-LFS standalone fixture and full native CI must
+validate the final source before packaging. No new archive engine, source store,
+identity reconstruction or device mutation. See docs/reading-queue-recovery.md.
+Installed0.0.9 remains accepted for its bounded physical collection/restart scope.
+
 ## 2026-10-24 Recovery safeguards on the same owner
 
 Candidate0.0.10 also rejects fresh enrollment when the primary is absent but

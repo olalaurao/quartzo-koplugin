@@ -2229,3 +2229,21 @@ Unrelated settings and the ordinary quartzo.lua configuration do not establish
 an earlier reading identity. No second registry, file scanner, schema or reset
 capability is introduced. This prevents an unsafe new namespace but cannot
 reconstruct an identity when every authoritative copy is lost.
+
+
+### New recovery destinations cannot inherit orphan SQLite sidecars
+
+The existing outbox owner checks primary presence/type plus -journal/-wal/-shm
+before any fresh create and before restore opens its selected backup. The same
+check runs before clone creates/attaches its destination. Existing sidecars,
+including empty files, require review and remain untouched; unsupported types
+fail safely. Do not let SQLite associate earlier recovery files with a newly
+created identity or restore target. Keep normal opening of an existing primary
+unchanged: the native SDK still owns legitimate hot-journal recovery.
+
+This is bounded metadata validation, not a second journaling layer, raw copier,
+repair engine or automatic identity recovery. Regressions cover refused create,
+backup and restore, original backup/sidecar preservation and no destination
+SQLite open/ATTACH. The standalone source fixture must use actual LFS for the
+orphan checks and the real SDK for the subsequent supported restore. See
+docs/reading-queue-recovery.md for the original-copy authority and refusal paths.

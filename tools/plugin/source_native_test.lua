@@ -32,6 +32,21 @@ if mode=="enroll" then
     local saved=assert(queue.backup())
     local reviewed_copy=assert(owner.inspect_backup(root,saved.backup_leaf,runtime))
     assert(os.rename(root.."/quartzo_sync_state.sqlite3",root.."/retired-test-state.sqlite3"))
+    local native_sdk=runtime.sqlite
+    runtime.sqlite={open=function() error("orphan destination must be refused before SQLite opens",0) end}
+    for _,suffix in ipairs({"-journal","-wal","-shm"}) do
+        local orphan=root.."/quartzo_sync_state.sqlite3"..suffix
+        local original=suffix=="-shm" and "" or "synthetic interrupted-state artifact"
+        local output=assert(io.open(orphan,"wb"))
+        assert(output:write(original) and output:close())
+        local rejected,reason=owner.restore(root,saved.backup_leaf,runtime,reviewed_copy)
+        assert(not rejected and reason=="outbox_recovery_review_required")
+        assert(not fs.symlinkattributes(root.."/quartzo_sync_state.sqlite3"))
+        local input=assert(io.open(orphan,"rb"))
+        assert(input:read("*a")==original and input:close())
+        assert(os.remove(orphan)) -- Only this fresh test-owned synthetic file.
+    end
+    runtime.sqlite=native_sdk
     queue=assert(owner.restore(root,saved.backup_leaf,runtime,reviewed_copy))
 elseif mode=="reopen" then
     queue=assert(owner.open(root,runtime))

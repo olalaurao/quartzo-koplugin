@@ -38,6 +38,19 @@ local function regular(name, runtime)
     check(info == nil or info.mode == "file", "unsupported_outbox_file")
     return info ~= nil
 end
+local function fresh_destination(name,runtime)
+    local checked,exists=pcall(regular,name,runtime)
+    if not checked then return nil,"unsupported_outbox_file" end
+    if exists then return nil,"outbox_exists" end
+    -- SQLite must not recover an earlier file's orphan journal/WAL into this
+    -- newly created destination. Preserve even empty sidecars for review.
+    for _,suffix in ipairs({"-journal","-wal","-shm"}) do
+        checked,exists=pcall(regular,name..suffix,runtime)
+        if not checked then return nil,"unsupported_outbox_file" end
+        if exists then return nil,"outbox_recovery_review_required" end
+    end
+    return true
+end
 local function entropy()
     local file = assert(io.open("/dev/urandom", "rb"))
     local ok, bytes = pcall(file.read, file, 16)
@@ -196,7 +209,8 @@ local errors = {invalid_outbox_state=true,unsupported_outbox_schema=true,unsuppo
     statistics_read_failed=true,unsupported_statistics_schema=true,invalid_statistics_collection=true,
     invalid_statistics_event=true,invalid_statistics_data=true,outbox_collection_review_required=true,
     outbox_collection_changed=true,outbox_review_changed=true,outbox_source_not_settled=true,
-    statistics_source_unchanged=true,statistics_source_reconciliation_required=true}
+    statistics_source_unchanged=true,statistics_source_reconciliation_required=true,
+    outbox_recovery_review_required=true}
 local function operation(name, runtime, mode, callback)
     local conn
     local ok, value = pcall(function()
@@ -353,7 +367,8 @@ local function check_review(conn, context, expected, selection)
         "outbox_backup_changed")
 end
 local function clone(conn, destination, runtime, context, expected)
-    check(not regular(destination,runtime),"outbox_exists")
+    local available,reason=fresh_destination(destination,runtime)
+    check(available,reason)
     -- Both databases are plugin-owned, in the same directory. SQLite's attached
     -- DELETE-journal transaction is the copy/recovery mechanism; no raw file copy.
     check(conn:rowexec("PRAGMA journal_mode")=="delete")
@@ -847,9 +862,8 @@ local function create(root, source_epoch, runtime, checkpoint)
     runtime=runtime or {}
     local ok,name=pcall(path,root)
     if not ok or (not checkpoint and not scope(source_epoch)) then return nil,"invalid_outbox_state" end
-    local checked,exists=pcall(regular,name,runtime)
-    if not checked then return nil,"unsupported_outbox_file" end
-    if exists then return nil,"outbox_exists" end
+    local available,reason=fresh_destination(name,runtime)
+    if not available then return nil,reason end
     return operation(name,runtime,"rwc",function(conn)
         -- The file can appear between the filesystem check and SQLite open.
         -- Reject unknown/existing state before any journal configuration writes.
@@ -980,10 +994,9 @@ function M.restore(root, backup_leaf, runtime, expected)
     local ok,name=pcall(path,root)
     local valid,backup=pcall(backup_path,root,backup_leaf)
     if not ok or not valid then return nil,"invalid_outbox_state" end
-    local checked,exists=pcall(regular,name,runtime)
-    if not checked then return nil,"unsupported_outbox_file" end
-    if exists then return nil,"outbox_exists" end
-    checked,exists=pcall(regular,backup,runtime)
+    local available,reason=fresh_destination(name,runtime)
+    if not available then return nil,reason end
+    local checked,exists=pcall(regular,backup,runtime)
     if not checked then return nil,"unsupported_outbox_file" end
     if not exists then return nil,"outbox_backup_missing" end
     local restored,reason=operation(backup,runtime,"rw",function(conn)

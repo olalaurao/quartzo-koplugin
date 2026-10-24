@@ -1,5 +1,32 @@
 # Implementation Status
 
+## 2026-10-24 New recovery destinations refuse orphan SQLite sidecars
+
+Review reproduced a separate restoration hazard: an absent primary with leftover
+-journal/-wal/-shm files could still be created/restored by SQLite. The SAME
+outbox owner now checks a fresh destination's primary and sidecars before create,
+before restore opens the backup, and before clone creates/attaches a destination.
+Existing or unsupported sidecars are preserved for review, including empty files.
+Ordinary open of an existing primary remains unchanged, so native hot-journal
+recovery still works. No raw-file repair, alternate journal or new identity path.
+
+Local focused regressions: six PASS, three explicit Linux-native-only skips.
+The restore/create regressions failed before the fix. Native source fixture now
+uses actual KOReader LFS to check all three sidecars (including empty SHM), refuses
+before its SQLite-open callback, then restores the original reviewed copy using
+the real SDK. Full exact-source native CI is pending for this change. Previous
+32b6ffc CI40125512029 passed599/no skips; it does not certify this new code.
+Candidate stays0.0.10, not installed. Earlier candidate ZIPs are superseded.
+Installed0.0.9 and the real993pending/seven-review queue/recovery remain untouched.
+
+The [recovery runbook](docs/reading-queue-recovery.md) records original-identity
+authority, preservation and supported restore/refusal paths without inventing
+an identity from native metadata or adding a second recovery store. Complete
+identity loss/nonempty replacement reconciliation and the full topic2 remain
+OPEN. Next validate/package this source, then implement only the transport and
+reconciliation steps whose prerequisites are proven; do not repeat accepted
+offline collection or start a device/session merely to await CI.
+
 ## 2026-10-24 Missing-primary enrollment preserves earlier identity artifacts
 
 Candidate0.0.10 now treats recognizable legacy state, orphan SQLite sidecars,
