@@ -1,0 +1,113 @@
+{
+  "evidence_version": 1,
+  "scope": "Phase D explicit recovery snapshots; host/native SDK only",
+  "host_result": "PASS",
+  "gate4_status": "OPEN",
+  "source_commit": "92af1bd97b46e8df8b158129363c02b17e34d420",
+  "runtime_first_commit": "c6a7a8660f5a9c942c964588833b3e2e9802a0f2",
+  "runtime_correction_commit": "b90272cabe09b9420e6df747da51069058e1dffa",
+  "plugin_version": "0.0.5",
+  "exact_source_ci": {
+    "url": "https://github.com/olalaurao/quartzo-koplugin/actions/runs/39725331982",
+    "conclusion": "success",
+    "plugin_cases": 208,
+    "actual_official_native_sqlite_cases": 67,
+    "outbox_cases": 95,
+    "actual_native_outbox_cases": 33,
+    "transport_cases": 34,
+    "wire_cases": 115,
+    "total": 357,
+    "skipped": 0,
+    "native_reference": "tools/plugin/SQLITE_REFERENCE.lock.json"
+  },
+  "windows_local": {
+    "full_plugin_total": 208,
+    "passed": 141,
+    "native_linux_skipped": 67,
+    "seconds": 19.44,
+    "focused_outbox_total": 95,
+    "focused_passed": 62,
+    "focused_native_linux_skipped": 33,
+    "focused_seconds": 13.503
+  },
+  "archive": {
+    "bytes": 48563,
+    "sha256": "4a7bbabef2cbf6e9c553edbba16a1e8c39988c175c36c9c712a515eb521ca7c1",
+    "linux_ci_windows_bytes_equal": true,
+    "files": {
+      "quartzo.koplugin/_meta.lua": "f12b486c821792500bbe775acbca86e53fedc611817fb09bfe31f4f3d286e700",
+      "quartzo.koplugin/main.lua": "3e1c3aaa90cc2e23ecb528fb3c150388eb54917ccef7a46a9d069495f89e6264",
+      "quartzo.koplugin/quartzo/statistics.lua": "3d58a6f7b98ce2b252b93c9724d7e172be5caa98acbc264e8cbf24c02b1bf745",
+      "quartzo.koplugin/quartzo/collector.lua": "83b5f4b6bd63bd4a3fd20261209059703354e904cb89ae2e9ddbc7e935c5a1d4",
+      "quartzo.koplugin/quartzo/outbox.lua": "74b5c0f544f899d11e706ac95d08cf5a63b4268110ca91ad7ae134ebe9204b5d",
+      "quartzo.koplugin/quartzo/paired_exchange.lua": "0f7bad0287d878244af4121881c6ccd3f1bde17ddc899a046fc9050d8af1f5a8"
+    }
+  },
+  "recovery": {
+    "owner": "Existing plugin-owned SQLite outbox; no second canonical store",
+    "copy": "Bounded validated native ATTACH/DELETE-journal transaction over the same three schema-v1 tables",
+    "source_open_mode": "rw, never creating",
+    "destination_creation": "Explicit fresh owned rwc only, checked before configuration and again after attach/under transaction",
+    "synchronous": "EXTRA read back as 3",
+    "identity_regenerated": false,
+    "selected_canonical_bytes_preserved": true,
+    "review_retained": true,
+    "source_and_backup_bytes_unchanged_in_synthetic_tests": true,
+    "unknown_objects_columns_or_defaults_rejected": true,
+    "malformed_foreign_or_future_data_rejected": true,
+    "all_pending_and_review_validated_before_restoration": true,
+    "oversized_fields_not_loaded": true,
+    "existing_primary_including_damaged_preserved": true,
+    "existing_backup_preserved": true,
+    "ordinary_open_auto_selects_backup": false,
+    "unregistered_partial_artifacts_preserved_and_rejected": true,
+    "point_in_time_only": true,
+    "source_generation_enrollment_proven": false
+  },
+  "process_stop_matrix": {
+    "existing_stage_prune_cases": 4,
+    "additional_recovery_cases": [
+      "backup before commit preserves original and rejects unregistered partial artifact",
+      "backup after commit retains complete validated snapshot",
+      "restore before commit preserves backup and refuses the partial primary without generating identity",
+      "restore after commit retains original device/epoch and selected bytes"
+    ],
+    "separate_owned_child_killed_without_finally": true,
+    "actual_spilled_nonzero_rollback_journal_observed_before_commit": true,
+    "hardware_power_loss_tested": false
+  },
+  "earlier_failures": [
+    {
+      "source_commit": "c6a7a8660f5a9c942c964588833b3e2e9802a0f2",
+      "run": 39724674354,
+      "plugin_total": 195,
+      "failures": 6,
+      "later_transport_wire_steps": "skipped",
+      "reason": "Native non-creating source connection could not ATTACH a nonexistent target; corrected with explicit fresh destination creation, no source creating-mode fallback"
+    },
+    {
+      "source_commit": "b90272cabe09b9420e6df747da51069058e1dffa",
+      "run": 39725147557,
+      "plugin_total": 208,
+      "failures": 1,
+      "later_transport_wire_steps": "skipped",
+      "reason": "Native direct API test compared int64 cdata with a Python integer; explicit tonumber retains exact zero requirement. Other 207 plugin cases passed, including recovery/process matrix"
+    }
+  ],
+  "device_execution": false,
+  "device_installation": false,
+  "active_pairing_or_listener": false,
+  "mounted_statistics_database_opened": false,
+  "upstream_contract_changed": false,
+  "companion_lock_changed": false,
+  "canonical_ack_issued": false,
+  "persisted_source_watermark": false,
+  "production_registration": false,
+  "full_goal_complete": false,
+  "pending": [
+    "Physical PW3 exact-source recovery/interruption/entropy and normal paired receipt proof",
+    "Production source-generation enrollment and lifecycle/checkpoint composition",
+    "Restore/reset user flow and handling preserved partial primary artifacts",
+    "Remaining integrated identity, Readwise, effects/UI and release DoD"
+  ]
+}

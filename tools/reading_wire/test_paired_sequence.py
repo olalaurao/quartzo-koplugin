@@ -3,9 +3,15 @@ import copy
 import datetime
 import hashlib
 import json
+import os
 import pathlib
 import ssl
+import sqlite3
+import sys
+import tempfile
 import unittest
+from contextlib import closing
+from unittest import mock
 
 import test_sequence as legacy
 
@@ -72,7 +78,7 @@ class PairedSequenceTest(unittest.TestCase):
         self.case.binding=self.case.fixture[b'binding']
         self.raw=encoded(self.document)
         self.module=self.lua.execute((ROOT/'paired_sequence.lua').read_bytes())
-        self.paired=self.lua.execute((ROOT/'paired_exchange.lua').read_bytes())
+        self.paired=self.lua.execute((ROOT.parents[1]/'quartzo.koplugin/quartzo/paired_exchange.lua').read_bytes())
         callback=self.lua.eval('function(fn) return function(...) return fn(...) end end')(self.case.transport)
         https,http,ltn12,self.counts=native_sdk(self.lua,callback,self.document['peer_certificate_sha256'])
         self.runtime=self.case.runtime
@@ -135,6 +141,141 @@ class PairedSequenceTest(unittest.TestCase):
             self.assertEqual(report[b'checked_receipts'],0)
             self.assertEqual(self.case.sent,[])
             self.assertNotIn(b'PRIVATE',self.case.json[b'encode'](report))
+
+
+@unittest.skipUnless(sys.platform=='linux','Actual pinned KOReader SQLite SDK requires Linux')
+class NativeOutboxPairedSequenceTest(unittest.TestCase):
+    run_sequence=PairedSequenceTest.run_sequence
+
+    def setUp(self):
+        self.temp=tempfile.TemporaryDirectory(prefix='reading-paired-outbox-test-')
+        self.addCleanup(self.temp.cleanup)
+        self.root=pathlib.Path(self.temp.name)
+        self.source=self.root/'quartzo_sync_state.sqlite3'
+        self.native_fixture=json.loads((ROOT/'outbox_sequence_fixture.json').read_bytes())
+        self.configure()
+        queue=self.outbox[b'create'](os.fsencode(self.root),
+            self.native_fixture['binding']['source_epoch'].encode(),self.outbox_runtime)
+        self.assertNotIsInstance(queue,tuple)
+        self.assertEqual(queue[b'context']()[b'device_id'],
+            self.native_fixture['binding']['device_id'].encode())
+
+    def configure(self):
+        PairedSequenceTest.setUp(self)
+        fixture=copy.deepcopy(self.native_fixture)
+        fixture['binding'].update(binding_id='qrp_'+'a'*32,vault_scope='b'*64)
+        raw=json.dumps(fixture,separators=(',',':')).encode()
+        self.case.fixture=self.case.deps[b'decode_json'](raw)
+        self.case.binding=self.case.fixture[b'binding']
+        self.document['binding']=fixture['binding']
+        self.raw=json.dumps(self.document,separators=(',',':')).encode()
+        self.runtime[b'document_bytes']=self.raw
+        self.runtime[b'approved_sha256']=hashlib.sha256(self.raw).hexdigest().encode()
+        # Reuse the pinned SDK verifier; no replacement SQL implementation.
+        sys.path.insert(0,str(ROOT.parent/'plugin'))
+        try:
+            from prepare_sqlite_reference import verify
+        finally:
+            sys.path.pop(0)
+        reference=pathlib.Path(os.environ['READING_SQLITE_REFERENCE_DIR'])
+        verify(reference)
+        sdk=self.lua.execute('''
+          local root=...
+          bit=require('bit')
+          local ffi=require('ffi')
+          ffi.loadlib=function(name,version)
+            assert(name=='sqlite3' and version=='0')
+            return ffi.load(root..'/libs/libsqlite3.so.0')
+          end
+          package.path=root..'/?.lua;'..package.path
+          return dofile(root..'/common/lua-ljsqlite3/init.lua')
+        ''',os.fsencode(reference))
+        wrap=self.lua.eval('function(fn) return function(...) return fn(...) end end')
+        attributes=wrap(lambda path:self.lua.table_from({b'mode':b'file'})
+            if pathlib.Path(os.fsdecode(path)).is_file() else None)
+        self.outbox=self.lua.execute((ROOT.parents[1]/'quartzo.koplugin/quartzo/outbox.lua').read_bytes())
+        self.outbox_runtime=self.lua.table_from({b'codec':self.case.codec,b'sqlite':sdk,
+            b'attributes':attributes,b'entropy':self.lua.eval("function() return string.rep('A',16) end")})
+        self.runtime[b'outbox']=self.outbox
+        self.runtime[b'queue_root']=os.fsencode(self.root)
+        self.runtime[b'sqlite']=sdk
+        self.runtime[b'attributes']=attributes
+        self.lua.globals().package.loaded[b'quartzo/paired_exchange']=self.paired
+
+    def run_native(self):
+        # Only the injected test response model consumes this generated fixture.
+        # Opaque receipt issuance and pruning still use the real Lua owners.
+        with mock.patch.object(legacy,'FIXTURE',self.native_fixture):
+            return self.run_sequence()
+
+    def rows(self):
+        with closing(sqlite3.connect(self.source.resolve().as_uri()+'?mode=ro',uri=True)) as conn:
+            context=conn.execute('SELECT device_id,source_epoch FROM identity').fetchone()
+            lines={row[0] for row in conn.execute('SELECT line FROM pending')}
+            review=conn.execute('SELECT COUNT(*) FROM review').fetchone()[0]
+        return context,lines,review
+
+    def seed(self):
+        self.runtime[b'seed_only']=True
+        self.runtime[b'nonce']=self.lua.eval("function() return 'qrtr_'..string.format('%032x',7) end")
+        report=self.run_native()
+        self.assertEqual(report[b'phase'],b'outbox_seed_receipt_discarded')
+        self.assertEqual(report[b'attempts'],1)
+        self.assertEqual(report[b'outbox_pruned'],0)
+        self.assertEqual(report[b'outbox_final_pending'],3)
+        self.assertEqual(report[b'deliberately_discarded_responses'],1)
+        return report
+
+    def test_lost_receipt_survives_fresh_vm_then_exact_receipts_prune_and_retain_review(self):
+        self.seed()
+        context,lines,review=self.rows()
+        expected={batch['event_lines'][-1] for batch in self.native_fixture['batches']}
+        self.assertEqual(lines,expected)
+        self.assertEqual(review,1)
+        old_vm=self.lua
+        self.configure() # Fresh Lua VM and actual native SQLite handle composition.
+        self.assertIsNot(self.lua,old_vm)
+        self.runtime[b'expected_seed_pending']=True
+        report=self.run_native()
+        self.assertEqual(report[b'phase'],b'paired_receipts_checked')
+        self.assertEqual(report[b'outbox_pruned'],3)
+        self.assertEqual(report[b'outbox_final_pending'],0)
+        self.assertEqual(report[b'outbox_raw_receipt_rejections'],5)
+        self.assertEqual(set(report[b'outbox_selected_sha256'].values()),
+            {hashlib.sha256(line.encode()).hexdigest().encode() for line in expected})
+        self.assertTrue(report[b'outbox_identity_preserved'])
+        self.assertEqual([step[b'outbox_pending'] for step in report[b'steps'].values()],
+            [3,2,1,1,0,0])
+        self.assertEqual(self.rows(),(context,set(),1))
+        for key in ('canonical_ack','physical_execution_attested','canonical_persistence_proven',
+                    'source_cursor_changed','statistics_accessed','wifi_changed'):
+            self.assertFalse(report[key.encode()])
+
+    def test_native_context_requires_existing_state_and_prior_seed_before_network(self):
+        before=self.source.read_bytes()
+        self.assertEqual(self.run_native()[b'phase'],b'failed')
+        self.assertEqual(self.case.sent,[])
+        self.assertEqual(self.source.read_bytes(),before)
+        self.runtime[b'outbox']=None
+        self.assertEqual(self.run_native()[b'phase'],b'failed')
+        self.assertEqual(self.case.sent,[])
+
+    def test_wrong_receipt_revision_after_restart_preserves_selected_bytes_and_review(self):
+        self.seed()
+        original=self.rows()
+        self.configure()
+        self.runtime[b'expected_seed_pending']=True
+        self.case.mutation='wrong_revision'
+        self.assertEqual(self.run_native()[b'phase'],b'failed')
+        self.assertEqual(self.rows(),original)
+
+    def test_native_fixture_provenance_and_false_acceptance_flags(self):
+        raw=(ROOT/'outbox_sequence_fixture.json').read_bytes()
+        proof=json.loads((ROOT/'outbox_sequence_fixture.provenance.json').read_bytes())
+        self.assertEqual(hashlib.sha256(raw).hexdigest(),proof['fixtureSha256'])
+        self.assertEqual(proof['sourceCommit'],'bdd95aa87491cd57d1914a265cb2c088928cfa17')
+        for key in ('canonicalAck','physicalExecutionAttested','nativeEntropyProven','sourceGenerationVerified'):
+            self.assertFalse(proof['proof'][key])
 
 
 if __name__=='__main__':unittest.main()

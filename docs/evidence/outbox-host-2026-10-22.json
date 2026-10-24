@@ -1,0 +1,108 @@
+{
+  "evidence_version": 1,
+  "scope": "Phase D plugin-owned delivery-state host/native SDK verification only",
+  "host_result": "PASS",
+  "gate4_status": "OPEN",
+  "source_commit": "7a7fb09e24bcd956ab913ea9b9a7ea3491fdee92",
+  "plugin_version": "0.0.4",
+  "exact_source_ci": {
+    "url": "https://github.com/olalaurao/quartzo-koplugin/actions/runs/39723070687",
+    "conclusion": "success",
+    "plugin_cases": 174,
+    "actual_official_native_sqlite_cases": 55,
+    "outbox_cases": 61,
+    "actual_official_native_outbox_cases": 21,
+    "transport_cases": 34,
+    "wire_cases": 115,
+    "total": 323,
+    "skipped": 0,
+    "native_sqlite_reference": "tools/plugin/SQLITE_REFERENCE.lock.json"
+  },
+  "windows_local": {
+    "plugin_passed": 117,
+    "plugin_native_linux_skipped": 54,
+    "wire_passed": 111,
+    "wire_native_platform_skipped": 4,
+    "boundary": "Windows does not execute the official POSIX SQLite binary; those cases actually ran in Linux CI",
+    "baseline_source_commit": "0bea3f92699e65a99c62f01066e3a4939bb0368a",
+    "guarded_outbox_focus": {
+      "total": 61,
+      "passed": 40,
+      "native_linux_skipped": 21
+    }
+  },
+  "archive": {
+    "bytes": 40200,
+    "sha256": "c805ce77307cb6acb0ad9f28cb604b272e577d3069c4051a39c1987a611e4d4f",
+    "linux_ci_windows_bytes_equal": true,
+    "files": {
+      "quartzo.koplugin/_meta.lua": "42df2517704fe6c858274b4640fec2b45dc7bc678414139fddd1e52292898727",
+      "quartzo.koplugin/main.lua": "3e1c3aaa90cc2e23ecb528fb3c150388eb54917ccef7a46a9d069495f89e6264",
+      "quartzo.koplugin/quartzo/collector.lua": "83b5f4b6bd63bd4a3fd20261209059703354e904cb89ae2e9ddbc7e935c5a1d4",
+      "quartzo.koplugin/quartzo/outbox.lua": "fed49ea4626b2f0219a0644df66372b1337f2161eef6678f6d9c6e8324257628",
+      "quartzo.koplugin/quartzo/paired_exchange.lua": "0f7bad0287d878244af4121881c6ccd3f1bde17ddc899a046fc9050d8af1f5a8",
+      "quartzo.koplugin/quartzo/statistics.lua": "3d58a6f7b98ce2b252b93c9724d7e172be5caa98acbc264e8cbf24c02b1bf745"
+    }
+  },
+  "storage": {
+    "owner": "Plugin-owned bounded outbox, not canonical Reading Activity",
+    "fixed_filename": "quartzo_sync_state.sqlite3",
+    "journal_mode": "delete",
+    "synchronous": "EXTRA",
+    "synchronous_readback": 3,
+    "maximum_pending_plus_review": 1000,
+    "maximum_delivery_lines": 100,
+    "maximum_delivery_bytes": 524288,
+    "missing_state_auto_creation": false,
+    "corrupt_future_state_auto_reset": false,
+    "selected_bytes_survive_source_deletion": true,
+    "native_conflict_and_capacity_rollback": true,
+    "review_retained_without_source_checkpoint": true,
+    "actual_linux_os_entropy_tested": true,
+    "source_epoch_generation_enrollment_proven": false,
+    "create_race_preserves_unknown_version_bytes_and_journal": true
+  },
+  "process_stop_cases": [
+    "stage_before_commit: nonzero rollback journal observed, owned child killed without finally/close, reopen retains previous state",
+    "stage_after_commit: owned child killed, exact selected bytes survive reopen",
+    "receipt_prune_before_commit: owned child killed with live journal, original pending facts recover",
+    "receipt_prune_after_commit: owned child killed, unacknowledged facts and review survive"
+  ],
+  "receipt_boundary": {
+    "actual_pairing_owner_and_shared_carrier_executed": true,
+    "new_transport_sdk": "Existing injected native-API fixture only; not new native TLS or device proof",
+    "opaque_session_request_receipt_required": true,
+    "raw_matching_claims_refused": true,
+    "wrong_session_request_or_line_refused": true,
+    "closed_expired_session_refused_by_existing_owner": true,
+    "partial_acceptance_only_prunes_matching_bytes": true,
+    "later_mismatch_rolls_back_earlier_prune": true,
+    "canonical_ack_or_watermark_issued_by_store": false,
+    "paired_owner_relocated_without_byte_changes": true
+  },
+  "new_pw3_execution": false,
+  "new_android_execution": false,
+  "hardware_power_loss_tested": false,
+  "user_statistics_mutated": false,
+  "device_installation": false,
+  "active_pairing_or_listener": false,
+  "production_registration": false,
+  "upstream_contract_changed": false,
+  "companion_lock_changed": false,
+  "full_goal_complete": false,
+  "pending": [
+    "Actual PW3 owned-state restart/interruption matrix with exact source and unchanged Statistics/other-plugin verification",
+    "Actual source-outbox-to-normal-Android-receiver receipt and dropped-receipt replay proof",
+    "Verified source-generation enrollment, identity restore/reset behavior and lifecycle/checkpoint integration before production activation",
+    "Remaining integrated provenance, Readwise, effects, UI and full release DoD"
+  ],
+  "prior_source_evidence": [
+    {
+      "source_commit": "0bea3f92699e65a99c62f01066e3a4939bb0368a",
+      "ci_url": "https://github.com/olalaurao/quartzo-koplugin/actions/runs/39722438051",
+      "total": 320,
+      "archive_bytes": 39962,
+      "archive_sha256": "58f23276256eeb4a2a6262b58a936d8876cd6ba5c7501ab0c1256513abcd6ef7"
+    }
+  ]
+}

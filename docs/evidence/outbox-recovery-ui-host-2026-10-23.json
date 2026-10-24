@@ -1,0 +1,96 @@
+{
+  "evidence_version": 1,
+  "scope": "Phase D manual recovery controls and reviewed restore, host and official native SDK only",
+  "source_commit": "c70a4e73317870f9e6ba7c3cadb5a15d329db922",
+  "plugin_version": "0.0.7",
+  "host_result": "PASS",
+  "physical_result": "NOT_RUN",
+  "gate4_status": "OPEN",
+  "exact_source_ci": {
+    "url": "https://github.com/olalaurao/quartzo-koplugin/actions/runs/39998554809",
+    "conclusion": "success",
+    "plugin_cases": 251,
+    "transport_cases": 34,
+    "wire_cases": 115,
+    "total": 400,
+    "skipped": 0,
+    "actual_official_native_sqlite_plugin_cases": 76,
+    "actual_standalone_luajit_lfs_discovery_case_included": true
+  },
+  "windows_local": {
+    "plugin_cases_before_later_race_test": 248,
+    "passed": 172,
+    "native_linux_skipped": 76,
+    "separate_later_race_cases_passed": 2,
+    "wire_passed": 111,
+    "wire_native_tls_skipped": 4,
+    "transport_passed": 32,
+    "transport_posix_skipped": 2
+  },
+  "manual_controls": {
+    "startup_initializes_state": false,
+    "automatic_backup_selection": false,
+    "directory_entry_limit": 512,
+    "supported_copy_limit": 32,
+    "file_dates_are_generation_proof": false,
+    "restore_requires_absent_primary": true,
+    "reviewed_identity_counts_rechecked_in_copy_transaction": true,
+    "whole_snapshot_crypto_binding": false,
+    "late_failed_target_preserved_unregistered": true,
+    "original_identity_pending_bytes_and_review_retained": true,
+    "canonical_ack": false
+  },
+  "native_evidence": {
+    "filesystem_runtime": "Actual official standalone LuaJIT with libkoreader-lfs",
+    "sqlite_runtime": "Actual official SQ3/SQLite plus both test bridges",
+    "symlink_excluded": true,
+    "directory_cap_enforced": true,
+    "copy_transaction_race_rejected": true,
+    "physical_menu_rendering_proven": false
+  },
+  "prior_failure": {
+    "source_commit": "5ca8a9dfbd6c1ea32307cd7599138a8be1783fd2",
+    "ci": "https://github.com/olalaurao/quartzo-koplugin/actions/runs/39998229836",
+    "plugin_passed": 250,
+    "fixture_setup_errors": 1,
+    "reason": "Official LFS cannot resolve exported Lua C symbols inside the private embedded Lupa VM",
+    "correction": "Run unchanged native discovery assertions in official standalone LuaJIT",
+    "later_ci_steps": "SKIPPED",
+    "runtime_changed_by_fixture_correction": false
+  },
+  "archive": {
+    "sha256": "f48bc9a0bbed995dca85e20aeb92c25be66397ddcd63446082570bee7cb0b491",
+    "bytes": 77357,
+    "files": {
+      "quartzo.koplugin/_meta.lua": "5221a14d3693646e5c5351c093cc3fc3be55c3bd12f2fa5eeb412ed7a4a589f3",
+      "quartzo.koplugin/main.lua": "d40c8e770c1d1bf81421d21836e766b4c1850589b6e6858235b3187e63337ae9",
+      "quartzo.koplugin/quartzo/statistics.lua": "3d58a6f7b98ce2b252b93c9724d7e172be5caa98acbc264e8cbf24c02b1bf745",
+      "quartzo.koplugin/quartzo/collector.lua": "83b5f4b6bd63bd4a3fd20261209059703354e904cb89ae2e9ddbc7e935c5a1d4",
+      "quartzo.koplugin/quartzo/outbox.lua": "80ae20c82bcddf636191ce3efd7fbbcf3291859c702e05f9b2720dfed770e3d8",
+      "quartzo.koplugin/quartzo/paired_exchange.lua": "0f7bad0287d878244af4121881c6ccd3f1bde17ddc899a046fc9050d8af1f5a8",
+      "quartzo.koplugin/quartzo/codec.lua": "c0657b9534cf658868b81d627e21df635e6847ffe6f532dc37b3e31d612789aa",
+      "quartzo.koplugin/quartzo/koreader_deps.lua": "ba20d6619e0572e2b5860be4059f17d065b3f4414cb5f3a76cbc9a195e128418"
+    },
+    "installed": false
+  },
+  "unchanged": {
+    "codec_bytes": true,
+    "koreader_adapter_bytes": true,
+    "statistics_owner_bytes": true,
+    "collector_bytes": true,
+    "paired_receipt_owner_bytes": true,
+    "schema_v1_create_bytes": true,
+    "upstream_contracts": true,
+    "companion_lock": true
+  },
+  "remaining": [
+    "Verified source-generation enrollment and reset/current-source lifecycle",
+    "Actual PW3 recovery UI, process interruption/restart and paired receipt proof",
+    "Later ingestion, identity/effects and full seven-topic release DoD"
+  ],
+  "device_accessed": false,
+  "user_statistics_accessed": false,
+  "network_session_started": false,
+  "production_registration_enabled": false,
+  "full_goal_complete": false
+}

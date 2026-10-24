@@ -37,9 +37,13 @@ jobs:
           curl -fL --retry 2 --max-time 120 -o "$RUNNER_TEMP/koreader-sqlite.tar.xz" \
             https://github.com/koreader/koreader/releases/download/v2026.07.1/koreader-linux-x86_64-v2026.07.1.tar.xz
           python tools/plugin/prepare_sqlite_reference.py --archive "$RUNNER_TEMP/koreader-sqlite.tar.xz" --output "$RUNNER_TEMP/koreader-sqlite-reference"
-      - name: Plugin and native read-only Statistics fixtures (no physical proof)
+      - name: Prepare existing pinned Reading wire reference
+        run: |
+          python tools/reading_wire/prepare_reference_runtime.py "$RUNNER_TEMP/quartzo-reading-wire-reference"
+      - name: Plugin, read-only Statistics and owned outbox fixtures (no physical proof)
         env:
           READING_SQLITE_REFERENCE_DIR: ${{ runner.temp }}/koreader-sqlite-reference
+          READING_WIRE_REFERENCE_DIR: ${{ runner.temp }}/quartzo-reading-wire-reference
         run: |
           python -m unittest discover -s tools/plugin -p 'test_*.py' -v
           python tools/plugin/package.py --output "$RUNNER_TEMP/quartzo-bootstrap.zip"
@@ -48,9 +52,9 @@ jobs:
           python -m unittest discover -s tools/transport_probe -p 'test_*.py' -v
       - name: Pinned Reading wire and gated pairing consumers (no production registration)
         env:
+          READING_SQLITE_REFERENCE_DIR: ${{ runner.temp }}/koreader-sqlite-reference
           READING_WIRE_REFERENCE_DIR: ${{ runner.temp }}/quartzo-reading-wire-reference
           READING_NATIVE_LUA51: /usr/bin/lua5.1
         run: |
           python tools/reading_wire/verify_upstream.py
-          python tools/reading_wire/prepare_reference_runtime.py "$READING_WIRE_REFERENCE_DIR"
           python -m unittest discover -s tools/reading_wire -p 'test_*.py' -v

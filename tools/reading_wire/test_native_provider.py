@@ -25,7 +25,7 @@ def provider_modules(lua):
     sha_module = lua.execute(sha_bytes)
     loader = lua.eval("function(json,sha) return function(name) if name=='dkjson' then return json end; "
                       "if name=='ffi/sha2' then return sha end; error('unsupported_reference_module') end end")(json_module, sha_module)
-    adapter = lua.execute((ROOT / "koreader_deps.lua").read_bytes())
+    adapter = lua.execute((ROOT.parents[1] / "quartzo.koplugin/quartzo/koreader_deps.lua").read_bytes())
     return adapter[b"load"](loader), json_module, sha_module
 
 
@@ -50,7 +50,7 @@ class NativeProviderCodecTest(test_codec.WireCodecTest):
 class ProviderBoundaryTest(unittest.TestCase):
     def test_missing_or_shape_losing_providers_fail_closed_without_excerpts(self):
         lua = LuaRuntime(unpack_returned_tuples=True, encoding=None)
-        adapter = lua.execute((ROOT / "koreader_deps.lua").read_bytes())
+        adapter = lua.execute((ROOT.parents[1] / "quartzo.koplugin/quartzo/koreader_deps.lua").read_bytes())
         for loader in (
             "function() error('private-provider-sentinel') end",
             "function() return {} end",

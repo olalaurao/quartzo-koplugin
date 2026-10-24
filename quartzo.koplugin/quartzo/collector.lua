@@ -63,8 +63,8 @@ function M.books(path, options, sqlite)
     end)
 end
 
-function M.collect(path, options, codec, sqlite)
-    return Statistics.with_snapshot(path, sqlite, function(conn)
+local function collect(options, codec, snapshot)
+    return snapshot(function(conn)
         check(type(options) == "table" and type(codec) == "table"
             and type(codec.encode_event) == "function")
         local limit = bound(options.limit)
@@ -170,10 +170,24 @@ function M.collect(path, options, codec, sqlite)
         table.sort(ids)
         for _, id in ipairs(ids) do group(result, seen[id]) end
         result.byte_count = bytes
+        result.snapshot_schema_cookie=tonumber(conn:rowexec("PRAGMA schema_version"))
+        check(integer(result.snapshot_schema_cookie,0,2147483647))
         -- This is a source observation only, including when complete=true.
         -- A future outbox must preserve pending review independently and cannot
         -- advance an acknowledged watermark over it. next_scan is not that ACK.
         return result
+    end)
+end
+
+function M.collect(path,options,codec,sqlite)
+    return collect(options,codec,function(read)
+        return Statistics.with_snapshot(path,sqlite,read)
+    end)
+end
+
+function M.collect_reviewed(path,options,codec,checkpoint,runtime)
+    return collect(options,codec,function(read)
+        return Statistics.with_source_snapshot(path,checkpoint,runtime,read)
     end)
 end
 

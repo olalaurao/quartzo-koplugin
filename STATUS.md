@@ -1,5 +1,755 @@
 # Implementation Status
 
+## 2026-10-24 New recovery destinations refuse orphan SQLite sidecars
+
+Review reproduced a separate restoration hazard: an absent primary with leftover
+-journal/-wal/-shm files could still be created/restored by SQLite. The SAME
+outbox owner now checks a fresh destination's primary and sidecars before create,
+before restore opens the backup, and before clone creates/attaches a destination.
+Existing or unsupported sidecars are preserved for review, including empty files.
+Ordinary open of an existing primary remains unchanged, so native hot-journal
+recovery still works. No raw-file repair, alternate journal or new identity path.
+
+Local focused regressions: six PASS, three explicit Linux-native-only skips.
+The restore/create regressions failed before the fix. Native source fixture now
+uses actual KOReader LFS to check all three sidecars (including empty SHM), refuses
+before its SQLite-open callback, then restores the original reviewed copy using
+the real SDK. Full exact-source native CI is pending for this change. Previous
+32b6ffc CI40125512029 passed599/no skips; it does not certify this new code.
+Candidate stays0.0.10, not installed. Earlier candidate ZIPs are superseded.
+Installed0.0.9 and the real993pending/seven-review queue/recovery remain untouched.
+
+The [recovery runbook](docs/reading-queue-recovery.md) records original-identity
+authority, preservation and supported restore/refusal paths without inventing
+an identity from native metadata or adding a second recovery store. Complete
+identity loss/nonempty replacement reconciliation and the full topic2 remain
+OPEN. Next validate/package this source, then implement only the transport and
+reconciliation steps whose prerequisites are proven; do not repeat accepted
+offline collection or start a device/session merely to await CI.
+
+## 2026-10-24 Missing-primary enrollment preserves earlier identity artifacts
+
+Candidate0.0.10 now treats recognizable legacy state, orphan SQLite sidecars,
+preserved/partial own primaries and malformed own recovery leaves as requiring
+review. The SAME bounded metadata-only recovery listing reports unsupported
+artifacts; it never opens, repairs, migrates or removes them. Discovery recognizes
+ASCII case variants on FAT while strict supported recovery filenames stay exact.
+Fresh source review AND enrollment confirmation both reject these artifacts,
+including artifacts appearing after a review. Unrelated settings remain ignored.
+No new identity registry, store, cursor, schema or receipt path was added.
+
+Eleven residue-name variants reproduced the unsafe fresh-review path before
+the fix. Local source-enrollment suites now report32PASS/17explicit native-only
+Windows skips; actual native CI is required for the final source. The preceding
+UI-only fix e2d3995 passed CI40125236031, but that run does not certify these new
+outbox changes. Installed0.0.9 and its993pending/seven-review queue remain intact.
+Earlier0.0.10 packages are superseded; package the final accepted source only.
+Missing every authoritative identity copy or nonempty replacement history still
+requires provenance reconciliation; these guards prevent unsafe reenrollment,
+not reconstruction of an unknown identity. Gate4/full topic2 remain OPEN.
+
+## 2026-10-24 Actual PW3 collection/recovery/restart accepted; recovery access fix
+
+Exact installed 0.0.9 / d5bab06 collected 1,000 real native positions: 993
+pending events and seven unresolved review entries. Independent private-copy
+inspection reconstructed every selected native ID/payload/digest, source guards
+and candidate progress. The recovery copy retained exactly the same identity,
+pending bytes, review and progress; acknowledged progress stayed NULL. The user
+corrected an initial restart report, then explicitly performed the restart and
+confirmed the same queue/copy remained responsive. A subsequent USB comparison
+verified unchanged primary, recovery, Statistics and all 957 installed Lua files
+(949 unrelated, eight Quartzo). No new crash-log bytes appeared. Root KOReader
+settings were normally rewritten and are not claimed byte-identical. UI timing
+was not measured. See [real collection proof](docs/evidence/outbox-reviewed-collection-pw3-2026-10-24.json).
+
+Exact b35f060 source-lifecycle diagnostic also passed on actual ARM/v2026.07.1:
+two owned-child commit stops, 251 same-second valid events and 16 independently
+verified synthetic files covering restore/replay, retained review, generation
+refusal/empty transition and schema2 upgrade. CPU time was 2.021544s for the
+synthetic diagnostic only, not real UI latency. See
+[physical source-lifecycle proof](docs/evidence/outbox-source-lifecycle-pw3-2026-10-24.json).
+Its original collector flags remain unchanged. The user acknowledged cleanup;
+USB inspection verified the diagnostic extension is absent. No phone APK,
+listener, credential or timer is active.
+
+Review found a recovery-access defect: an unreadable primary or failed status
+hid the existing recovery-copy controls. Candidate 0.0.10 keeps their read-only
+review reachable, disables primary mutations without valid status and retains
+the owner's refusal to overwrite an existing primary. The new Lua5.1/LuaJIT
+regressions failed before the fix; all 44 bootstrap cases now pass locally.
+No store/schema/identity/receipt/network change. The 130925-byte0.0.10 package
+is prepared privately; it is NOT installed and native CI is pending. The 0.0.9
+physical proof remains source-specific.
+
+Gate4/PhaseD and full topic2 remain OPEN for the remaining lost-identity/nonempty
+history reconciliation and applicable receipt/lifecycle integration. Later
+production transport, real canonical ingestion, resumable full backfill and
+optional lifecycle work are not claimed complete by this bounded offline proof.
+Preserve the real queue/copy; do not repeat accepted collection or reset it.
+
+## 2026-10-24 Current candidate installed; grouped PW3 execution requested
+
+User availability returned for both devices. Exact runtime d5bab06 / 0.0.9
+was installed from its verified 130544-byte package after preserving a fresh
+private Statistics/settings baseline and the exact installed 0.0.7 rollback.
+All 949 other installed plugin Lua sources and tracked settings stayed exact.
+KOReader git-rev remains v2026.07.1. No mounted Statistics database was SQL-opened.
+
+The exact b35f060 --source-lifecycle bundle was installed through the existing
+artifact owner; its manifest digest matches the accepted prepared bundle.
+One grouped Kindle-only execution was requested: synthetic KUAL lifecycle cases,
+real source setup, one bounded collection, populated recovery-copy review and
+KOReader restart. Human observations and independent USB/private-copy collection
+remain PENDING. No phone APK, listener, credential or timed session was started;
+Wi-Fi stays under user control. CI40113853878 remains SUCCESS / 589 native cases.
+Upstream post-merge CI40116226677 also completed SUCCESS at 51cebff3.
+
+This installation is not physical acceptance or full topic2 completion. Gate4
+and PR5 remain OPEN/DRAFT. Preserve failures and partial evidence; do not rerun
+in place or silently recreate an identity. After USB returns, independently
+check selected native IDs/payloads, retained review, source/progress and recovery
+identity, synthetic outputs and unrelated source/settings preservation.
+
+## 2026-10-24 Grouped source-lifecycle diagnostic native PASS, physical OPEN
+
+Exact b35f060, CI40113545022: 589 PASS, no skips (434 plugin, 34 transport, 121 wire).
+The standalone official SDK fixture actually stopped its own child twice around
+schema3 collection commit and independently checked all 16 synthetic files. It
+verified 251 same-second events, retained/resolved review, same-identity recovery
+and replay, refused nonempty replacement, backed-up empty generation change and
+schema2 upgrade. Forged ACK progress and altered pending bytes failed collection.
+See [bounded host evidence](docs/evidence/outbox-source-lifecycle-host-2026-10-24.json).
+
+The exact committed --source-lifecycle bundle is prepared privately, NOT installed.
+It reuses the existing manifest/launcher/collector and native process helper;
+actual Statistics and all eight plugin runtime files remain untouched. Runtime
+d5bab06 / 0.0.9 package still applies. No phone, APK build, Wi-Fi action, listener,
+session or human request was started. Upstream post-merge CI40112480349 is also
+SUCCESS at 8db57c36; no extra Flutter run was requested for these diagnostic files.
+
+Next: after availability, take a fresh device baseline and install this exact
+accepted synthetic bundle for the grouped Kindle-only block. Correlated reports
+still need actual human/device execution and preservation verification. Do not
+repeat unchanged earlier offline/transport scopes. Real current-plugin UI/source
+proof, nonempty/state-loss provenance, time/performance and full Gate4 remain
+OPEN. PR5 DRAFT; full goal ACTIVE, topic 2 of 7, later production phases disabled.
+
+## 2026-10-24 Grouped source-lifecycle diagnostic candidate, native proof pending
+
+The existing single-use offline outbox artifact owner now has an explicit
+`--source-lifecycle` mode. Five fresh synthetic groups exercise schema3 collection
+before/after actual owned-child SIGKILL, empty-source witness/event/progress
+atomicity, same-second continuation over 251 events, retained review resolution,
+content-reviewed same-identity restore/replay, refusal of a nonempty replacement,
+reviewed empty new-generation transition and schema2 upgrade with its old backup.
+The host collector validates exact allowed files, schemas, native IDs/payloads,
+review/source/progress and backup identity on private synthetic copies. It cannot
+attest hardware from report booleans. The native standalone fixture and report
+adversaries must pass before packaging the new mode.
+
+Local diagnostic tests: 14 cases, 12 PASS / two explicit standalone-native skips. The
+initial driver model lacked the new Statistics preload; it was corrected and
+all four driver cases pass. Native source execution remains pending CI, not PASS.
+No plugin runtime source, wire contract, Companion lock, production caller or
+device state changed. Candidate 0.0.9 / runtime d5bab06 remains byte-identical;
+installed 0.0.7 is the latest physical observation. No APK or session was started.
+The updated grouped physical runbook at d0df842 passed 585 native host cases in
+CI40111598016; that earlier proof does not cover this new diagnostic mode.
+
+Upstream PR89 merged 8db57c36 after exact 74d9b157 CI40111424714 passed 2921 tests /
+eight explicit skips. Its source inventory is review-only; it cannot restore a
+lost identity or authorize reimport. Statistics lacks an intrinsic generation
+UUID, so state-loss/nonempty-history provenance remains a separate blocked
+production path. No sample-match shortcut was added. Gate 4 OPEN, goal ACTIVE, topic 2
+of 7; next prove/package this isolated mode, then wait for device availability.
+
+## 2026-10-24 Reviewed offline collection0.0.9: native accepted, physical OPEN
+
+Exactd5bab06 native CI40109125180 passed585/no skips (430 plugin,34 transport,
+121 wire). The final private0.0.9 package contains the eight exact Git sources;
+it supersedes the earlier efbb/0.0.8 artifacts and is NOT installed. The actual
+last-known0.0.7 installation and earlier source-bound physical scopes remain.
+No device access, phone APK build, timed session, listener or human request was
+started. Windows suites remain manual; no unrelated Flutter/TS suite was rerun.
+
+The SAME Statistics/collector/outbox owners provide confirmed foreground collection,
+opaque transient passes and atomic schema3 event/coverage/witness writes. Only
+matching approved opaque receipts can advance the acknowledged overlap frontier;
+pending/unresolved positions block further progress. Remaining pending metadata
+is revalidated, so an inconsistent neighbor rolls back another receipt's prune
+and marker. The regression failed before the fix and passes now. Native child
+SIGKILL before/after commit proves the joined state, not hardware power loss.
+
+Explicit invalid-entry decisions retain audit and add no minutes/ACK. Same-identity
+history rescan restarts progress only after consent. Empty-source witnesses are
+strengthened on first collection. Empty replacement generations require settled
+work and mandatory verified recovery; device ID stays, epoch changes. Nonempty
+replacement/state-loss without provenance stays blocked for reconciliation.
+Schema2-to3 upgrade is explicit and backed up, preserving identities and all
+pending/review bytes; failed native DDL/commit rolls back. Schema1 stays in its
+recognized diagnostic/recovery scope, never silently promoted to production.
+
+Manual UI requires closed books and yields between at most ten100-position batches.
+Observable clock rollback offers reviewed replay or invalidates a transient pass;
+it is not clock calibration or proof of actual event-day correctness. Arbitrary
+backdating/rewrites still need explicit rescan/provenance policy. No startup or
+automatic transport/lifecycle/effects registration is enabled. Gate4 stays OPEN
+for grouped changed0.0.9 PW3 UI/runtime proof, real source provenance, remaining
+state-loss/nonempty-history reconciliation and physical/time/performance gates.
+Full goal ACTIVE/topic2of7; later production phases have not been bypassed.
+
+## 2026-10-24 Explicit source review and content-bound recovery candidate0.0.8
+
+The existing Statistics owner now mints one-use native RO source reviews. Explicit
+fresh setup through the existing outbox owner creates independent random qrd_/qse_
+values and private schema2 source guards; startup remains inert. Existing schema1
+identity/selected bytes are not migrated or regenerated. Known recovery copies
+block fresh setup. Native file changes/reset observations preserve pending data.
+Explicit same-history reconfirmation can refresh file continuity only, retaining
+identity, original witnesses and history boundary; missing witnesses/unknown
+history fail closed. Guards do not certify indistinguishable clones or establish
+an intrinsic database-generation UUID. No production collection, backfill,
+watermark or transport registration is enabled. Full reset/new-generation
+reconciliation and actual source enrollment proof remain OPEN.
+
+Recovery review now binds selected line digests, retained review descriptors and
+source metadata, not just counts. Same-count changes are checked again inside
+the copy transaction. Schema1/2 recovery preserves its original version/context.
+UI0.0.8 adds manual Reading source setup/check/reconfirmation and keeps sync
+inactive. Nothing is installed; actual0.0.7 remains the latest installed proof.
+The implementation addendum records precise authority and remaining limits.
+The same collector loop now supports an owner-bound read-only preview inside
+the guarded native snapshot. Its device/epoch come from existing state; legacy/
+changed sources and foreign continuations fail closed. Preview stages nothing
+and creates no lifecycle/ACK authority. Exact0689d4a native CI40101594161
+passed499/no skips (344 plugin,34 transport,121 wire), including the guarded
+preview through actual SQ3/LFS in the standalone fixture. Its fresh private
+0.0.8 package supersedes the701 package; all eight source hashes match Git.
+No new device request or installation is made.
+
+Exact701bd12 native CI40100324573 passed493 cases without skips (338 plugin,
+34 transport,121 wire), including official LFS/entropy/SQ3 and fresh-process
+v2 recovery. Local plugin tests passed234 with104 explicit native-only skips.
+The98023-byte package in the private candidate manifest matches all eight Git
+sources; it is not installed. PR5 remains draft. Upstream
+main8375fc63 CI40053124500 retry passed2915 tests/8 skips; initial attempt failed
+reference preparation before tests. No hash pin was relaxed. Windows suites
+remain manual per the user's instruction. Goal ACTIVE/topic2of7; Gate4 OPEN.
+
+## 2026-10-23 Actual PW3 and Android paired outbox subtest PASS
+
+The user executed the consolidated KUAL diagnostic and reconnected USB. Exact
+25819d6 sources ran on ARM/v2026.07.1 against the isolated Android profile APK
+built from bdd95aa8, using host595a2d60. The SAME outbox/paired owners preserved
+the previously PW3-generated synthetic identity: a child staged three facts and
+retained review, checked/discarded a receipt and left three facts pending. Its
+parent reopened the persisted file; pending counts were3/2/1/1/0/0. Five raw
+receipt rejections pruned nothing; only opaque paired receipts pruned three facts.
+Independent private-copy inspection found zero pending and one retained review;
+the isolated canonical destination contained three unique events/120 seconds.
+
+Statistics/reserved settings and all352 tracked Lua files stayed exact (344 other
+plugins,8 installed Quartzo). The credential was revoked, our listener closed and
+the identity-checked isolated APK removed; production app metadata stayed exact.
+Both temporary diagnostic roots were manually removed and absence verified.
+See [bounded paired physical evidence](docs/evidence/outbox-paired-pw3-2026-10-23.json).
+Raw collector attestation/ACK fields remain untouched; this separately records
+the actual human/device execution. No cloud delivery, hardware power loss or
+verified Statistics generation is inferred from this synthetic scope.
+
+Exact25819d6 native CI40047639692 already passed415 cases/no skips. At the
+user's request, upstream Windows desktop suites are now manual; shared/Android
+contracts remain in one automatic hosted job. Existing accepted offline, empty UI
+and normal reading/restart proofs need no repetition for unchanged runtime bytes.
+Next consolidate generation enrollment/reset/current-source handling and populated
+recovery UI, using the existing owner. Those remain OPEN; no production producer,
+watermark/lifecycle/transport registration is enabled. Full Gate4 remains OPEN,
+PR5 DRAFT, full goal ACTIVE/topic2 of7. Candidate0.0.7 and its0.0.2 rollback remain.
+
+## 2026-10-23 Consolidated paired outbox trial candidate
+
+Exact645b4fa native CI40045536903 passed413 cases without skips (260 plugin,
+34 transport,119 wire). The SQLite reference environment correction is accepted.
+The next coherent change extends the EXISTING paired bundle/driver/collector:
+one KUAL execution seeds an explicitly supplied empty synthetic outbox in a
+child process, discards a checked receipt, then reopens the same file in its
+parent for six idempotent attempts. The existing outbox/process/receipt owners
+are reused; no production startup, source enrollment or schema is added.
+
+Collection checks distinct process IDs, request bindings, selected digests,
+pending counts3/2/1/1/0/0, retained review and final private-copy SQL. Two new
+Linux SDK/TLS process regressions require native CI; Windows skips them explicitly.
+Host response models remain models and cannot attest physical execution or ACK.
+The actual paired device trial and populated recovery/source lifecycle remain
+OPEN. No timed session or new installation has started; PR5 stays draft.
+
+Validation is consolidated per the user's request: reuse exact-source successful
+proof, run changed-path regressions and required CI, and group physical cases.
+Upstream Quartzo bdd95aa8 hosted CI40044743609 passed2915 tests/8 skips; the
+redundant local full Windows run was intentionally canceled, not marked PASS.
+Remaining required Windows checks must still pass before upstream merge.
+
+## 2026-10-23 Paired outbox sequence candidate; native CI pending
+
+Initial exacte6ec004 CI40045291562 passed plugin260 and transport34, then
+failed all four new native wire setups: that step did not receive the already
+prepared READING_SQLITE_REFERENCE_DIR. The workflow now passes the SAME pinned
+directory to that step; tests still require verification and do not skip missing
+references on Linux. No sequence/runtime criterion was relaxed. Full native CI
+must be repeated; the failed log is preserved privately.
+
+The existing paired sequence now supports a strictly shaped synthetic native
+context only with an existing outbox. A seed-only pass stages three selected
+canonical facts plus retained review, validates and deliberately discards the
+first receipt while leaving all three facts pending. A fresh replay composition
+requires that persisted seed; only the same paired owner's opaque receipts prune
+matching facts. Invalid wire neighbors do not prune selected neighbors; review
+and identity remain intact. No outbox creation or production enrollment is added.
+
+The fixture was generated through actual Dart models at upstream draftPR88,
+bdd95aa8, using explicit deterministic host context; it is not native entropy or
+hardware evidence. Five existing local paired cases PASS; four new actual native
+SQLite cases are explicit Linux skips locally and require CI. They exercise a
+fresh Lua VM after a lost receipt, independent private-fixture SQL, pending counts
+3/2/1/1/0/0 and rejected altered receipts. The physical two-process driver/bundle/
+collector is not prepared yet. No timed session or new device request is active.
+
+## 2026-10-23 Actual0.0.7 empty-state UI and normal reading/restart PASS
+
+The user confirmed Diagnostics0.0.7, no queue, inactive synchronization, disabled
+Create recovery copy and no recovery copies. On USB reconnection Statistics,
+reserved settings and all352 tracked Lua files were identical to the installed
+baseline. No identity, queue or recovery file was created.
+
+The user then confirmed the requested existing-book reading/navigation and
+KOReader restart checks, including unchanged Wi-Fi. Fresh private-copy SQL found
+two new native event keys (5729 to5731), zero removed keys and zero changed prior
+event values. Both copies passed schema20221111/quick_check; book rows stayed44.
+All344 other-plugin and8 candidate Lua files remained exact; reserved Quartzo
+state stayed absent. Host SQL never opened mounted Statistics. See
+[bounded UI/reading evidence](docs/evidence/outbox-ui-pw3-2026-10-23.json).
+
+These subtests pass only their observed scopes. Populated recovery UI, verified
+source-generation enrollment/reset/current-source lifecycle and paired canonical
+receipt/prune/replay remain OPEN. The older paired diagnostic uses a fixed
+synthetic identity; it cannot certify this outbox's generated identity unchanged.
+Prepare that next trial through the existing fixture/session/outbox/receipt owners,
+without starting a timer before source-bound host artifacts are accepted. PR5
+stays draft and full goal remains active/topic2 of7. Prior pending entries below
+record their observation times; current candidate0.0.7 remains installed, with
+the verified0.0.2 rollback retained privately. No production registration/release.
+
+## 2026-10-23 Actual PW3 offline outbox subtest PASS; Gate4 remains OPEN
+
+The user executed the installed source-bound KUAL diagnostic on KOReader
+v2026.07.1 and reconnected USB. Same-bundle collection passed six native writer
+process-stop cases before/after stage, backup and restore commits, five raw
+receipt rejections, six entropy cases and seven native fingerprints. Independent
+SQL inspection used private copies of synthetic output only. All 31 synthetic
+files were archived; Statistics/settings and 347 tracked plugin Lua sources
+matched the preserved baseline. This includes 344 other-plugin Lua sources;
+the earlier 180-file inventory is historical, not the current source inventory.
+Installed0.0.2 remained unchanged throughout this offline subtest.
+
+The diagnostic was then removed manually after automatic cleanup was blocked;
+its absence was independently verified. No credential, listener or timed network
+session was created. See [bounded physical evidence](docs/evidence/outbox-offline-pw3-2026-10-23.json).
+This proves process interruption/recovery for the finite synthetic offline scope,
+not hardware power loss, source-generation enrollment or paired canonical ACK.
+The collector's host-only attestation fields remain untouched; the separate
+physical report records the human execution and actual mounted result.
+
+Next, the eight exact sources of unreleased0.0.7 were installed for the empty-state
+UI trial, after revalidating clean1f4d240/PR5 and successful exact-head CI409/no
+skips. Package SHA256 remains6aea1bb87d9312e46fa38f292c5f12c3d9053ed717c2c5d2986cfcccf50789e6.
+Exact0.0.2 rollback and private baselines were preserved. Statistics/settings and
+344 other-plugin Lua sources stayed identical during installation. The human
+UI request is pending; installation is not UI acceptance. No source enrollment,
+collector, networking or production registration was activated. PR5 stays draft;
+source lifecycle, populated recovery UI, normal reading/restart and paired
+receipt/prune/replay remain open. Full goal remains active at topic2 of7.
+
+## 2026-10-23 — Reject unrecoverable review input before staging (host accepted; physical Gate4 OPEN)
+
+A synthetic host reproduction on 336a7a8 accepted a malformed pending-review
+record, then rejected its recovery copy as invalid_outbox_state. Six new baseline
+regressions failed across Lua 5.1/LuaJIT: missing integer source value, noninteger
+field with integer text, and noninteger start type. This is host API evidence,
+not a claim that actual user Statistics contains such descriptors.
+
+The existing outbox owner now shares its recovery review validation with staging,
+rejecting these batches before the write transaction. Existing selected bytes,
+identity and review remain recoverable; a valid neighboring new event cannot
+partially enter a rejected batch. No schema-v1 declaration, store, event identity,
+receipt/cursor policy, source enrollment or runtime activation changed.
+
+All six focused regressions passed after the fix. The full configured Windows
+plugin suite ran 260 tests: 180 passed, 80 explicit native/POSIX skips, 28.678s.
+Exact 4c99c7a CI 40015457755 passed 409 cases/no skips: 260 plugin, 34
+transport, 115 wire, including the three new actual SDK cases. The 77,566-byte
+Windows ZIP matches native CI: 6aea1bb87d9312e46fa38f292c5f12c3d9053ed717c2c5d2986cfcccf50789e6.
+See [source-bound evidence](docs/evidence/outbox-review-validation-host-2026-10-23.json).
+Final documentation follow-ups require their own exact-head CI. PR5 stays draft;
+physical Gate4 and verified source-generation enrollment remain OPEN.
+
+The unreleased 0.0.7 candidate now has changed outbox source. All earlier UI ZIPs
+and offline bundles, including the prepared 336a7a8 bundle, remain historical;
+fresh UI/offline artifacts were prepared and source-verified from 4c99c7a. No
+device was accessed/installed, no source database written and no timed session
+started while the user cannot operate hardware. See PR5 for final source/CI proof.
+
+
+## 2026-10-23 — Manual recovery UI 0.0.7 host accepted; physical Gate4 OPEN
+
+Exactc70a4e7 CI39998554809 passed400 cases/no skips:251 plugin,34 transport,
+115 wire, including actual official standalone LFS and native SQLite restore/
+interruption cases. The77,357-byte Windows package matches native CI exactly:
+f48bc9a0bbed995dca85e20aeb92c25be66397ddcd63446082570bee7cb0b491.
+See [source-bound host evidence](docs/evidence/outbox-recovery-ui-host-2026-10-23.json).
+Artifact is prepared only, NOT installed. PR5 remains draft/open; no later gate
+or source generation is certified. Documentation-only acceptance follow-ups require
+their own exact-head CI; see the current PR5 checks.
+
+### Implemented and tested scope
+
+Continues the open PhaseD on draftPR5; no device is available for operation in
+this block. The main menu now exposes the existing outbox owner's queue counts,
+confirmed recovery-copy creation and explicit selected-copy review/restoration.
+Startup only registers the menu and reserves paths. Missing state stays missing;
+no initial identity, source epoch, collector, network or production registration
+is created by this UI. Backup/restore displays progress on the next UI tick and
+coalesces repeated confirmation while busy; SQL remains bounded synchronous work.
+
+Discovery reads metadata only, at most512 directory entries/32 supported regular
+copy leaves, never opens Statistics or chooses a recovery copy automatically.
+File dates are display-only. Restoration retains original device/epoch/bytes and
+review; existing primary, including damaged state, cannot be overwritten. The UI
+passes copied reviewed identity/counts to the same owner, rechecked before target
+creation and inside the copy transaction. This is not a cryptographic snapshot
+binding, current-generation proof, durable ACK or source watermark. A late failed
+copy can leave its unregistered target for review, as the existing protocol does.
+
+The existing codec and KOReader dependency adapter move byte-for-byte from tools
+into the plugin namespace, with all active consumers updated. There is one codec
+and unchanged schema-v1; the deterministic package allowlist now has eight Lua
+sources. Version0.0.7 supersedes earlier packages only for this new candidate;
+previous physical/host proofs remain tied to their original sources. Native
+ButtonDialog displays title (not an arbitrary text field); host UI tests enforce
+that actual SDK boundary. Local configured Windows plugin suite248:172 PASS/76 explicit native-Linux
+skips (33.401s); the later transaction-race case passed separately on both VMs.
+Wire115:111 PASS/4 native-TLS skips (5.177s); transport34:32 PASS/2 POSIX skips
+(11.515s). Initial full plugin run lacked the required reference environment
+and failed5 setup cases, not production criteria; preserved separately. Final
+exact-head CI must execute all native cases without these platform skips.
+
+Initial exact5ca8a9d CI39998229836 ran251 plugin cases:250 PASS/one test setup
+ERROR, no skips. The new LFS case could not resolve lua_gettop inside Lupa's
+private embedded VM. Its correction runs the SAME owner/assertions with actual
+official standalone LuaJIT/LFS, as existing native process probes do; no production
+logic or test criteria are weakened. Later transport/wire CI steps were skipped,
+not passed. The failed log is retained; repeat complete exact-head CI.
+
+Generation enrollment, reset/source lifecycle and physical Gate4 remain OPEN.
+No Kindle/phone access, installation, session, Wi-Fi change or production release
+was performed. Full seven-topic goal remains ACTIVE/topic2/7.
+
+
+## 2026-10-22 — Recovery schema preservation review (0.0.6, host accepted)
+
+Exact9f7c3a7 CI39730904884 passed373 cases/no skips:224 plugin (70 actual
+official native SDK cases),34 transport,115 wire. Full Windows224:154 PASS/
+70 explicit native-Linux skips,32.671s. Both new regressions ran on actual native
+SDK as well as both bridge VMs. Normal recovery and all six standalone native
+stop cases still pass. New48,598-byte archive SHA256:
+4971c597858225852eee72431cbc291dc24a58deafdc009c9cadce66a7c751a1.
+Only _meta/outbox runtime bytes changed; the four other runtime sources and
+upstream contracts are identical. See the source-bound
+[schema preservation evidence](docs/evidence/outbox-schema-preservation-host-2026-10-22.json).
+
+Official hash-verified v2026.07.1 Linux archive Statistics main was also inspected:
+createDB lines454-495 set user_version to DB_SCHEMA_VERSION. It is not a unique
+database generation identifier; this source audit is not a new PW3 observation or
+permission to derive an epoch from schema/book/title/MD5/counts. Explicit verified
+generation enrollment and source/reset lifecycle remain incomplete.
+
+The previous goal turn made concrete host progress: exact8b73c6e passed367 CI
+cases and prepared an uninstalled offline artifact. The user still cannot operate
+devices. No install, device access, timed pairing or user question is active.
+
+Review found a real gap in the advertised unknown-schema preservation rule:
+table_info cannot describe CHECK/UNIQUE/FK constraints, collations or generated
+columns. Recovery accepted such a modified table and rebuilt only known fields,
+silently dropping the unfamiliar declaration. The new CHECK regression actually
+failed on both host VMs against8b73c6e before the correction; its log is preserved
+privately. This is a recovery-owner fix, not source-generation enrollment proof.
+
+Candidate0.0.6 uses ONE existing-owner declaration map for both CREATE and exact
+validation. Recognize only the three original table declarations and their two
+implicit indexes, including bounded stored SQL. Unknown columns/constraints/table
+options/internal objects fail before creating a restore destination, preserving
+the input. No generic SQL parser, schema rewrite/migration or new state store.
+The actual v1 CREATE bytes are unchanged, so untouched0.0.4/0.0.5 owner state remains
+compatible; equivalent hand-edited SQL is deliberately not automatically adopted.
+
+Focused Windows101 cases:66 PASS/35 explicit native-Linux skips,13.219s. Regressions
+cover CHECK, UNIQUE, FK, virtual/stored generated fields, collation and internal
+analysis objects; existing backup/restore/interruption paths still pass locally.
+Final full native CI passed as recorded above. Prior8b73c6e artifact/evidence remains historical
+and must not be installed as this new source. No physical Gate4 or later-phase
+acceptance is claimed; full goal ACTIVE/topic2/7, source lifecycle still incomplete.
+
+## 2026-10-22 — Offline outbox physical block preparation (not installed)
+
+Accepted exactb081938 native CI39729636826:364 cases/no skips (215 plugin,
+34 transport,115 wire). The standalone official LuaJIT/LFS/SQLite probe performed
+all six real child SIGKILL cases and the independent private-copy collector passed.
+The48,563-byte production archive is unchanged. See the new source-bound
+[offline host evidence](docs/evidence/outbox-offline-probe-host-2026-10-22.json).
+Additional driver-boundary tests use explicitly modeled ARM metadata and a stub
+core only to enforce source/native fingerprints, fixed I/O and failed-report
+behavior; they are not native ARM proof. The initial model fixture's byte-key
+metadata mistake was corrected; all three driver checks pass locally. Final
+exact-head CI is required for those added tests/documentation too.
+
+First source95d00c5 native CI39729483467 failed ONLY the independent collector's
+nonempty-file assumption after the actual standalone native six-case probe had
+passed. SQLite's real hot-journal rollback truncates fresh incomplete destinations
+to zero bytes. Collection now permits zero ONLY for the two specified unregistered
+before-commit destinations, still verifies schema/version0 and refuses empty
+healthy state. The production owner/fixture interruption criteria are unchanged;
+new regression covers this exact boundary. Full exact-head CI must be repeated.
+
+The user cannot operate either device now. Preparing a finite synthetic KUAL
+probe using the SAME outbox, codec and paired consumer, with no source/Statistics
+access, networking, pairing, receipt issuance or production registration. Six
+owned native child processes stop via SIGKILL before/after stage, backup and
+restore commits; parent-death termination and bounded waits prevent an orphan
+worker. Positive paired receipt/prune remains a separate Android/PW3 proof.
+
+The existing source-bound single-use bundle/launcher owner is reused. Collection
+checks native/source fingerprints and independently examines only bounded private
+copies of synthetic diagnostic SQLite files. Matching reports never attest a
+physical run or close Gate4. Official standalone Linux LuaJIT/LFS are added to the
+same hash-pinned test archive allowlist; no runtime dependency is shipped.
+
+Local first focused bundle attempt failed two fixture checks (missing-parent
+exception expectation and unclosed Python test connection). Corrected only those
+fixtures; five bundle cases now PASS, standalone Linux case explicitly skipped on
+Windows. Exact-head native CI is still required. No new artifact is installed or
+device execution requested. Runtime0.0.5 remains unchanged; full goal ACTIVE,
+topic2/7, Gate4 OPEN, later topics/DoD incomplete.
+
+Final test-harness hygiene: killed children now place their synthetic fixtures
+inside the parent's owned temporary root, so normal parent cleanup also removes
+the child's leftover fixture files without running child finally/SQLite close.
+No production source or interruption criterion changes; no broad Temp cleanup
+or deletion of unrelated files is performed. This test-only follow-up requires
+its final exact-head CI; runtime/archive still match accepted92af1bd.
+
+## 2026-10-22 — Native recovery host block accepted, physical Gate4 still OPEN
+
+Exact `92af1bd97b46e8df8b158129363c02b17e34d420` CI39725331982 passed357
+cases without skips:208 plugin (67 actual official native SQLite, including33
+outbox cases),34 transport,115 wire. Actual Linux/Windows48,563-byte ZIP matches
+4a7bbabef2cbf6e9c553edbba16a1e8c39988c175c36c9c712a515eb521ca7c1.
+Runtime remained b90272c after the last test-only correction; its ordinary source
+opens remain non-creating rw, and only a fresh validated recovery target uses rwc.
+The native direct API case confirmed both behaviors without relaxing criteria.
+
+[Source-bound recovery proof](docs/evidence/outbox-recovery-host-2026-10-22.json)
+preserves both actual failed attempts separately. Eight owned-process stop cases
+now cover stage, receipt prune, backup and restore before/after commit, including
+real spilled journals and native recovery. A partial restore remains unregistered
+and preserved with its valid backup; there is no automatic new identity or data
+discard. Same-device/epoch and exact pending canonical bytes/review survive a
+verified explicit restore. A stale backup cannot certify facts selected later or
+the current Statistics generation.
+
+Full Windows plugin suite208:141 PASS/67 explicit Linux-native skips,19.440s;
+focused outbox95:62 PASS/33 skips,13.503s. All those platform cases actually ran
+in Linux CI without skips, including OS entropy. Unknown columns/objects/keys,
+future schemas and foreign/malformed native facts are refused before restoration;
+existing damaged primary and older recovery snapshots remain intact.
+
+No device/app/credential/Wi-Fi/session was touched. PR5 remains draft/OPEN for
+required source-lifecycle and physical Gate4 conditions, despite host PASS.
+Verified source-generation enrollment, recovery/reset UX and actual PW3/paired
+delivery still need proof/implementation before production registration. Later
+phases/full seven-topic DoD remain incomplete; full goal ACTIVE/topic2/7.
+
+Follow-upb90272c CI39725147557 confirmed the creating-mode diagnosis and passed
+all recovery/restore/process cases:207/208 plugin cases passed. The only failure
+was the new native API assertion comparing SQ3's int64 cdata COUNT directly with
+a Python integer. It now explicitly uses Lua tonumber (the production owner
+already does this) and still requires exactly zero. No runtime criterion or
+receipt rule changes. Later transport/wire steps were skipped, not passed.
+The failed logs remain preserved; the exact new head must pass the full CI.
+
+Initial0.0.5 sourcec6a7a86 CI39724674354 FAILED six actual-native backup cases
+(189/195 plugin cases passed; later transport/wire steps skipped). No backup
+artifact appeared, unlike the Python SQLite bridge. The source opens with
+native `sqlite3_open_v2(...,rw)` and ATTACH inherits a non-creating mode. The
+candidate now explicitly initializes only the fresh owned destination via rwc,
+checks its empty schema, closes it, then attaches it through the unchanged rw
+source. There is no creating-mode fallback for the source. A native-only direct
+API case checks the actual failure and successful precreated-target path; final
+CI must confirm this diagnosis and the complete recovery matrix. Failure logs
+are preserved, not relabeled as passed. Added process-stop fixtures interrupt
+backup/restore before/after commit with actual spilled attached journals; local
+94 cases62 PASS/32 native-Linux skips (12.871s) precede this native-target fix.
+
+## 2026-10-22 — Explicit recovery snapshots preserve identity; native proof pending
+
+Previous goal turn made progress: PhaseC accepted/merged and the PhaseD storage
+core passed exact native CI. Revalidated clean0c76d42 and draftPR5/all green
+before this continuation. User remains unable to operate devices; no device
+install/session/question is active. This change stays within the open PhaseD,
+without enabling a later production phase or weakening its physical gate.
+
+Candidate0.0.5 adds explicit `backup`, `inspect_backup` and `restore` through the
+same outbox owner. Recovery files use an OS-random, strictly bounded own leaf
+name in the same settings directory. SQLite ATTACH with DELETE journals and
+synchronous EXTRA copies all three bounded tables in one native transaction;
+there is no second serializer, raw database-file copy, custom journal or writer.
+Identity and source epoch are copied verbatim, never regenerated during restore.
+Selected bytes and pending review remain intact even after source-history loss.
+
+All owner tables/columns/types/nullability/primary keys are validated; unknown
+objects/columns cannot be silently dropped by a recovery copy. Full bounded
+pending lines and digests/context plus review integer/type fields are validated
+without loading all events or arbitrarily large corrupt fields. Restoration
+requires the primary to be absent. Existing, even damaged, primary state and
+existing recovery files are preserved; malformed/future/foreign snapshots fail
+without fallback or automatic identity reset. Partial recovery artifacts remain
+for review and cannot be read as registered state. Ordinary open never chooses a
+backup automatically. A snapshot is the point-in-time selected state, not proof
+that facts selected after it, the current Statistics generation or a cloud
+receipt can be recovered from it.
+
+The implementation deliberately uses native attached-database transactions
+rather than VACUUM INTO: SQLite documents INTO as permitting an existing empty
+destination, while this owner checks fresh destination/schema and uses its own
+normal table/identity validation. Official ATTACH documentation establishes the
+DELETE-journal multi-database transaction contract; no hardware power-loss claim
+follows. References: https://www.sqlite.org/lang_attach.html and
+https://www.sqlite.org/lang_vacuum.html.
+
+Local focused outbox82 cases:54 PASS/28 actual-native Linux skips (10.235s).
+New cases cover byte-identical source/backup preservation, same identity/bytes
+after source deletion, collision retention, malformed names/missing files,
+unknown/future schemas, foreign pending facts and interrupted copy rollback.
+Actual native CI, recovery process-stop extensions and final package proof are
+pending. Existing 323-case0.0.4 evidence remains historical/source-specific.
+No upstream contract, Companion lock, source DB, release or production caller
+changed. Gate4/full seven-topic goal remain OPEN, topic2/7.
+
+Final guarded candidate `7a7fb09e24bcd956ab913ea9b9a7ea3491fdee92` passed
+CI39723070687:323 tests/no skips (174 plugin including55 actual native SQLite
+cases,34 transport,115 wire). Actual Linux/Windows40,200-byte ZIP matches
+c805ce77307cb6acb0ad9f28cb604b272e577d3069c4051a39c1987a611e4d4f.
+The host report now binds this guarded source and preserves0bea's prior320-case
+evidence separately. The creation-race fixture ran in all three VM/SDK variants.
+No source/runtime change follows this evidence update. Gate4 remains OPEN;
+PR5 stays draft, no device/session installed/started and no test question pending.
+
+Final creation-race review: a store file may appear after the initial filesystem
+observation. Creation now checks version/empty schema before any journal-mode
+write and repeats that condition under the transaction; an unknown existing DB
+is preserved. New real-SQLite fixture checks unchanged bytes and WAL mode after
+the stale observation. Focused Windows outbox40 PASS/21 native-Linux skips
+(61 total,8.243s). The earlier0bea host proof below remains source-specific;
+this small guard requires its own exact-head native CI/package comparison.
+
+## 2026-10-22 — Native outbox host block passed; physical Gate4 remains open
+
+Exact `0bea3f92699e65a99c62f01066e3a4939bb0368a` CI39722438051 passed320
+tests without skips:171 plugin (54 actual official native SQLite, including20
+outbox cases),34 transport and115 wire. The actual39,962-byte Linux/Windows
+package matches SHA25658f23276256eeb4a2a6262b58a936d8876cd6ba5c7501ab0c1256513abcd6ef7.
+The live-journal process-stop cases, actual Linux OS entropy and joined actual
+paired-owner/shared-carrier fixture all executed. This is host/native SDK proof,
+not new PW3/Android/TLS, source-generation or hardware power-loss acceptance.
+
+[Host evidence](docs/evidence/outbox-host-2026-10-22.json) records exact scope;
+[physical resumption](docs/outbox-physical-resume.md) defines the next checks
+without an active test request. Draft PR5 targets merged mainf416b8d and remains
+open for the unfulfilled Gate4/lifecycle conditions. Standing merge authorization
+does not waive mandatory physical/spec checks. The final evidence-head CI must
+also pass; no release, device install or session is started while unavailable.
+
+Risk boundary: no observed source-data loss or source DB write. Missing/corrupt
+owned state deliberately stops; restore/review identity before historical replay.
+Core selected bytes/review persist, but source-generation enrollment, restore/
+reset UX and lifecycle/checkpoint composition still need implementation and real
+device proof. Do not describe the complete production plugin or full seven-topic
+goal as complete. Full goal ACTIVE/topic2; source/effect flags remain inactive.
+
+## 2026-10-22 — Phase D durable delivery-state candidate; no device available
+
+PR4 merged after exact0d96d1e CI39720286930 passed262 cases without skips as
+`f416b8d8314fd25cdde020ad5d4c988b12f00e2a`; its tree matches tested0d.
+Branch `feature/reading-durable-outbox` starts from that merged source. The user
+cannot operate the Kindle/phone now and requested independent host work followed
+by later physical tests. No device installation, active session or question is
+pending. Installed development0.0.2 remains untouched; full goal stays ACTIVE.
+
+Candidate0.0.4 adds the plugin-owned `quartzo_sync_state.sqlite3` delivery owner.
+This deliberately replaces the unused reserved `.lua` state example with native
+SQLite transactions rather than inventing another atomic JSON/temp journal.
+It is not canonical Reading Activity. Explicit creation uses a strong16-byte
+`/dev/urandom` device ID and a caller-supplied source epoch; this API does not
+prove a database generation or implement production enrollment. Ordinary open
+uses existing-file `rw` for native hot-journal recovery, never `rwc`/re-enrollment
+on missing/corrupt/future state. Statistics remains a separate explicit-`ro` owner.
+No migration or fallback to an empty state, identity rotation or raw source write.
+
+Owned write transactions require native DELETE journal and synchronous EXTRA,
+read back as3. SQLite documents EXTRA's directory sync after rollback-journal
+unlink in DELETE mode: https://www.sqlite.org/pragma.html#pragma_synchronous.
+This delegates recovery to the existing SDK, not a hardware power-loss claim.
+Selected canonical lines remain immutable; same-ID/native-payload differences
+rollback the whole stage. Bounded review cases retain exact integer text/type
+flags. Combined pending/review capacity1000 fails atomically without removing
+older data. Delivery selection caps100 lines/512KiB. Source deletion does not
+erase previously selected bytes; no source watermark or review-deletion API is
+exposed. Conservative source rescans must reuse the persisted identity; a
+missing identity requires restore/review, not silent new-ID historical reupload.
+
+The existing approved `paired_exchange.lua` owner moved byte-for-byte into the
+plugin namespace (SHA2560f7bad0287d878244af4121881c6ccd3f1bde17ddc899a046fc9050d8af1f5a8).
+Its tooling consumers now read that single source. No TLS/role/pin/window/receipt
+rule changed and no transport/startup hook was enabled. Only that owner's opaque
+session/request-bound per-event receipts can prune exact queued bytes. The wire
+codec exposes its existing event inspection/digests for this owner; no second
+serializer/hash/parser or accepted-ID/boolean setter was introduced.
+
+Host tests include actual paired owner/shared carrier composition with the
+existing native-API SDK model (not actual new TLS/device proof), raw-claim/
+wrong-session/request/line rejection, partial acceptance with retained review,
+atomic later-position failure, replay and prune failure. Separate owned Python
+children are killed before/after commit and during receipt prune, with forced
+cache spill and a nonzero rollback-journal header observed before interruption.
+Reopen recovers the old or committed state as appropriate; no finally/SQLite
+close runs in killed children. These are real process stops, not power cuts.
+
+Local final focused outbox:38 PASS/20 explicit Linux-native skips (58 total,
+7.240s). Initial helper failures (duplicate keyword, colliding synthetic capacity
+rows and nested quote syntax) were corrected in fixtures; prior logs preserved.
+Earlier full plugin pass164 total preceded the last additional cases; updated
+full suite/native CI/package comparison remain pending. Native Linux additionally
+must execute the actual official SQ3/SQLite and actual OS entropy cases.
+
+Final local complete plugin run:117 PASS/54 explicit native-Linux skips
+(171 total,16.438s). Wire regressions:111 PASS/four explicit native-platform
+skips (115 total,7.298s). The remaining native class must run in CI without
+skips, including actual OS entropy; host results do not close physical Gate4.
+
+PhaseD/Gate4 remains OPEN. Production source-generation enrollment, identity
+restore/reset UX, lifecycle/checkpoint integration and the actual PW3 restart/
+interruption + paired receipt matrix remain required before activation/later
+phase acceptance. No claim of canonical ACK, ingestion, Resource effects,
+configured sync or completed seven-topic goal follows from this storage module.
+
 ## 2026-10-22 — Gate 3 deterministic extraction accepted
 
 Exact `1cfd3ecdf9c6979b786bf7f2cc0e7dfd57c348f2` CI39719998012 passed262

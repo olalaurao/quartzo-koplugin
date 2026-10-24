@@ -1,11 +1,12 @@
-# Plugin and read-only Statistics probe
+# Plugin, read-only Statistics and owned delivery-state development
 
 Phase A0.0.1 passed the actual PW3 install/start/menu/remove/restart gate. PhaseB
 0.0.2 adds a separate, explicitly requested Reading Statistics diagnostic.
 Synchronization remains inactive. KOReader's PluginLoader
 loads `_meta.lua` into the plugin class; it is the single version owner.
-`DataStorage:getSettingsDir()` supplies the two reserved Quartzo settings paths.
-Neither path is opened or written. Reader, SimpleUI and Extra are not dependencies.
+`DataStorage:getSettingsDir()` supplies reserved Quartzo settings paths; normal
+startup opens/writes neither. The inactive outbox API can explicitly own its
+separate SQLite file. Reader, SimpleUI and Extra are not dependencies.
 
 Run with the existing pinned test-only Lupa dependency:
 
@@ -15,10 +16,33 @@ python tools/plugin/package.py --output /existing/output/directory/quartzo-boots
 ```
 
 Packaging exclusively creates a fresh uncompressed ZIP containing
-`quartzo.koplugin/main.lua`, `_meta.lua` and `quartzo/statistics.lua`. Its JSON
+the eight exact Lua sources in `package.py`'s allowlist: main,metadata,Statistics,
+collector,outbox,the unchanged paired owner and the sole codec/SDK adapter. Its JSON
 output records ZIP and individual source SHA-256 hashes.
 It never installs a plugin, replaces an archive or bundles diagnostics, fixtures,
 credentials, contract copies or private data.
+
+## Grouped synthetic source-lifecycle diagnostic
+
+The existing offline artifact owner also supports `--source-lifecycle` before
+the `prepare`, `install` or `collect` subcommand of
+`tools/plugin/outbox_probe_bundle.py`. Always use that same mode for all three
+operations. Preparation requires an exact committed source and a fresh host
+output; installation still requires a freshly verified device baseline and
+human availability. No installation or KUAL execution is requested by this doc.
+
+This mode packages the existing Statistics/collector/outbox modules plus a finite
+synthetic fixture through the same manifest/launcher/installation/collection
+owner. It creates Statistics-shaped data only inside the freshly owned diagnostic
+state root and uses the plugin's read-only source access against those files.
+It never opens the user's Statistics, settings or canonical outbox. Five groups
+combine collection process stops, same-second batches/review, same-identity
+recovery/replay, source transition refusal/acceptance and schema2 migration.
+The host verifies only private copies of those exact synthetic files. Unknown
+files, journals, altered native payloads, an advanced ACK marker or mismatched
+backups block collection without repairing/deleting anything. A matching report
+still cannot attest physical execution or close Gate4. See
+[the current physical handoff](../../docs/outbox-physical-resume.md).
 
 ## Source-bound Phase A Gate 1 proof
 
@@ -91,7 +115,7 @@ Only bounded valid32-hex MD5 values accompany native IDs; titles,authors,paths,
 annotations and Reader identifiers are not projected. Groups describe only the
 rows in the current batch, not an authoritative whole-library association.
 
-Pass an explicit codec from the existing `tools/reading_wire/codec.lua` owner,
+Pass an explicit codec from the existing `quartzo.koplugin/quartzo/codec.lua` owner,
 device ID, database-generation epoch and canonical UTC observation. The codec
 constructs/validates canonical event bytes with the ratified native tuple, not
 MD5. Missing book/MD5 still permits an otherwise valid native event. No context
@@ -114,3 +138,127 @@ preserve review and cannot advance an acknowledged checkpoint across it.
 Safe earlier/later dates use SQLite UTC conversion, avoiding host timezone and
 32-bit `os.date` limits. Close failure suppresses all collected results. Loading
 the module has no DB access; the normal plugin still invokes only diagnostics.
+
+## Phase D delivery-state candidate
+
+`quartzo/outbox` owns only `DataStorage:getSettingsDir()/quartzo_sync_state.sqlite3`.
+It uses existing native SQ3 transactions, DELETE journal and synchronous EXTRA,
+checked as3; missing state never opens in create mode. Explicit `create` refuses
+an existing file, generates a16-byte OS-entropy device ID and requires an explicit
+source epoch. This does not establish source generation or enroll a production
+device. Restore/review a missing identity before any historical reupload; do not
+silently generate a new identity after state loss. The old unused `.lua` path is
+not migrated or parsed automatically. No state is created by plugin startup.
+
+`stage` persists at most100 selected source positions atomically. It retains
+original canonical bytes/observation on duplicate, blocks native-payload conflict
+and deduplicates identical review cases by their bounded integer/type content.
+Review case counts are not canonical event counts or evidence that damaged
+source rows can be discarded. All original source rows remain Statistics-owned.
+The shared1000-entry capacity stops staging without dropping old work. `pending`
+returns at most100 lines and512KiB; it validates stored canonical bytes/digests.
+
+`consume_receipt` calls the unchanged `quartzo/paired_exchange` opaque receipt
+owner. Only exact per-event native/line bindings can prune, inside one native
+transaction. An absent/bad/expired/foreign/raw-claim receipt cannot prune. Review
+is never removed; no source-watermark advancement API exists. Full conservative
+replay therefore requires retained identity and canonical native-ID deduplication,
+not another local archive/index. Existing canonical Reading Activity is upstream.
+
+Host fixtures kill their own separate writer processes before/after commit and
+during prune, forcing cache spill and checking a live journal before interruption.
+Both real SQLite bridge VMs execute those cases; Linux CI must also use actual
+official KOReader SQ3/SQLite and OS entropy. The joined receipt test uses the
+actual paired owner/shared carrier with its existing injected SDK model. It is
+not new native TLS, PW3 restart, hardware power-loss or full Gate4 acceptance.
+No user database, existing Reader state, Wi-Fi, real credential or live listener
+is involved. Device tests wait until the user is available; never start a finite
+pairing/session in advance of that availability.
+
+### Explicit recovery snapshots (0.0.5 candidate)
+
+Correction0.0.6 recognizes the exact original table declarations plus two implicit
+PK indexes from the same declaration map used by CREATE. Original v1 CREATE bytes
+remain unchanged. table_info alone omits generated columns, constraints, collation
+and table options; unfamiliar declarations/internal objects now require review
+before copying. This deliberately refuses even equivalent hand-edited SQL rather
+than adopting or silently rewriting it. No schema parser/migration is introduced.
+
+`queue.backup()` creates a fresh `quartzo_sync_recovery_<32hex>.sqlite3` in the
+same owner directory. Native SQLite ATTACH/DELETE-journal transactions copy the
+complete bounded identity/pending/review state; a second serializer or bytewise
+database-file copier is not used. `inspect_backup(root, leaf, runtime)` verifies
+schema, every bounded selected canonical line/digest/scope and review fields.
+`restore(root, leaf, runtime)` works only when the primary file is absent, copies
+the same identity and selected data, then reopens through the normal owner.
+It never calls entropy to create a replacement identity.
+
+No unknown objects/columns are silently dropped; malformed/future/foreign or
+oversized data fails. Existing primary/recovery files are preserved, including
+damaged state; preserve/review them before any explicit restore. A failed copy
+may leave an unregistered partial artifact, which is retained and rejected by
+normal open/inspection. There is no automatic fallback, overwriting, pruning or
+directory-wide scan. A recovery snapshot is point-in-time: newer selected facts
+need their source or another verified recovery point; restored identity does
+not verify the current Statistics generation or issue canonical receipts.
+
+## Manual recovery controls (0.0.7 candidate; device proof pending)
+
+Tools / Quartzo / Offline reading queue opens only existing owned state. It shows
+pending/review counts and inactive synchronization. Create recovery copy requires
+confirmation and reopens the owner before copying. Missing state disables backup;
+there is no create/reset/enroll action. Review recovery copies lists at most32
+supported leaves within512 directory entries using native filesystem metadata,
+without DB opens. Choose explicitly; dates are informational and never establish
+Statistics generation. Unknown/symbolic/nonregular entries are preserved.
+
+Selected-copy inspection validates its bounded schema/content. Confirmation warns
+that only that point in time is recovered and requires absent primary. Reviewed
+identity/counts are copied and rechecked by restore, including inside its native
+transaction; original device/epoch/bytes/review remain. Existing damaged primary
+cannot be replaced. This is not a whole-snapshot cryptographic binding or source
+enrollment. A late interrupted copy can leave an unregistered target for review.
+
+UI fixtures cover missing SDK/state, confirmation/progress/coalescing, copied
+review preconditions and fixed failures on both Lua VMs. Linux CI additionally
+uses actual official LFS for bounded directory discovery and actual SQLite for
+restore. These do not establish PW3 menu rendering/restart or physical Gate4.
+Do not install/start a device session while the user is unavailable. Later manual
+acceptance must use a fresh source-bound artifact; older proofs do not pass0.0.7.
+
+
+## Explicit source controls (0.0.8 candidate; no physical proof)
+
+See the2026-10-24 PhaseD addendum in `IMPLEMENTATION_SPEC.md` for source review,
+private schema2, conservative continuity guards and preserved schema1 recovery.
+The Statistics/outbox owners are reused. New setup and same-history reconfirmation
+require opaque one-use reviews and manual confirmation; startup, collection,
+historical import and synchronization remain inactive. Reset/new-generation
+reconciliation and actual source provenance are still gated.
+
+Recovery confirmation now binds selected line digests, review descriptors and
+source metadata as well as identity/counts, before creation and inside the copy
+transaction. This local key is not a remote receipt.
+
+`test_source.py`, `test_enrollment.py` and updated bootstrap/recovery regressions
+cover those paths on both Lua engines. Native CI additionally exercises official
+SQ3 INTEGER cdata and `source_native_test.lua`: actual LFS, OS entropy, v2 backup/
+restore and a fresh standalone process reopen. These synthetic host proofs do
+not certify a Statistics generation on PW3 or pass the grouped0.0.8 device gate.
+
+
+## Reviewed collection and progress (0.0.9 candidate)
+
+The2026-10-24 schema3 addendum in IMPLEMENTATION_SPEC.md defines opaque reviewed
+collection, atomic coverage, receipt-only progress, retained review decisions,
+explicit history rescan and safe empty-generation transitions. Normal startup
+stays inert; foreground UI collection requires a closed book and confirmation.
+Existing schema1/2 recovery is recognized without migration. Schema2 collection
+is disabled until an explicit upgrade; no identity is regenerated by open/restore.
+
+`test_collection.py` covers source/selection changes, same-second groups, partial
+ACK, reviewed invalid cases, rollback, recovery and owned child SIGKILL before/
+after committing events+coverage+witnesses. Native CI repeats through the actual
+SQ3/SQLite ABI and shared paired owner; source_native_test.lua reopens persisted
+schema3 in a fresh official standalone process. These tests do not assert actual
+PW3 UI/source-provenance or physical power-loss acceptance.

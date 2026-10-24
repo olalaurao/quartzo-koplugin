@@ -1,5 +1,182 @@
 # Quartzo ↔ KOReader — Product & Delivery Plan
 
+## 2026-10-24 Recovery destination safety
+
+Candidate0.0.10 refuses fresh create/backup/restore destinations with orphan
+SQLite journal/WAL/SHM files, even empty ones. The existing primary-open path
+still delegates hot-journal recovery to the same SDK. Local six PASS / three
+native-only skips; the actual-LFS standalone fixture and full native CI must
+validate the final source before packaging. No new archive engine, source store,
+identity reconstruction or device mutation. See docs/reading-queue-recovery.md.
+Installed0.0.9 remains accepted for its bounded physical collection/restart scope.
+
+## 2026-10-24 Recovery safeguards on the same owner
+
+Candidate0.0.10 also rejects fresh enrollment when the primary is absent but
+legacy state, orphan sidecars, preserved own state or malformed own recovery
+names remain. The existing metadata-only bounded listing supplies this guard;
+both review and confirmation recheck it. No file repair or new identity store.
+Local32PASS/17native-only skips for enrollment; final native CI/package pending.
+The actual installed0.0.9 and its accepted physical proof stay unchanged.
+Unrecoverable identity/nonempty-history reconciliation and fullGate4 remain open.
+
+## 2026-10-24 Grouped PW3 source/storage proof accepted
+
+Installed0.0.9/d5bab06 passed real bounded collection and populated recovery:
+993 pending, seven unresolved review, all selected native bytes exact, same
+identity/progress in backup and after the user's later explicit restart. Private
+USB comparison kept Statistics and all957Lua sources exact. The b35f060 synthetic
+source-lifecycle diagnostic passed its five ARM groups/16 independent files.
+See the two new source-bound physical reports in docs/evidence. Diagnostic
+cleanup is verified; do not repeat these scopes and preserve the real queue/copy.
+
+Candidate0.0.10 fixes a newly reproduced recovery UI gap: failed primary open or
+status must not hide valid backup review. Existing owner overwrite refusal and
+all schema/identity/receipt behavior stay unchanged. Local bootstrap44PASS;
+package prepared, full native CI pending, not installed. Gate4 remains OPEN for the
+remaining reconciliation obligations; topic2 still includes production manual
+transport, canonical ingestion, complete bounded/resumable history and lifecycle
+integration. A 1,000-position offline selection is not complete history import.
+
+## 2026-10-24 Grouped synthetic source-lifecycle proof prepared
+
+Exact b35f060 passed 589 native host tests/no skips in CI40113545022. The existing
+offline bundle now groups changed schema3 collection stops, 251 same-second events,
+review, same-identity recovery/replay, source-generation refusal/transition and
+schema2 upgrade with backup. The host independently verifies 16 synthetic files.
+The committed --source-lifecycle bundle is prepared privately, not installed;
+no phone or timed session is needed. Runtime 0.0.9 / d5bab06 is unchanged. Next wait
+for user/device availability, preserve a fresh baseline and execute the grouped
+Kindle-only proof. Source-loss/nonempty provenance and real performance remain
+OPEN; host reports do not close physical Gate4 or enable later production phases.
+
+
+## 2026-10-24 Current reviewed-collection block
+
+Candidate0.0.9 now implements reviewed offline selection, bounded transient passes,
+receipt-only acknowledged overlap, explicit invalid-entry decisions, same-identity
+history rescan and settled empty-generation transitions with mandatory recovery.
+All use existing owners/private schema3; schema1/2 recovery remains unchanged.
+Exactd5bab06 native CI40109125180 passed585/no skips including source/ACK fault
+cases, pending-neighbor integrity, clock rollback and explicit schema2 upgrade.
+One final source-bound0.0.9 artifact is prepared privately, not installed. Group
+changed UI/source/queue proof when the user is available; do not repeat prior
+unchanged physical scopes or build another phone APK for Lua-only work. Source
+provenance, nonempty replacement/state-loss reconciliation and remaining
+performance/physical Gate4 proof stay OPEN. Schema2 upgrade is implemented,
+not automatic; source-specific physical acceptance is not inferred. Do not enable
+later lifecycle/transport/effects before their gates. Full seven-topic goal intact.
+
+
+## 2026-10-24 Current source-review implementation block
+
+Candidate0.0.8 adds explicit source enrollment/continuity review through the SAME
+Statistics/outbox owners and content-bound manual recovery. Original schema1
+remains unchanged; only fresh reviewed enrollment uses schema2. No automatic
+production collector, historical import, reset epoch rollover or network startup
+is enabled. Exact0689d4a native CI40101594161 passed499/no skips, including
+owner-bound guarded preview with no staging. ONE grouped
+PW3 trial remains for changed setup/populated recovery/reconfirmation paths.
+Reuse unchanged accepted proofs.
+Full reset/new-generation reconciliation and production source proof remain OPEN;
+then implement bounded lifecycle/overlap/backfill through the same owner. Gate4
+and later phases stay open. Do all host work before requesting device availability.
+
+2026-10-23 paired physical subtest PASS: same native synthetic outbox identity,
+lost receipt, distinct seed/replay processes, exact pruning and retained review
+passed against the isolated Android canonical owner. Three unique facts/120s;
+Statistics/settings/all352Lua exact; credential/listener/app cleanup and both
+temporary roots verified. See docs/evidence/outbox-paired-pw3-2026-10-23.json.
+Reapply no completed offline/empty UI/normal reading trial for identical sources.
+Next implement the remaining source enrollment/reset/current-source lifecycle as
+one coherent block, then group populated recovery UI and applicable device proof.
+No production producer/watermark/transport activation or fullGate4 pass follows.
+
+2026-10-23 execution consolidation:645b4fa native CI passed413/no skips.
+Validate the complete existing-owner two-process paired bundle in one native CI
+block, then prepare one finite physical trial covering lost receipt, persisted
+replay and exact pruning. Reuse accepted offline/UI/normal-reading evidence;
+do not repeat unchanged full local suites. Required CI, populated recovery UI,
+verified generation enrollment/lifecycle and full Gate4 acceptance stay required.
+
+2026-10-23 current UI proof: actual0.0.7 empty-state UI and normal reading/restart
+passed. Empty-state execution left Statistics/settings and352Lua unchanged. Normal
+reading added2nativeeventkeys, removed0 and changed0existingvalues; all352Lua and
+reservedQuartzo state stayed intact. See docs/evidence/outbox-ui-pw3-2026-10-23.json.
+Populated recovery UI, verified generation enrollment/lifecycle and pairedcanonical
+receipt/prune/replay remain OPEN. The old fixed-identity paired fixture cannot
+prove the real outbox identity; adapt the existing test owners before a new session.
+
+
+2026-10-23 current physical progress: actual PW3 offline synthetic outbox subtest
+passed six stage/backup/restore process-stop cases on v2026.07.1. Statistics/settings
+and 347 tracked Lua sources matched before/after; diagnostic cleanup is verified.
+See docs/evidence/outbox-offline-pw3-2026-10-23.json. This does not pass Gate4.
+The exact-source0.0.7 empty-state UI trial is now installed with0.0.2 rollback;
+human execution is pending. Source enrollment/current-generation verification,
+populated recovery UI, normal reading/restart and paired canonical receipt/replay
+remain obligations. Earlier prepared-only/no-device entries below are historical.
+
+2026-10-23 PhaseD validation correction: stage only pending-review descriptors
+that the SAME recovery owner can read. A synthetic accepted-then-unrecoverable
+batch reproduced the gap; shared validation now rejects it before transaction,
+preserving existing queue/review/identity and valid neighbors. Schema and owners
+stay unchanged. Exact 4c99c7a native CI 40015457755 passed 409 cases/no skips. Fresh
+0.0.7 UI/offline artifacts were prepared only; old bundles remain historical.
+Physical Gate4/source-generation enrollment and later phases stay OPEN.
+
+
+Exactc70a4e7 native CI39998554809 accepted0.0.7 host scope:400 cases/no skips
+(251 plugin,34 transport,115 wire), with the same77,357-byte package on Linux and
+Windows. See docs/evidence/outbox-recovery-ui-host-2026-10-23.json. Physical Gate4,
+source generation and production registration remain OPEN; nothing is installed.
+
+2026-10-23 PhaseD0.0.7 adds manual backup/recovery controls through the existing
+outbox owner only. Confirmed operations show progress, preserve original identity
+and refuse an existing primary. Bounded metadata discovery and reviewed identity/
+count checks do not establish source generation or canonical acceptance. The sole
+codec/SDK adapter move unchanged into the runtime package. Finish exact-source
+host/native CI; defer device installation and Gate4 tests until user availability.
+Source-generation enrollment and later production phases remain gated/open.
+
+
+2026-10-22 PhaseD0.0.6 closes a reproduced recovery schema gap before the device
+trial: exact owner declarations now serve creation and recognition, preventing
+silent removal of unfamiliar constraints/generated columns/internal objects.
+Untouched v1 schema CREATE bytes stay compatible; no migration/identity enrollment
+or later phase is enabled. Full native CI and refreshed source-bound artifacts
+are required; the prepared8b73c6e offline bundle remains historical, uninstalled.
+Exact9f7c3a7 passed373 native/fixture CI cases/no skips; preserve that source-bound
+host evidence and refresh the uninstalled artifact against the final accepted head.
+
+2026-10-22 offline PhaseD proof is prepared, NOT installed. Exactb081938 passed
+364 native/fixture CI cases without skips. Reuse the existing finite KUAL launcher
+and artifact owner, run six actual synthetic stage/backup/restore process stops,
+and independently inspect private copies of their bounded outputs. No phone,
+Wi-Fi, session or credentials are needed for this future offline portion. Wait
+for device availability before installation/execution; keep installed0.0.2 intact.
+The actual paired receipt/prune proof, source-generation enrollment and production
+lifecycle remain separate Gate4 obligations. Full goal stays ACTIVE/topic2/7.
+
+2026-10-22 PhaseD0.0.5 native host proof passed357 cases/no skips, including
+eight stage/prune/backup/restore process-stop cases. Source and restored identity/
+selected bytes/review are preserved; partial artifacts do not become empty new
+identities. Gate4 remains OPEN for actual PW3/paired proof and required lifecycle
+work. No device install or session while user unavailable. See recovery evidence.
+
+2026-10-22 PhaseD0.0.5 candidate adds explicit validated recovery snapshots through
+the existing SQLite outbox owner. Restore retains device/epoch and selected bytes,
+requires a missing primary and never overwrites damaged/unknown state. No automatic
+backup selection, source enrollment or network hook. Native/process/device proof
+remain required; user cannot operate devices now. See STATUS for actual scope.
+
+2026-10-22 PhaseD candidate0.0.4 adds bounded plugin-owned native SQLite delivery
+state, immutable selected bytes, retained review and opaque per-event receipt
+pruning. The existing paired owner moved unchanged into the plugin namespace.
+No lifecycle/network/enrollment is activated. Gate4 remains OPEN for native CI,
+remaining source lifecycle integration and real device crash/restart/receipt
+proof. User cannot operate devices now; no session/install is pending. See STATUS.
+
 2026-10-22 Gate3 PASS at1cfd3ec:262 native/fixture CI cases without skips;
 complete private-backup host comparison accounted for5,717 valid events and
 ten retained page-zero review positions over58 bounded batches. No new PW3

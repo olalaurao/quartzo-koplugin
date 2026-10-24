@@ -1,4 +1,4 @@
-"""Read only three hash-pinned files from an official, already-downloaded archive."""
+"""Read only allowlisted hash-pinned files from an official, downloaded archive."""
 import argparse
 import hashlib
 import json
@@ -34,6 +34,8 @@ def prepare(archive, output):
             path.parent.mkdir(parents=True, exist_ok=True)
             with path.open("xb") as handle:
                 handle.write(tar.extractfile(member).read(2 * 1024 * 1024 + 1))
+            if name == "luajit":
+                path.chmod(0o700)
     verify(output)
 
 

@@ -17,7 +17,7 @@ class WireSequenceTest(unittest.TestCase):
     def setUp(self):
         self.lua = LuaRuntime(unpack_returned_tuples=True, encoding=None)
         self.deps, self.json, _ = provider_modules(self.lua)
-        self.codec_module = self.lua.execute((ROOT / 'codec.lua').read_bytes())
+        self.codec_module = self.lua.execute((ROOT.parents[1] / 'quartzo.koplugin/quartzo/codec.lua').read_bytes())
         self.codec = self.codec_module[b'new'](self.deps)
         self.exchange = self.lua.execute((ROOT / 'exchange.lua').read_bytes())
         self.client = self.lua.execute((ROOT.parent / 'transport_probe' / 'client.lua').read_bytes())

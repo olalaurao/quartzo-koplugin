@@ -1,5 +1,116 @@
 # Quartzo ↔ KOReader — Implementation Specification
 
+2026-10-23 PhaseD review validation correction:
+The SAME outbox validator governs staged and restored pending-review descriptors.
+Require integer start type, integer source text when its recorded SQLite type is
+integer, and empty integer-field projection for noninteger source types, with the
+existing field/count bounds. Reject inconsistent batches before BEGIN so valid
+neighbors and existing recoverable state remain untouched. Schema-v1 CREATE bytes,
+identity, receipts and source-cursor rules do not change. New inherited native SDK
+cases must pass exact-head CI. Refresh source-bound 0.0.7/offline artifacts; prior
+336a7a8 preparations remain historical, not installed. Physical Gate4 and verified
+source-generation enrollment remain required; no later phase is enabled.
+
+
+Exactc70a4e7 native CI39998554809 accepted0.0.7 host scope:400 cases/no skips
+(251 plugin,34 transport,115 wire), with the same77,357-byte package on Linux and
+Windows. See docs/evidence/outbox-recovery-ui-host-2026-10-23.json. Physical Gate4,
+source generation and production registration remain OPEN; nothing is installed.
+
+2026-10-23 PhaseD0.0.7 manual recovery controls:
+Expose the SAME outbox owner through Offline reading queue, without initializing
+state or enrolling a source. Load the sole codec/KOReader adapter lazily from the
+plugin namespace; their previous tools copies are moved, not duplicated. Confirm
+backup/restore, show progress next tick and guard repeated operations while busy.
+Native ButtonDialog renders title; fixed errors omit private paths/SQL/content.
+Metadata-only discovery visits at most512 entries and32 supported regular leaves;
+no automatic selection. File dates sort display only, never identify a generation.
+Restore supplies reviewed device/epoch/counts/canonical_ack=false, checked before
+target creation and again in the copy transaction. Validate all canonical content
+as before, retain original identity and refuse an existing primary. No full-snapshot
+signature/lease is implied; an interrupted destination remains unregistered for
+review. Schema-v1 CREATE bytes, ACK/cursor rules and source owner are unchanged.
+Source-generation enrollment/reset lifecycle and physical Gate4 remain incomplete.
+
+
+2026-10-22 PhaseD0.0.6 recovery validation correction:
+Use the SAME owner declaration strings for CREATE and validation of schema-v1
+identity/pending/review tables. Stored table_info alone cannot describe generated
+columns, CHECK/UNIQUE/FK constraints, collation or table options. Accept exactly
+the original CREATE declarations and two implicit PK indexes; unknown SQLite
+internal objects are not silently dropped. Stored SQL projection is bounded and
+there is no general SQL parser or second schema source. Unknown/equivalent edited
+declarations require review, preserving input before any restore target creation.
+Existing untouched owner CREATE bytes and schema version remain unchanged; this
+requires no data migration. Exact9f7c3a7 CI passed373 cases/no skips, including
+the actual native regression cases. Physical/source-enrollment gates remain.
+
+2026-10-22 PhaseD offline acceptance preparation:
+Use tools/plugin/outbox_probe_bundle.py as a definition of the existing wire
+artifact owner and reuse its finite single-use KUAL launcher. No second installer,
+production store, journal, receipt issuer, service or production lifecycle is
+introduced. The same outbox/codec/paired consumer runs on synthetic isolated
+state only. Six own child SIGKILL cases cover before/after stage, backup and
+restore commits, with native entropy, live journal evidence, bounded waits and
+kernel termination on parent death. Offline raw claims must not prune. Positive
+receipt/prune acceptance still requires the normal scoped Android receiver.
+
+Independent SQL only examines bounded private copies of synthetic outputs, never
+mounted Statistics/user state. Exact expected schema/version0 partial files may
+be zero bytes after native rollback, but cannot be enrolled or treated as healthy
+empty outboxes. Unknown files/journals/schema/identity/bytes are refused. Matching
+observations alone cannot attest hardware, source generation or canonical ACK.
+Exactb081938 native x64 CI passed364 cases/no skips; actual PW3 proof is pending.
+The user cannot operate devices; this block does not install or request execution.
+
+2026-10-22 PhaseD0.0.5 recovery candidate:
+Use the SAME SQLite outbox owner for explicit point-in-time recovery copies.
+ATTACH/DELETE-journal/synchronous EXTRA transactions copy complete bounded
+identity, pending and review tables; no alternate store, raw file copier,
+serializer or custom journal. Every owner table/column/PK/default shape and
+bounded content is validated. Unknown/future/foreign state cannot be silently
+reinterpreted or dropped. Recovery filenames are strict own random leaves in
+the same directory. Restore requires primary absence, keeps the original
+device/epoch/selected bytes, never regenerates identity and never overwrites
+damaged state. Ordinary open never selects backup automatically. Failed-copy
+artifacts stay preserved/unregistered. A snapshot cannot recover selected facts
+newer than its point in time or establish current Statistics generation.
+
+Source-generation enrollment, reset UX/lifecycle and physical Gate4 remain open.
+This extends only the existing PhaseD storage owner while user devices cannot
+be operated; no installs, sessions, networking or production effects are enabled.
+Exact92af1bd native CI passed357 cases/no skips, including eight actual
+owned-process stage/prune/backup/restore interruption cases. This is host-only
+acceptance, not physical Gate4 or hardware power-loss/source-generation proof.
+
+
+2026-10-22 PhaseD0.0.4 candidate (supersedes historical .lua state example):
+Use plugin-owned quartzo_sync_state.sqlite3 with existing native SQ3, DELETE
+journal and synchronous EXTRA checked as3, not a new JSON/temp journaling layer.
+It is a bounded outbox, not canonical Reading Activity. Explicit create generates
+an OS-entropy device ID and takes an explicit source epoch; generation enrollment
+is still a separate required production boundary. Existing-file open never
+recreates missing/corrupt/future state, migrates unknown files or rotates identity.
+Restore/review identity before historical replay. Native rw is required only for
+this owned store's hot-journal recovery; Statistics always stays explicit ro.
+
+Selected canonical bytes survive source deletion. Duplicate stage preserves the
+first bytes; native conflict/capacity/commit failures rollback. Bounded pending
+review cannot be auto-discarded. Native transactions replace snapshots atomically;
+there is no independent staging/temp-file promotion or recovery framework.
+The unchanged paired_exchange owner moves into quartzo.koplugin/quartzo with its
+consumers updated. Only its opaque session/request-bound receipts can prune exact
+per-event native/line bindings; there is no accepted-ID list/boolean shortcut.
+No source watermark API is exposed: conservative replay must retain identity and
+use canonical deduplication. Source-generation/reset/lifecycle integration remains
+required before production; do not treat local scan positions as acknowledged.
+
+Gate4 stays OPEN until full native tests and actual PW3 crash/restart/paired
+receipt acceptance. Current host process-stop/SDK fixtures are not device/power
+loss evidence. No lifecycle/network/configuration/ingestion hook is enabled;
+user cannot operate devices now, so no new install or timed session is started.
+
+
 2026-10-22 PhaseC0.0.3 accepted fixture/native Gate3 (historical SQL superseded):
 Reuse the existing Statistics read-only/schema/snapshot owner and wire codec.
 Book enumeration is keyset-bounded; event collection defaults50/max100 rows,
@@ -1883,3 +1994,256 @@ Primary technical references reviewed during planning:
   - upstream lock
 
 These references inform the plan but do not override current upstream canonical docs at implementation time.
+
+
+## 2026-10-24 Phase D source review and recovery binding addendum (candidate0.0.8)
+
+The existing Statistics and outbox owners implement explicit setup only. Plugin
+startup remains inert and collection, historical import and network synchronization
+are not registered. This addendum does not close Gate4 or authorize later phases.
+
+Statistics schema20221111 has no intrinsic database-generation UUID. An opaque,
+one-use review is minted from a validated short native read-only snapshot and
+rechecked on confirmation. Counts, titles, dates, MD5, file hashes and caller
+booleans never mint a review or prove a database generation. Fresh setup requires
+an absent primary and no discoverable recovery copies; otherwise recover/review
+existing state. It creates independent OS-random qrd_/qse_ values through the
+same SQLite owner. Existing history is not imported by setup.
+
+Fresh explicitly enrolled state uses private outbox schema2, adding one source
+row to the unchanged schema1 tables. It stores bounded native file device/inode,
+book AUTOINCREMENT sequence, two indexed immutable native-event witnesses and
+the observed historical time boundary. These are conservative continuity guards,
+not whole-database equality, an intrinsic generation identity or a canonical ACK.
+File identity is checked before/after the read snapshot, native witnesses must
+remain exact, and the book sequence cannot regress. Unknown/changed sources
+preserve queued facts, review, identities and recovery copies. Existing schema1
+state and recovery copies remain readable/restorable without automatic migration
+or reassignment; they require separate source review before any production use.
+
+Native file identity must not be assumed stable across filesystem maintenance or
+reboots. Explicit reconfirmation of the SAME history can refresh only device/inode
+when retained witnesses and sequence still match. This requires another one-use
+review bound to that exact queue identity, confirmed by the user. It preserves
+qrd_,qse_,all selected bytes,the original witnesses and original history boundary.
+A missing witness, regressed sequence, initial empty-history enrollment or
+indeterminate source fails closed. This cannot silently adopt a reset/different
+history or mint a replacement epoch. Indistinguishable clones cannot be certified
+by these guards; a full reset/new-generation/backfill reconciliation workflow
+and real source/provenance evidence remain required before production collection.
+The stored history boundary grants neither permission to skip older native facts
+nor permission to reupload them under a new namespace. No watermark is advanced.
+
+SQLite backup/restore copies the complete recognized schema version, including
+source guards. Manual recovery review now binds the exact selected event lines
+using the existing codec's line digests, all retained review descriptors and source
+metadata, in deterministic bounded order. Identity/count equality alone is not
+sufficient. Recheck both before destination creation and within the copy transaction;
+preserve existing files and partial unregistered targets on failure. This local
+review key is transient and is never a wire receipt or remote acceptance signal.
+
+Host/native fixtures must cover explicit consent, stale/forged/foreign reviews,
+new state and legacy recovery, native INTEGER cdata, reset/replacement and commit
+failures, preserved pending data and fresh-process reopen. Actual LFS, entropy and
+SQLite must run in native CI. Remaining PW3 proof is grouped for the changed0.0.8
+setup/populated recovery/reconfirmation paths; prior exact0.0.7 empty UI, normal
+reading/restart and paired outbox proofs remain valid only for their recorded
+sources. No new device session is started while the user is unavailable.
+
+
+### Owner-bound source preview (same candidate block)
+
+The existing collector loop also runs inside Statistics.with_source_snapshot.
+The outbox owner's preview_source supplies its own persisted device/epoch and
+source guards, returning a bounded read-only dry run. It neither stages history
+nor advances state/ACK. Legacy/unreviewed or changed sources and foreign transient
+continuations fail closed before scanning raw events. This avoids a separate
+extractor or a guard check detached from the actual source snapshot. No producer,
+UI collection action or lifecycle registration is enabled by this API.
+
+
+## 2026-10-24 Phase D reviewed collection, ACK frontier and empty reset (candidate0.0.9)
+
+Fresh explicit enrollment now creates private schema3. Existing schema1/2 CREATE
+bytes and recognized recovery remain supported without automatic migration. Schema3
+adds one progress row (ack_watermark,scan_before) and a resolved flag on retained
+review descriptors. Original identity/pending/source columns and canonical event
+bytes do not change. A schema2 restore stays schema2; collection controls remain
+disabled until a separate explicit migration. No source/vault/Markdown writer,
+wire version, external ACK model or Companion contract is introduced.
+
+A collection pass is an opaque, queue/identity/source-bound in-memory capability.
+It reads the SAME collector under the SAME native guarded snapshot, using only
+its internal transient continuation. Review displays bounded counts; confirmation
+rechecks exact selected bytes/descriptors/schema cookie before the sole SQLite
+owner atomically stages the batch and scan coverage. Raw stage(batch) is refused
+for schema3. A failed/full/interrupted transaction preserves prior pending data,
+coverage and witnesses. A committed pass may continue; a lost process restarts
+from the persisted acknowledged boundary with inclusive overlap. Rowid is never
+persisted or acknowledged. The schema cookie invalidates a transient pass after
+VACUUM/DDL; it is not a database-generation identifier. Native Statistics must be
+closed/flushed: manual collection/source actions require the file browser. No
+startup/background collection, reader hooks, automatic network or Wi-Fi changes
+are registered. The UI yields between at most ten100-position batches and stops
+safely on capacity/source/error/work limits.
+
+scan_before is a private candidate coverage bound (last observed second minus
+one), not the extraction lower bound, a source ACK or permission to drop queued
+facts. Only ack_watermark is used to restart ordinary collection. It advances
+ONLY within the matching approved opaque-receipt prune transaction, and only
+when a selected pending fact was actually acknowledged. Its upper bound is the
+observed coverage and strictly before every pending event and unresolved review.
+Out-of-order/partial ACKs cannot pass gaps. Already committed overlapping facts
+retain their event identity and canonical deduplication remains required.
+No response/claim table or boolean can advance this marker. Local status/preview
+canonical_ack remains false; it is not an externally usable durability receipt.
+
+Retained invalid entries can be explicitly reviewed in batches of at most100.
+One-use owner-bound decisions recheck every exact descriptor inside a transaction.
+Exclusion sets resolved=1, keeps the audit descriptor and Statistics untouched,
+adds no minutes and advances no ACK marker. Duplicate re-extraction does not undo
+the decision. Unresolved cases keep blocking further ACK advancement. Capacity
+counts all retained entries, including resolved audit; no silent audit pruning.
+Backup/restore and manual copy review bind progress and resolution flags as well
+as all selected bytes, identity and source metadata.
+
+Explicit all_history review uses the SAME device/source identity and rescans
+native history. Confirming its first batch revokes the prior scan/ACK marker in
+the same staging transaction; it does not grant ACK. Failed confirmation restores
+prior progress atomically. Subsequent true per-event receipts re-establish the
+frontier. This catches backdated additions through explicit rescan, without
+inventing a persistent tuple cursor or re-namespacing already delivered facts.
+It assumes the reviewed Statistics generation and native identities remain valid;
+merged/replaced/rewritten histories still require provenance reconciliation.
+
+An initially empty enrolled source gains indexed native continuity witnesses
+when its first real selection is committed. This keeps its original device,
+epoch and empty enrollment-history boundary. Witnesses, events and coverage share
+one transaction. Old handles/passes must reopen afterward. Thus an in-place
+Statistics reset after first collection cannot hide behind permanently empty
+witnesses. Legacy schema2 validation remains unchanged; only schema3 accepts the
+promoted-witness/empty-original-boundary state.
+
+An actual empty replacement/reset can be explicitly enrolled as a NEW epoch
+only when no pending fact or unresolved review remains. The old device ID stays
+unchanged; a verified recovery copy of the old state is mandatory before the
+transaction, which archives settled audit in that copy, draws a new random epoch
+and resets progress. Recheck source review and old scope inside the operation;
+rollback keeps the old identity and recovery copy. A still-matching source cannot
+rotate its epoch, and a NONEMPTY replacement is blocked for canonical identity/
+history reconciliation, never silently reuploaded under a new namespace.
+
+Native/host tests cover acknowledged overlap, same-second groups, partial/foreign
+receipts, explicit review, failed commits, before/after SIGKILL with live journals,
+atomic empty-source witness promotion, legacy recovery and empty-generation
+transitions. Synthetic native proof is not PW3/source-generation or hardware
+power-loss acceptance. Gate4 remains OPEN for grouped changed0.0.9 physical/UI
+proof, nonempty replacement/state-loss reconciliation and remaining migration/
+performance cases. Production transport/lifecycle/effects remain unregistered.
+
+
+### Explicit schema2-to3 upgrade
+
+An existing schema2 queue can be upgraded only through a one-use reviewed action
+bound to that same queue, identity and source guard. Verify all current selected
+bytes/review descriptors and the current native Statistics snapshot; save a
+verified schema2 recovery copy first. Inside one transaction recheck the old scope,
+rebuild only the recognized review declaration with resolved=0 for existing rows,
+create empty progress and set version3. Preserve device/epoch, original source
+metadata, pending event bytes and every review descriptor. Failed DDL/commit
+rolls back to recognized schema2 and leaves the recovery copy. No new identity,
+old delivery ACK or source marker is inferred. Unknown schemas and schema1's
+unverified diagnostic source remain in explicit recovery/reconciliation, never
+silently upgraded. The UI requires a closed book and explicit confirmation.
+
+
+The ACK frontier validates each remaining pending row's event ID and native
+payload digest against its canonical line, just as delivery selection does.
+An internally inconsistent neighbor rejects/rolls back another event's local
+prune and marker update; a valid receipt does not certify unrelated local rows.
+
+
+A collection review validates observation UTC through the existing codec parser.
+If that observation is earlier than the confirmed boundary, review offers an
+explicit same-identity history rescan; progress is untouched until confirmation.
+A backward clock step during a transient pass invalidates its continuation.
+This is not clock calibration or proof of real event-day accuracy. Arbitrary
+backdating/clock corrections that are not detectable from these observations
+still require explicit history rescan and the later time/provenance policy.
+
+
+## 2026-10-24 Isolated grouped source-lifecycle diagnostic
+
+The existing offline artifact owner supports explicit --source-lifecycle mode
+for prepare/install/collect, with the same bounded manifest, single-use launcher
+and scope-checked host collection. Only a new synthetic state root is writable.
+Statistics-shaped fixtures are created there, then read through the unchanged
+Statistics/collector/outbox owners. No real Statistics/settings/outbox, network,
+Wi-Fi control, canonical writer, source ACK or production registration is used.
+Five groups exercise changed collection/witness/progress commits around owned
+child SIGKILL, same-second continuation/review, exact same-identity restore and
+replay, nonempty-source refusal/empty-generation consent with backup, and schema2
+upgrade preserving its old backup. Reuse the existing native process helper;
+never stop KOReader or another process. Validate exact allowed files and their
+schema/native IDs/payloads/review/source/progress on bounded PRIVATE synthetic
+copies before accepting correlated observations. No mounted user database is
+SQLite-opened by the host. Unknown/partial artifacts remain preserved on failure.
+Reports never attest hardware or intrinsic source generation. Native host tests
+and a future actual PW3 run remain different proofs. Core plugin sources and
+wire/Companion contracts are unchanged; Gate4 stays OPEN.
+
+
+## 2026-10-24 Recovery review remains reachable with an unreadable primary
+
+Candidate0.0.10 changes the existing UI only. If the outbox owner cannot open
+the current primary, or cannot obtain its validated status, show an unavailable
+queue with synchronization inactive and all primary mutation controls disabled.
+Keep the existing Review recovery copies action reachable through the SAME
+owner. Inspecting or cancelling copy review creates no queue or identity. The
+existing restore owner still refuses any present/damaged primary; review never
+grants overwrite, reset, migration or native source-generation authority.
+If the dependency itself cannot load, retain the sanitized failure behavior.
+Lua5.1/LuaJIT regressions must demonstrate the previously hidden recovery path,
+failed status, disabled writes and refused restore over an existing primary.
+No state schema, receipt, network or automatic lifecycle changes. Installed0.0.9
+has separate real collection/recovery/restart proof; this new source is not
+installed or physically accepted. Remaining identity reconciliation and Gate4
+obligations are not waived by this UI correction.
+
+
+### Missing-primary artifacts are recovery evidence, not fresh enrollment
+
+The SAME bounded metadata-only list_backups owner must count recognizable
+quartzo_sync_state legacy/sidecar/preserved names and malformed
+quartzo_sync_recovery_ names as unsupported recovery artifacts. Classify the
+own ASCII namespace case-insensitively for FAT discovery; strict supported
+backup leaves still pass the original exact validator. The current primary
+name remains handled by the existing presence/type check. Do not open, repair,
+migrate, remove or reinterpret unknown artifacts. Existing directory/file/count
+bounds and close/finalizer behavior remain in force.
+
+Both review_source and enroll already recheck enrollment_available; their
+existing recovery-required result now covers these residues too. An artifact
+appearing after a source review blocks confirmation before source SQL or entropy.
+Unrelated settings and the ordinary quartzo.lua configuration do not establish
+an earlier reading identity. No second registry, file scanner, schema or reset
+capability is introduced. This prevents an unsafe new namespace but cannot
+reconstruct an identity when every authoritative copy is lost.
+
+
+### New recovery destinations cannot inherit orphan SQLite sidecars
+
+The existing outbox owner checks primary presence/type plus -journal/-wal/-shm
+before any fresh create and before restore opens its selected backup. The same
+check runs before clone creates/attaches its destination. Existing sidecars,
+including empty files, require review and remain untouched; unsupported types
+fail safely. Do not let SQLite associate earlier recovery files with a newly
+created identity or restore target. Keep normal opening of an existing primary
+unchanged: the native SDK still owns legitimate hot-journal recovery.
+
+This is bounded metadata validation, not a second journaling layer, raw copier,
+repair engine or automatic identity recovery. Regressions cover refused create,
+backup and restore, original backup/sidecar preservation and no destination
+SQLite open/ATTACH. The standalone source fixture must use actual LFS for the
+orphan checks and the real SDK for the subsequent supported restore. See
+docs/reading-queue-recovery.md for the original-copy authority and refusal paths.

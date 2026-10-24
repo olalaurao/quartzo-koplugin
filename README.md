@@ -4,9 +4,25 @@ KOReader plugin in development for synchronizing reading activity into Quartzo.
 
 > **Status:** Foundations and physical Phases A/B passed. Version0.0.3 passed PhaseC deterministic extraction fixtures/native SDK and private-backup host comparison; it has not run on PW3. PhaseD durable state/outbox is next. Ingestion and effects remain inactive. See STATUS for source-bound evidence and remaining gates.
 
+Candidate0.0.4 implements inactive plugin-owned delivery state with native SQLite
+transactions and exact opaque-receipt pruning. Gate4 remains open; no new version
+is installed and no source enrollment or production synchronization is enabled.
+
+Candidate0.0.5 extends that same owner with explicit validated recovery snapshots
+and restoration of the original identity. Native host CI passed357 cases; actual
+device/Gate4 acceptance is pending. Installed0.0.2 and production are untouched.
+
+Candidate0.0.7 adds manual offline queue status, confirmed recovery copies and
+reviewed restoration through that same owner. It initializes no missing state;
+source enrollment, synchronization and physical Gate4 remain open. The sole wire
+codec/SDK adapter now ship in the plugin namespace; no duplicate implementation.
+Exactc70a4e7 passed400 host/native CI cases without skips. See STATUS for the
+source-bound evidence and uninstalled artifact.
+
 The package and offline acceptance steps are documented in
 [tools/plugin](tools/plugin/README.md). The Quartzo Tools menu shows diagnostics
-and a separate Reading Statistics action. Neither starts synchronization.
+a separate Reading Statistics action and Offline reading queue. None starts
+synchronization.
 
 Independent Gate 0B client preparation and real-Lua-5.1 host logic tests are in
 [tools/transport_probe](tools/transport_probe/README.md). This is diagnostic-only,
