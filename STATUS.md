@@ -1,46 +1,39 @@
 # Implementation Status
 
-## 2026-10-24 Reviewed offline collection and ACK frontier candidate0.0.9
+## 2026-10-24 Reviewed offline collection0.0.9: native accepted, physical OPEN
 
-Schema3 adds atomic selected-source coverage, a receipt-only ACK frontier and
-explicit retained-review decisions through the SAME Statistics/collector/outbox
-owners. Collection uses opaque passes, rechecks native bytes/schema cookie and
-never persists rowid. Raw stage is blocked for schema3. Partial ACKs cannot pass
-pending/unresolved positions; resolution adds no time or ACK. Explicit history
-rescan retains identity and restarts progress only after confirmation. First
-collection strengthens initially empty source witnesses atomically. Empty resets
-require settled work, mandatory recovery and a new epoch with unchanged device;
-nonempty replacements fail closed for identity reconciliation.
+Exactd5bab06 native CI40109125180 passed585/no skips (430 plugin,34 transport,
+121 wire). The final private0.0.9 package contains the eight exact Git sources;
+it supersedes the earlier efbb/0.0.8 artifacts and is NOT installed. The actual
+last-known0.0.7 installation and earlier source-bound physical scopes remain.
+No device access, phone APK build, timed session, listener or human request was
+started. Windows suites remain manual; no unrelated Flutter/TS suite was rerun.
 
-Manual UI0.0.9 requires closed books for source/collection actions, confirms
-history import/exclusion/reset and yields between bounded batches. No startup
-collector, automatic network, Wi-Fi or production transport is registered.
-Schema1/2 recovery stays supported without automatic migration; schema2 collection
-stays disabled until explicit confirmed upgrade. That schema2-to3 action now
-requires a matching source and verified pre-upgrade recovery, retaining all
-identity/event/review bytes and rolling back failed DDL. Candidate0.0.8 is superseded for future
-trial; actual installed0.0.7 and prior physical scopes remain unchanged.
+The SAME Statistics/collector/outbox owners provide confirmed foreground collection,
+opaque transient passes and atomic schema3 event/coverage/witness writes. Only
+matching approved opaque receipts can advance the acknowledged overlap frontier;
+pending/unresolved positions block further progress. Remaining pending metadata
+is revalidated, so an inconsistent neighbor rolls back another receipt's prune
+and marker. The regression failed before the fix and passes now. Native child
+SIGKILL before/after commit proves the joined state, not hardware power loss.
 
-Local plugin suite413=288 PASS/125 explicit native-only skips, including actual
-owned child stops before/after selection commit and the real paired-owner model.
-The initial UI-mock failure was fixed and its log retained. Exactd922bdb native
-CI40106347294 passed568/no skips (413 plugin,34 transport,121 wire), including
-actual SQ3 child stops and joined paired-owner/frontier cases. The follow-up
-explicit upgrade efbb0de passed native CI40107193589:576/no skips (421 plugin,
-34 transport,121 wire). The final0.0.9 artifact contains the eight exact accepted
-Git sources and is not installed. Changed-path local tests passed42 collection/
-40 UI cases; native proof additionally covers official SQ3 migration/rollback.
-A subsequent adversarial corruption regression exposed an unchecked pending
-neighbor in frontier calculation. The new comparison verifies its event ID and
-native digest before ACK progress; failure rolls back prune+marker. Its local
-regression passes (44 collection cases/22 native-only skips); exact new native
-CI and repackaging are required. The prior efbb artifact is superseded and must
-not be used for the final trial. The collection pass also validates observation
-UTC, reviews a same-identity rescan when the clock is earlier than the ACK
-boundary, and rejects backward clock changes within a pass. This retains data;
-it does not certify real-world dates or replace later time/provenance gates. Repo base3cff94d was clean with
-exact CI40101783788 SUCCESS499/no skips. Gate4 and full goal stay OPEN/ACTIVE,
-topic2of7. No device, timed session, listener or human request was started.
+Explicit invalid-entry decisions retain audit and add no minutes/ACK. Same-identity
+history rescan restarts progress only after consent. Empty-source witnesses are
+strengthened on first collection. Empty replacement generations require settled
+work and mandatory verified recovery; device ID stays, epoch changes. Nonempty
+replacement/state-loss without provenance stays blocked for reconciliation.
+Schema2-to3 upgrade is explicit and backed up, preserving identities and all
+pending/review bytes; failed native DDL/commit rolls back. Schema1 stays in its
+recognized diagnostic/recovery scope, never silently promoted to production.
+
+Manual UI requires closed books and yields between at most ten100-position batches.
+Observable clock rollback offers reviewed replay or invalidates a transient pass;
+it is not clock calibration or proof of actual event-day correctness. Arbitrary
+backdating/rewrites still need explicit rescan/provenance policy. No startup or
+automatic transport/lifecycle/effects registration is enabled. Gate4 stays OPEN
+for grouped changed0.0.9 PW3 UI/runtime proof, real source provenance, remaining
+state-loss/nonempty-history reconciliation and physical/time/performance gates.
+Full goal ACTIVE/topic2of7; later production phases have not been bypassed.
 
 ## 2026-10-24 Explicit source review and content-bound recovery candidate0.0.8
 
