@@ -213,6 +213,7 @@ local function create(deps)
         timestamp(raw.observed_at_utc)
         check(raw.event_id == event_identity(raw) and object(raw,event_keys) == line, "native_identity_or_encoding")
         return {event_id=raw.event_id, device_id=raw.device_id, source_epoch=raw.source_epoch,
+            started_at_seconds=timestamp(raw.started_at_utc).seconds,
             native=object(raw,event_keys,"observed_at_utc")}
     end
     local function entries(value)
@@ -232,7 +233,7 @@ local function create(deps)
             if entry.event_id and conflicts[entry.event_id] then entry.rejection = "conflict" end
             if entry.rejection then entry.event_id, entry.native_digest = null, null
             else entry.native_digest = digest(entry.native) end
-            entry.native, entry.device_id, entry.source_epoch = nil, nil, nil
+            entry.native, entry.device_id, entry.source_epoch, entry.started_at_seconds = nil, nil, nil, nil
         end
         return result
     end
@@ -242,7 +243,8 @@ local function create(deps)
             local entry = inspect_event(line)
             check(not entry.rejection, "invalid_event")
             return {event_id=entry.event_id, device_id=entry.device_id, source_epoch=entry.source_epoch,
-                native_digest=digest(entry.native), line_digest=digest(line), canonical_ack=false}
+                native_digest=digest(entry.native), line_digest=digest(line),
+                started_at_seconds=entry.started_at_seconds,canonical_ack=false}
         end)
     end
     -- Construction and inspection share the same serializer, identity and validator.

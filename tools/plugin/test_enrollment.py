@@ -57,14 +57,12 @@ class EnrollmentTest(unittest.TestCase):
         return result
 
     def stage(self, queue):
-        fields = dict(queue.context().items())
-        fields["observed_at_utc"] = collector.OBSERVED
-        batch = self.collector.collect(str(self.path), self.lua.table_from(fields), self.codec, self.sdk)
-        self.assertNotIsInstance(batch, tuple)
-        result = queue.stage(batch)  # Synthetic owner fixture; no production historical import.
+        preview = queue.review_collection(str(self.path), collector.OBSERVED)
+        self.assertNotIsInstance(preview, tuple)
+        result = queue.stage_collection(preview["pass"])  # Explicit synthetic owner fixture.
         self.assertNotIsInstance(result, tuple)
 
-    def test_review_is_inert_and_only_opaque_confirmation_creates_v2_identity(self):
+    def test_review_is_inert_and_only_opaque_confirmation_creates_current_identity(self):
         source = self.path.read_bytes()
         review = self.review()
         self.assertFalse(self.owned.exists())
@@ -80,7 +78,7 @@ class EnrollmentTest(unittest.TestCase):
         self.assertEqual(queue.check_source(str(self.path)).source_state, "matches_enrollment")
         self.assertEqual(source, self.path.read_bytes())
         with statistics.closing(sqlite3.connect(self.owned)) as conn:
-            self.assertEqual(conn.execute("PRAGMA user_version").fetchone()[0], 2)
+            self.assertEqual(conn.execute("PRAGMA user_version").fetchone()[0], 3)
             self.assertEqual(conn.execute("SELECT * FROM source").fetchone(), (1, "7", "11", "1",
                              "1,1,100,20,10", "1,2,110,30,10", "110"))
         self.assertEqual(dict(self.reopen().context().items()), context)

@@ -198,7 +198,7 @@ local function parse_anchor(value)
     source_check(#values==5 and anchor(values)==value)
     return values
 end
-function M.validate_source_checkpoint(value)
+function M.validate_source_checkpoint(value,allow_empty_boundary)
     local ok,result=pcall(function()
         source_check(type(value)=="table")
         local copied,allowed={},{}
@@ -216,8 +216,8 @@ function M.validate_source_checkpoint(value)
         source_check((first==nil)==(last==nil))
         if first then
             local field=copied.history_boundary
-            source_check(#field<=17 and field:match("^%-?%d+$") and native_number(tonumber(field))==field
-                and tonumber(field)>=first[3] and tonumber(field)>=last[3])
+            source_check((allow_empty_boundary and field=="") or (#field<=17 and field:match("^%-?%d+$")
+                and native_number(tonumber(field))==field and tonumber(field)>=first[3] and tonumber(field)>=last[3]))
         else source_check(copied.history_boundary=="") end
         return copied
     end)
@@ -255,15 +255,7 @@ local function check_anchors(conn,checkpoint)
         end
     end
 end
-local function capture_source(path,runtime,previous)
-    return source_snapshot(path,runtime,function(conn,volume,inode)
-        if previous then
-            check_anchors(conn,previous)
-            local refreshed={}
-            for _,field in ipairs(source_fields) do refreshed[field]=previous[field] end
-            refreshed.volume,refreshed.inode=volume,inode
-            return refreshed -- Keep the original history boundary and anchors.
-        end
+local function describe_source(conn,volume,inode)
         local function edge(order)
             local stmt=conn:prepare("SELECT "..projection.." FROM page_stat_data "
                 .."INDEXED BY sqlite_autoindex_page_stat_data_1 ORDER BY id_book "..order
@@ -280,12 +272,36 @@ local function capture_source(path,runtime,previous)
         local checked=M.validate_source_checkpoint(value)
         source_check(checked~=nil)
         return checked
+end
+local function capture_source(path,runtime,previous)
+    return source_snapshot(path,runtime,function(conn,volume,inode)
+        if previous then
+            check_anchors(conn,previous)
+            local refreshed={}
+            for _,field in ipairs(source_fields) do refreshed[field]=previous[field] end
+            refreshed.volume,refreshed.inode=volume,inode
+            return refreshed -- Keep the original history boundary and anchors.
+        end
+        return describe_source(conn,volume,inode)
+    end)
+end
+function M.strengthen_empty_source(path,previous,runtime)
+    local checked,code=M.validate_source_checkpoint(previous)
+    if not checked then return nil,code end
+    if checked.first_event~="" then return nil,"statistics_source_unverifiable" end
+    return source_snapshot(path,runtime or {},function(conn,volume,inode)
+        source_check(volume==checked.volume and inode==checked.inode,"statistics_source_changed")
+        check_anchors(conn,checked)
+        local current=describe_source(conn,volume,inode)
+        source_check(current.first_event~="")
+        current.history_boundary=checked.history_boundary
+        return current
     end)
 end
 function M.review_source(path,runtime,previous)
     runtime=runtime or {}
     if previous then
-        local checked,code=M.validate_source_checkpoint(previous)
+        local checked,code=M.validate_source_checkpoint(previous,true)
         if not checked then return nil,code end
         -- An enrollment made against empty history has no retained native
         -- witness for a moved/replaced file. Do not guess continuity later.
@@ -312,7 +328,7 @@ function M.accept_source_review(token,accept)
 end
 function M.with_source_snapshot(path,expected,runtime,read)
     runtime=runtime or {}
-    local checkpoint,code=M.validate_source_checkpoint(expected)
+    local checkpoint,code=M.validate_source_checkpoint(expected,true)
     if not checkpoint then return nil,code end
     return source_snapshot(path,runtime,function(conn,volume,inode)
         source_check(volume==checkpoint.volume and inode==checkpoint.inode,"statistics_source_changed")

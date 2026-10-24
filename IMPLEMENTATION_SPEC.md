@@ -2060,3 +2060,83 @@ nor advances state/ACK. Legacy/unreviewed or changed sources and foreign transie
 continuations fail closed before scanning raw events. This avoids a separate
 extractor or a guard check detached from the actual source snapshot. No producer,
 UI collection action or lifecycle registration is enabled by this API.
+
+
+## 2026-10-24 Phase D reviewed collection, ACK frontier and empty reset (candidate0.0.9)
+
+Fresh explicit enrollment now creates private schema3. Existing schema1/2 CREATE
+bytes and recognized recovery remain supported without automatic migration. Schema3
+adds one progress row (ack_watermark,scan_before) and a resolved flag on retained
+review descriptors. Original identity/pending/source columns and canonical event
+bytes do not change. A schema2 restore stays schema2; collection controls remain
+disabled until a separate explicit migration. No source/vault/Markdown writer,
+wire version, external ACK model or Companion contract is introduced.
+
+A collection pass is an opaque, queue/identity/source-bound in-memory capability.
+It reads the SAME collector under the SAME native guarded snapshot, using only
+its internal transient continuation. Review displays bounded counts; confirmation
+rechecks exact selected bytes/descriptors/schema cookie before the sole SQLite
+owner atomically stages the batch and scan coverage. Raw stage(batch) is refused
+for schema3. A failed/full/interrupted transaction preserves prior pending data,
+coverage and witnesses. A committed pass may continue; a lost process restarts
+from the persisted acknowledged boundary with inclusive overlap. Rowid is never
+persisted or acknowledged. The schema cookie invalidates a transient pass after
+VACUUM/DDL; it is not a database-generation identifier. Native Statistics must be
+closed/flushed: manual collection/source actions require the file browser. No
+startup/background collection, reader hooks, automatic network or Wi-Fi changes
+are registered. The UI yields between at most ten100-position batches and stops
+safely on capacity/source/error/work limits.
+
+scan_before is a private candidate coverage bound (last observed second minus
+one), not the extraction lower bound, a source ACK or permission to drop queued
+facts. Only ack_watermark is used to restart ordinary collection. It advances
+ONLY within the matching approved opaque-receipt prune transaction, and only
+when a selected pending fact was actually acknowledged. Its upper bound is the
+observed coverage and strictly before every pending event and unresolved review.
+Out-of-order/partial ACKs cannot pass gaps. Already committed overlapping facts
+retain their event identity and canonical deduplication remains required.
+No response/claim table or boolean can advance this marker. Local status/preview
+canonical_ack remains false; it is not an externally usable durability receipt.
+
+Retained invalid entries can be explicitly reviewed in batches of at most100.
+One-use owner-bound decisions recheck every exact descriptor inside a transaction.
+Exclusion sets resolved=1, keeps the audit descriptor and Statistics untouched,
+adds no minutes and advances no ACK marker. Duplicate re-extraction does not undo
+the decision. Unresolved cases keep blocking further ACK advancement. Capacity
+counts all retained entries, including resolved audit; no silent audit pruning.
+Backup/restore and manual copy review bind progress and resolution flags as well
+as all selected bytes, identity and source metadata.
+
+Explicit all_history review uses the SAME device/source identity and rescans
+native history. Confirming its first batch revokes the prior scan/ACK marker in
+the same staging transaction; it does not grant ACK. Failed confirmation restores
+prior progress atomically. Subsequent true per-event receipts re-establish the
+frontier. This catches backdated additions through explicit rescan, without
+inventing a persistent tuple cursor or re-namespacing already delivered facts.
+It assumes the reviewed Statistics generation and native identities remain valid;
+merged/replaced/rewritten histories still require provenance reconciliation.
+
+An initially empty enrolled source gains indexed native continuity witnesses
+when its first real selection is committed. This keeps its original device,
+epoch and empty enrollment-history boundary. Witnesses, events and coverage share
+one transaction. Old handles/passes must reopen afterward. Thus an in-place
+Statistics reset after first collection cannot hide behind permanently empty
+witnesses. Legacy schema2 validation remains unchanged; only schema3 accepts the
+promoted-witness/empty-original-boundary state.
+
+An actual empty replacement/reset can be explicitly enrolled as a NEW epoch
+only when no pending fact or unresolved review remains. The old device ID stays
+unchanged; a verified recovery copy of the old state is mandatory before the
+transaction, which archives settled audit in that copy, draws a new random epoch
+and resets progress. Recheck source review and old scope inside the operation;
+rollback keeps the old identity and recovery copy. A still-matching source cannot
+rotate its epoch, and a NONEMPTY replacement is blocked for canonical identity/
+history reconciliation, never silently reuploaded under a new namespace.
+
+Native/host tests cover acknowledged overlap, same-second groups, partial/foreign
+receipts, explicit review, failed commits, before/after SIGKILL with live journals,
+atomic empty-source witness promotion, legacy recovery and empty-generation
+transitions. Synthetic native proof is not PW3/source-generation or hardware
+power-loss acceptance. Gate4 remains OPEN for grouped changed0.0.9 physical/UI
+proof, nonempty replacement/state-loss reconciliation and remaining migration/
+performance cases. Production transport/lifecycle/effects remain unregistered.

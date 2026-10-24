@@ -1,5 +1,31 @@
 # Implementation Status
 
+## 2026-10-24 Reviewed offline collection and ACK frontier candidate0.0.9
+
+Schema3 adds atomic selected-source coverage, a receipt-only ACK frontier and
+explicit retained-review decisions through the SAME Statistics/collector/outbox
+owners. Collection uses opaque passes, rechecks native bytes/schema cookie and
+never persists rowid. Raw stage is blocked for schema3. Partial ACKs cannot pass
+pending/unresolved positions; resolution adds no time or ACK. Explicit history
+rescan retains identity and restarts progress only after confirmation. First
+collection strengthens initially empty source witnesses atomically. Empty resets
+require settled work, mandatory recovery and a new epoch with unchanged device;
+nonempty replacements fail closed for identity reconciliation.
+
+Manual UI0.0.9 requires closed books for source/collection actions, confirms
+history import/exclusion/reset and yields between bounded batches. No startup
+collector, automatic network, Wi-Fi or production transport is registered.
+Schema1/2 recovery stays supported without automatic migration; schema2 collection
+stays disabled pending explicit migration. Candidate0.0.8 is superseded for future
+trial; actual installed0.0.7 and prior physical scopes remain unchanged.
+
+Local plugin suite413=288 PASS/125 explicit native-only skips, including actual
+owned child stops before/after selection commit and the real paired-owner model.
+The initial UI-mock failure was fixed and its log retained. Native CI is required
+for this candidate before packaging/installation. Repo base3cff94d was clean with
+exact CI40101783788 SUCCESS499/no skips. Gate4 and full goal stay OPEN/ACTIVE,
+topic2of7. No device, timed session, listener or human request was started.
+
 ## 2026-10-24 Explicit source review and content-bound recovery candidate0.0.8
 
 The existing Statistics owner now mints one-use native RO source reviews. Explicit

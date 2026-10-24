@@ -29,6 +29,10 @@ function Quartzo:showDeliveryError(code)
         outbox_recovery_review_required = _("Recovery copies already exist. Review them before setting up a new reading identity. Existing files were preserved."),
         statistics_source_changed = _("Reading Statistics changed since source review or setup. The reading queue and its identity were preserved. Synchronization is inactive."),
         statistics_source_unverifiable = _("The Reading Statistics source could not be checked safely. No new identity was created. Synchronization is inactive."),
+        outbox_capacity = _("The offline queue is full. Queued events were kept and collection paused. Synchronization is inactive."),
+        outbox_collection_changed = _("Statistics or the reading selection changed. Review the collection again. Queued events were kept."),
+        outbox_source_not_settled = _("Finish queued deliveries and review invalid entries before changing the Statistics source. Existing data was preserved."),
+        statistics_source_reconciliation_required = _("The replacement Statistics history needs identity reconciliation before import. Existing reading identities and recovery copies were preserved."),
     }
     UIManager:show(InfoMessage:new{
         text = messages[code] or _("The reading queue needs review. Existing files were preserved. Synchronization is inactive."),
@@ -37,13 +41,19 @@ end
 
 function Quartzo:showReadingSource()
     if self.delivery_busy then return end
+    if not self:sourceActionAllowed() then return end
     self:deliveryRequest(function(owner,runtime)
         local queue,code=owner.open(self.state_root,runtime)
         if queue then
             local source
             source,code=queue.check_source(self.statistics_path)
             if not source and code=="statistics_source_changed" then
-                return self:reviewSourceChange(queue)
+                local reviewed,reason=self:reviewSourceChange(queue)
+                if reviewed then return true end
+                if reason=="statistics_source_changed" or reason=="statistics_source_unverifiable" then
+                    return self:reviewNewGeneration(queue)
+                end
+                return nil,reason
             end
             if not source then return nil,code end
             UIManager:show(InfoMessage:new{ text=source.source_state=="matches_enrollment"
@@ -66,6 +76,135 @@ function Quartzo:showReadingSource()
                     local enrolled,reason=current.enroll(self.state_root,review,current_runtime)
                     if not enrolled then return nil,reason end
                     UIManager:show(InfoMessage:new{ text=_("Reading source set up. Existing history was not imported. Synchronization remains inactive.") })
+                    return true
+                end)
+            end,
+        })
+        return true
+    end)
+end
+
+function Quartzo:sourceActionAllowed()
+    if not self.ui.document then return true end
+    UIManager:show(InfoMessage:new{ text=_("Close the book and return to the file browser before collecting reading or changing its source.") })
+    return false
+end
+
+function Quartzo:reviewNewGeneration(queue)
+    local preview,code=queue.review_new_generation(self.statistics_path)
+    if not preview then return nil,code end
+    local token=preview.review
+    UIManager:show(ConfirmBox:new{
+        text=_("The current Statistics history is empty and previous queued work is settled. Start a new source generation, keeping this device identity? A recovery copy of the previous state will be saved first. No old history is imported. Synchronization remains inactive."),
+        ok_text=_("Start new generation"),
+        ok_callback=function()
+            self:deliveryChange(_("Saving source recovery…"),function(owner,runtime)
+                local current,reason=owner.open(self.state_root,runtime)
+                if not current then return nil,reason end
+                local changed
+                changed,reason=current.begin_new_generation(token)
+                if not changed then return nil,reason end
+                UIManager:show(InfoMessage:new{ text=_("New source generation saved. The device identity and previous recovery copy were retained. Synchronization remains inactive.") })
+                return true
+            end)
+        end,
+    })
+    return true
+end
+
+function Quartzo:showCollection(all_history)
+    if self.delivery_busy or not self:sourceActionAllowed() then return end
+    self:deliveryRequest(function(owner,runtime)
+        local current,code=owner.open(self.state_root,runtime)
+        if not current then return nil,code end
+        local preview
+        preview,code=current.review_collection(self.statistics_path,os.date("!%Y-%m-%dT%H:%M:%S.000Z"),100,
+            all_history and "all_history" or nil)
+        if not preview then return nil,code end
+        if preview.scanned_count==0 then
+            UIManager:show(InfoMessage:new{ text=_("No reading events found in this source selection. Synchronization is inactive.") })
+            return true
+        end
+        local pass=preview.pass
+        UIManager:show(ConfirmBox:new{
+            text=all_history
+                and _("Rescan all reading history using this same identity? Earlier scan progress will be restarted; queued events stay intact. Previously delivered events keep their identity for retry. If Statistics was merged, replaced or reset, review its source first. Collection is bounded. No data is sent.")
+                or _("Collect existing and new reading events from this Statistics source into the offline queue? This includes reading history. If Quartzo was used before, recover its original identity first. Collection is bounded and pauses safely at the queue limit. Invalid entries remain for review. No data is sent."),
+            ok_text=_("Collect reading"),
+            ok_callback=function() self:runCollection(pass) end,
+        })
+        return true
+    end)
+end
+
+function Quartzo:runCollection(pass)
+    if self.delivery_busy then return end
+    self.delivery_busy=true
+    local progress=InfoMessage:new{ text=_("Collecting reading into the offline queue…") }
+    UIManager:show(progress)
+    local batches=0
+    local function finish(text)
+        self.delivery_busy=false
+        UIManager:close(progress)
+        if text then UIManager:show(InfoMessage:new{ text=text }) end
+    end
+    local step
+    step=function()
+        local again=false
+        local ok=self:deliveryRequest(function(owner,runtime)
+            local current,code=owner.open(self.state_root,runtime)
+            if not current then return nil,code end
+            local staged
+            staged,code=current.stage_collection(pass)
+            if not staged then return nil,code end
+            batches=batches+1
+            if staged.complete or batches>=10 then
+                finish((staged.complete and _("Reading selection queued.") or _("Collection paused at its work limit. Queued events were kept."))
+                    .."\n".._("Queued events:").." "..staged.pending.."\n".._("Synchronization: inactive"))
+            else
+                if staged.source_reopen_required then
+                    current,code=owner.open(self.state_root,runtime)
+                    if not current then return nil,code end
+                end
+                local preview
+                local now=os.date("!%Y-%m-%dT%H:%M:%S.000Z")
+                if staged.source_reopen_required then preview,code=current.review_collection(self.statistics_path,now,100)
+                else preview,code=current.next_collection(pass,now) end
+                if not preview then return nil,code end
+                pass,again=preview.pass,true
+            end
+            return true
+        end)
+        if not ok then finish() elseif again then UIManager:nextTick(step) end
+    end
+    UIManager:nextTick(step)
+end
+
+function Quartzo:showRejectionReview()
+    if self.delivery_busy then return end
+    self:deliveryRequest(function(owner,runtime)
+        local current,code=owner.open(self.state_root,runtime)
+        if not current then return nil,code end
+        local preview
+        preview,code=current.review_rejections(100)
+        if not preview then return nil,code end
+        if preview.count==0 then
+            UIManager:show(InfoMessage:new{ text=_("No invalid entries need review.") })
+            return true
+        end
+        local token=preview.review
+        UIManager:show(ConfirmBox:new{
+            text=_("Invalid entries in this review:").." "..preview.count.."\n\n"
+                .._("Keep these entries for audit and exclude them from reading time? No minutes will be added for them. Reading Statistics stays unchanged. This does not confirm delivery or advance synchronization."),
+            ok_text=_("Exclude invalid entries"),
+            ok_callback=function()
+                self:deliveryChange(_("Saving review decision…"),function(current_owner,current_runtime)
+                    local active,reason=current_owner.open(self.state_root,current_runtime)
+                    if not active then return nil,reason end
+                    local resolved
+                    resolved,reason=active.resolve_rejections(token)
+                    if not resolved then return nil,reason end
+                    UIManager:show(InfoMessage:new{ text=_("Entries retained for audit. No reading time was added.") })
                     return true
                 end)
             end,
@@ -133,7 +272,7 @@ function Quartzo:showDeliveryState()
             if not status then return nil,code end
         end
         local text=status and (_("Queued events:").." "..status.pending.."\n"
-            .._("Needs review:").." "..status.review)
+            .._("Needs review:").." "..(status.unresolved_review or status.review))
             or _("No reading queue found. Existing recovery copies can be reviewed below.")
         local dialog
         dialog=ButtonDialog:new{
@@ -153,7 +292,7 @@ function Quartzo:showDeliveryState()
                                 if not saved then return nil,reason end
                                 UIManager:show(InfoMessage:new{ text=_("Recovery copy saved.").."\n"
                                     .._("Queued events:").." "..saved.pending.."\n"
-                                    .._("Needs review:").." "..saved.review })
+                                    .._("Needs review:").." "..(saved.unresolved_review or saved.review) })
                                 return true
                             end)
                         end,
@@ -162,6 +301,19 @@ function Quartzo:showDeliveryState()
                 {{text=_("Review recovery copies"),callback=function()
                     UIManager:close(dialog)
                     self:showRecoveryCopies()
+                end}},
+                {{text=_("Collect reading into queue"),enabled=status and status.collection_supported or false,callback=function()
+                    UIManager:close(dialog)
+                    self:showCollection()
+                end}},
+                {{text=_("Review invalid entries"),enabled=status and status.collection_supported
+                    and (status.unresolved_review or 0)>0 or false,callback=function()
+                    UIManager:close(dialog)
+                    self:showRejectionReview()
+                end}},
+                {{text=_("Rescan reading history"),enabled=status and status.collection_supported or false,callback=function()
+                    UIManager:close(dialog)
+                    self:showCollection(true)
                 end}},
                 {{text=_("Close"),callback=function() UIManager:close(dialog) end}},
             },
@@ -207,7 +359,7 @@ function Quartzo:showRecoveryCopy(leaf)
         local expected={device_id=preview.device_id,source_epoch=preview.source_epoch,
             pending=preview.pending,review=preview.review,selection_key=preview.selection_key,canonical_ack=false}
         UIManager:show(ConfirmBox:new{
-            text=_("Queued events:").." "..preview.pending.."\n".._("Needs review:").." "..preview.review
+            text=_("Queued events:").." "..preview.pending.."\n".._("Needs review:").." "..(preview.unresolved_review or preview.review)
                 .."\n\n".._("Restore this point-in-time copy only if the current queue is absent? It retains its original identity and cannot recover later events. Source setup still requires review. Synchronization remains inactive."),
             ok_text=_("Restore copy"),
             ok_callback=function()

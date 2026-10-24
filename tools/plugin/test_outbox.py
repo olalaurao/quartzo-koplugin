@@ -517,8 +517,9 @@ class OutboxTest(unittest.TestCase):
         self.assertEqual(replay.removed,0)
 
     def test_actual_pairing_owner_and_shared_carrier_isolate_partial_receipt(self):
-        self.seed()
-        self.queue.stage(self.batch())
+        if not getattr(self, "already_selected", False):
+            self.seed()
+            self.queue.stage(self.batch())
         # Reuse the existing pinned carrier's native-API SDK model; do not invent
         # a second response->receipt implementation for this integration test.
         wire_root=ROOT/"tools/reading_wire"
@@ -573,7 +574,7 @@ class OutboxTest(unittest.TestCase):
         result=self.queue.consume_receipt(session,receipt,request_bytes)
         self.assertEqual((result.removed,result.review_retained),(1,1))
         self.assertEqual(self.reopen().status().pending,1)
-        self.assertIsNone(result.source_watermark)
+        self.assertEqual(result.source_watermark, getattr(self, "expected_source_watermark", None))
         paired.close(session)
         self.assertEqual(self.queue.consume_receipt(session,receipt,request_bytes),(None,"unverified_reading_receipt"))
 

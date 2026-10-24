@@ -170,6 +170,8 @@ local function collect(options, codec, snapshot)
         table.sort(ids)
         for _, id in ipairs(ids) do group(result, seen[id]) end
         result.byte_count = bytes
+        result.snapshot_schema_cookie=tonumber(conn:rowexec("PRAGMA schema_version"))
+        check(integer(result.snapshot_schema_cookie,0,2147483647))
         -- This is a source observation only, including when complete=true.
         -- A future outbox must preserve pending review independently and cannot
         -- advance an acknowledged watermark over it. next_scan is not that ACK.

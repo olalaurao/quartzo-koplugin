@@ -4,6 +4,10 @@ local M = {}
 local FILE = "quartzo_sync_state.sqlite3"
 local CAP = 1000
 local source_reviews=setmetatable({}, {__mode="k"})
+local collection_passes=setmetatable({}, {__mode="k"})
+local rejection_reviews=setmetatable({}, {__mode="k"})
+local generation_reviews=setmetatable({}, {__mode="k"})
+local EARLIEST,LATEST=-62135596800,253402300799
 local function check(value, code)
     if not value then error(code or "invalid_outbox_state", 0) end
 end
@@ -80,30 +84,43 @@ local definitions = {
         .."PRIMARY KEY(started_at,book_id,page,duration,pages,types))",
     source="(id INTEGER PRIMARY KEY CHECK(id=1),volume TEXT NOT NULL,inode TEXT NOT NULL,"
         .."book_sequence TEXT NOT NULL,first_event TEXT NOT NULL,last_event TEXT NOT NULL,history_boundary TEXT NOT NULL)",
+    progress="(id INTEGER PRIMARY KEY CHECK(id=1),ack_watermark TEXT,scan_before TEXT)",
 }
+local function definition(name,version)
+    if name=="review" and version==3 then
+        return definitions.review:gsub("PRIMARY KEY", "resolved INTEGER NOT NULL DEFAULT 0 CHECK(resolved IN(0,1)),PRIMARY KEY",1)
+    end
+    return definitions[name]
+end
 local source_fields={"volume","inode","book_sequence","first_event","last_event","history_boundary"}
+local function update_source(conn,checkpoint)
+    execute(conn,"UPDATE source SET volume=?,inode=?,book_sequence=?,first_event=?,last_event=?,history_boundary=? WHERE id=1",
+        checkpoint.volume,checkpoint.inode,checkpoint.book_sequence,
+        checkpoint.first_event,checkpoint.last_event,checkpoint.history_boundary)
+end
 local function tables(version)
+    if version==3 then return {"identity","pending","review","source","progress"} end
     return version==2 and {"identity","pending","review","source"} or {"identity","pending","review"}
 end
 local function create_schema(conn, prefix, version)
     check(prefix=="" or prefix=="recovery.")
     for _,name in ipairs(tables(version)) do
-        conn:exec("CREATE TABLE "..prefix..name..definitions[name])
+        conn:exec("CREATE TABLE "..prefix..name..definition(name,version))
     end
 end
 local function check_schema(conn,version)
     local indexes={sqlite_autoindex_pending_1="pending",sqlite_autoindex_review_1="review"}
     local objects=conn:prepare("SELECT name,type,tbl_name,"
         .."CASE WHEN typeof(sql)='text' AND length(CAST(sql AS BLOB))<=1024 THEN sql ELSE NULL END "
-        .."FROM sqlite_master LIMIT 7")
+        .."FROM sqlite_master LIMIT 8")
     local seen={}
-    for _=1,7 do
+    for _=1,8 do
         local row=objects:step()
         if not row then break end
         local name=row[1]
         check(not seen[name])
-        if definitions[name] and (name~="source" or version==2) then
-            check(row[2]=="table" and row[3]==name and row[4]=="CREATE TABLE "..name..definitions[name])
+        if definitions[name] and (name~="source" or version>=2) and (name~="progress" or version==3) then
+            check(row[2]=="table" and row[3]==name and row[4]=="CREATE TABLE "..name..definition(name,version))
         else
             check(indexes[name] and row[2]=="index" and row[3]==indexes[name] and row[4]==nil)
         end
@@ -113,7 +130,30 @@ local function check_schema(conn,version)
     for _,name in ipairs({"identity","pending","review","sqlite_autoindex_pending_1","sqlite_autoindex_review_1"}) do
         check(seen[name])
     end
-    if version==2 then check(seen.source) end
+    if version>=2 then check(seen.source) end
+    if version==3 then check(seen.progress) end
+end
+local function watermark(value)
+    if value==nil then return nil end
+    check(type(value)=="string" and #value<=13 and value:match("^%-?%d+$"))
+    local n=tonumber(value)
+    check(integer(n) and n>=EARLIEST and n<=LATEST and string.format("%.0f",n)==value)
+    return n
+end
+local function progress(conn,version)
+    if version~=3 then return {} end
+    check(tonumber(conn:rowexec("SELECT COUNT(*) FROM (SELECT 1 FROM progress LIMIT 2)"))==1)
+    local row=query(conn,"SELECT "..bounded("ack_watermark",13)..","..bounded("scan_before",13)
+        ..",typeof(ack_watermark),typeof(scan_before) FROM progress WHERE id=1")
+    check(row~=nil)
+    for index=1,2 do check(row[index+2]=="null" or (row[index+2]=="text" and row[index]~=nil)) end
+    local result={ack=watermark(row[1]),scanned=watermark(row[2])}
+    check(not result.ack or (result.scanned and result.ack<=result.scanned))
+    return result
+end
+local function set_progress(conn,ack,scanned)
+    execute(conn,"UPDATE progress SET ack_watermark=?,scan_before=? WHERE id=1",
+        ack and string.format("%.0f",ack) or nil,scanned and string.format("%.0f",scanned) or nil)
 end
 local function configured(conn)
     conn:set_busy_timeout(1000)
@@ -125,7 +165,7 @@ local function configured(conn)
 end
 local function own_schema(conn)
     local version=tonumber(conn:rowexec("PRAGMA user_version"))
-    check(version==1 or version==2, "unsupported_outbox_schema")
+    check(version==1 or version==2 or version==3, "unsupported_outbox_schema")
     check(conn:rowexec("PRAGMA quick_check(1)") == "ok", "invalid_outbox_state")
     check_schema(conn,version)
     check(tonumber(conn:rowexec("SELECT COUNT(*) FROM (SELECT 1 FROM identity LIMIT 2)"))==1)
@@ -133,7 +173,7 @@ local function own_schema(conn)
     check(row and scope(row[1]) and scope(row[2]))
     check(count(conn, "pending") + count(conn, "review") <= CAP, "outbox_capacity")
     local checkpoint
-    if version==2 then
+    if version>=2 then
         check(tonumber(conn:rowexec("SELECT COUNT(*) FROM (SELECT 1 FROM source LIMIT 2)"))==1)
         local columns={}
         for _,field in ipairs(source_fields) do columns[#columns+1]=bounded(field,104) end
@@ -141,9 +181,10 @@ local function own_schema(conn)
         check(saved~=nil)
         local value={}
         for index,field in ipairs(source_fields) do value[field]=saved[index] end
-        checkpoint=require("quartzo/statistics").validate_source_checkpoint(value)
+        checkpoint=require("quartzo/statistics").validate_source_checkpoint(value,version==3)
         check(checkpoint~=nil)
     end
+    progress(conn,version)
     return {device_id=row[1], source_epoch=row[2],schema_version=version,source_checkpoint=checkpoint}
 end
 local errors = {invalid_outbox_state=true,unsupported_outbox_schema=true,unsupported_outbox_file=true,
@@ -152,7 +193,9 @@ local errors = {invalid_outbox_state=true,unsupported_outbox_schema=true,unsuppo
     outbox_backup_missing=true,outbox_backup_changed=true,statistics_source_changed=true,
     statistics_source_unverifiable=true,statistics_source_review_required=true,statistics_busy=true,statistics_unavailable=true,
     statistics_read_failed=true,unsupported_statistics_schema=true,invalid_statistics_collection=true,
-    invalid_statistics_event=true,invalid_statistics_data=true}
+    invalid_statistics_event=true,invalid_statistics_data=true,outbox_collection_review_required=true,
+    outbox_collection_changed=true,outbox_review_changed=true,outbox_source_not_settled=true,
+    statistics_source_unchanged=true,statistics_source_reconciliation_required=true}
 local function operation(name, runtime, mode, callback)
     local conn
     local ok, value = pcall(function()
@@ -191,6 +234,48 @@ local function inspect(codec, line, context)
     context_equal(entry, context)
     return entry
 end
+local function frontier(conn,context,codec)
+    local saved=progress(conn,context.schema_version)
+    local candidate=saved.scanned
+    if not candidate then return nil end
+    local stmt=conn:prepare("SELECT "..bounded("line",8192).." FROM pending LIMIT 1001")
+    for i=1,CAP+1 do
+        local row=stmt:step()
+        if not row then break end
+        check(i<=CAP,"outbox_capacity")
+        local entry=inspect(codec,row[1],context)
+        check(integer(entry.started_at_seconds))
+        candidate=math.min(candidate,entry.started_at_seconds-1)
+    end
+    stmt:close()
+    check(tonumber(conn:rowexec("SELECT COUNT(*) FROM review WHERE typeof(started_at)<>'integer' "
+        .."OR typeof(resolved)<>'integer' OR resolved NOT IN(0,1)"))==0)
+    local unresolved=conn:rowexec("SELECT MIN(started_at) FROM review WHERE resolved=0")
+    if unresolved~=nil then candidate=math.min(candidate,tonumber(unresolved)-1) end
+    return candidate>=EARLIEST and candidate or nil
+end
+local function unresolved_count(conn,version)
+    if version~=3 then return count(conn,"review") end
+    return tonumber(conn:rowexec("SELECT COUNT(*) FROM review WHERE resolved=0"))
+end
+local function same_batch(a,b)
+    check(a.scanned_count==b.scanned_count and a.complete==b.complete
+        and a.snapshot_schema_cookie==b.snapshot_schema_cookie
+        and #a.event_lines==#b.event_lines and #a.rejections==#b.rejections,"outbox_collection_changed")
+    for i,line in ipairs(a.event_lines) do check(line==b.event_lines[i],"outbox_collection_changed") end
+    for i,row in ipairs(a.rejections) do
+        local other=b.rejections[i]
+        check(row.started_at==other.started_at and row.row_id==other.row_id,"outbox_collection_changed")
+        for _,field in ipairs({"book_row_id","page","duration_seconds","total_pages"}) do
+            check(row.integer_fields[field]==other.integer_fields[field],"outbox_collection_changed")
+        end
+        for j=1,5 do check(row.field_types[j]==other.field_types[j],"outbox_collection_changed") end
+    end
+    if a.next_scan or b.next_scan then
+        check(a.next_scan and b.next_scan and a.next_scan.started_at==b.next_scan.started_at
+            and a.next_scan.row_id==b.next_scan.row_id,"outbox_collection_changed")
+    end
+end
 local valid_review_types={integer=true,real=true,text=true,blob=true,["null"]=true}
 local function verify_review(row)
     check(integer(tonumber(row[1])) and type(row[6])=="string" and #row[6]<=39)
@@ -215,6 +300,11 @@ local function verify_contents(conn, codec, context)
         selection[#selection+1]="source-v2"
         for _,field in ipairs(source_fields) do selection[#selection+1]=context.source_checkpoint[field] end
     end
+    if context.schema_version==3 then
+        local saved=progress(conn,3)
+        selection[#selection+1]="progress-v3:"..(saved.ack and string.format("%.0f",saved.ack) or "")
+            ..":"..(saved.scanned and string.format("%.0f",saved.scanned) or "")
+    end
     local stmt=conn:prepare("SELECT "..bounded("event_id",68)..","..bounded("line",8192)
         ..","..bounded("native_digest",64).." FROM pending ORDER BY event_id LIMIT 1001")
     for i=1,CAP+1 do
@@ -228,7 +318,8 @@ local function verify_contents(conn, codec, context)
     stmt:close()
     stmt=conn:prepare("SELECT CASE WHEN typeof(started_at)='integer' THEN started_at ELSE NULL END,"
         ..bounded("book_id",20)..","..bounded("page",20)..","..bounded("duration",20)..","
-        ..bounded("pages",20)..","..bounded("types",39).." FROM review "
+        ..bounded("pages",20)..","..bounded("types",39)..(context.schema_version==3
+            and ",CASE WHEN typeof(resolved)='integer' THEN resolved ELSE NULL END" or "").." FROM review "
         .."ORDER BY started_at,book_id,page,duration,pages,types LIMIT 1001")
     for i=1,CAP+1 do
         local row=stmt:step()
@@ -236,6 +327,11 @@ local function verify_contents(conn, codec, context)
         check(i<=CAP,"outbox_capacity")
         verify_review(row)
         row[1]=string.format("%.0f",tonumber(row[1]))
+        if context.schema_version==3 then
+            local resolved=tonumber(row[7])
+            check(resolved==0 or resolved==1)
+            row[7]=tostring(resolved)
+        end
         selection[#selection+1]="r:"..table.concat(row,":")
     end
     stmt:close()
@@ -292,7 +388,8 @@ local function clone(conn, destination, runtime, context, expected)
         end
         conn:exec("PRAGMA recovery.user_version="..context.schema_version)
         return {device_id=context.device_id,source_epoch=context.source_epoch,
-            pending=count(conn,"pending"),review=count(conn,"review"),canonical_ack=false}
+            pending=count(conn,"pending"),review=count(conn,"review"),
+            unresolved_review=unresolved_count(conn,context.schema_version),canonical_ack=false}
     end)
 end
 local function handle(name, runtime, context)
@@ -319,8 +416,10 @@ local function handle(name, runtime, context)
     function api.status()
         return access(false, function(conn)
             return {pending=count(conn,"pending"), review=count(conn,"review"), capacity=CAP,
+                unresolved_review=unresolved_count(conn,context.schema_version),
+                collection_supported=context.schema_version==3,
                 source_state=context.source_checkpoint and "enrolled" or "review_required",
-                source_watermark=nil, canonical_ack=false}
+                source_watermark=progress(conn,context.schema_version).ack, canonical_ack=false}
         end)
     end
     function api.check_source(statistics_path)
@@ -396,8 +495,7 @@ local function handle(name, runtime, context)
             return result
         end)
     end
-    function api.stage(batch)
-        return access(true, function(conn)
+    local function stage_batch(conn,batch,coverage,before_stage,strengthened)
             check(type(batch) == "table" and type(batch.event_lines) == "table"
                 and type(batch.rejections) == "table" and integer(batch.scanned_count)
                 and batch.scanned_count >= 0 and batch.scanned_count <= 100
@@ -433,6 +531,10 @@ local function handle(name, runtime, context)
                 reviews[i]=values
             end
             return transaction(conn,function()
+                local current=own_schema(conn)
+                context_equal(current,context)
+                source_equal(current,context)
+                if before_stage then before_stage() end
                 for _,entry in ipairs(incoming) do
                     local saved=query(conn,"SELECT native_digest FROM pending WHERE event_id=?",entry.event_id)
                     check(not saved or saved[1]==entry.native_digest,"outbox_native_conflict")
@@ -446,8 +548,189 @@ local function handle(name, runtime, context)
                 end
                 local pending, review=count(conn,"pending"),count(conn,"review")
                 check(pending+review<=CAP,"outbox_capacity")
-                return {pending=pending,review=review,canonical_ack=false}
+                if context.schema_version==3 then
+                    local saved=progress(conn,3)
+                    if coverage then saved.scanned=math.max(saved.scanned or EARLIEST,coverage) end
+                    set_progress(conn,saved.ack,saved.scanned)
+                    if strengthened then
+                        update_source(conn,strengthened)
+                    end
+                end
+                return {pending=pending,review=review,source_reopen_required=strengthened~=nil,canonical_ack=false}
             end)
+    end
+    function api.stage(batch)
+        return access(true,function(conn)
+            check(context.schema_version~=3,"outbox_collection_review_required")
+            return stage_batch(conn,batch)
+        end)
+    end
+    local function read_collection(saved,observed_at)
+        local batch,code=require("quartzo/collector").collect_reviewed(saved.path,
+            {device_id=context.device_id,source_epoch=context.source_epoch,observed_at_utc=observed_at,
+                from_started_at=saved.lower,after=saved.after,limit=saved.limit},
+            codec,context.source_checkpoint,runtime)
+        if not batch then error(code,0) end
+        if saved.cookie then check(saved.cookie==batch.snapshot_schema_cookie,"outbox_collection_changed") end
+        return batch
+    end
+    local function pass_preview(pass,saved,batch,observed)
+        saved.batch,saved.observed,saved.cookie=batch,observed,batch.snapshot_schema_cookie
+        saved.ready=true
+        return {pass=pass,scanned_count=batch.scanned_count,event_count=#batch.event_lines,
+            review_count=#batch.rejections,complete=batch.complete,canonical_ack=false}
+    end
+    function api.review_collection(statistics_path,observed_at_utc,limit,mode)
+        return access(false,function(conn)
+            check(context.schema_version==3,"outbox_collection_review_required")
+            check(mode==nil or mode=="all_history","invalid_statistics_collection")
+            local pass={}
+            local saved={name=name,context=context,path=statistics_path,
+                lower=progress(conn,3).ack,limit=limit,restart=mode=="all_history"}
+            if saved.restart then saved.lower=nil end
+            local batch=read_collection(saved,observed_at_utc)
+            collection_passes[pass]=saved
+            return pass_preview(pass,saved,batch,observed_at_utc)
+        end)
+    end
+    local function checked_pass(pass,conn)
+        local saved=collection_passes[pass]
+        check(saved and saved.name==name and context.schema_version==3,"outbox_collection_review_required")
+        context_equal(saved.context,context)
+        source_equal(saved.context,context)
+        local ack=progress(conn,3).ack
+        check(saved.lower==nil or (ack~=nil and saved.lower<=ack),"outbox_collection_changed")
+        return saved
+    end
+    function api.stage_collection(pass)
+        return access(true,function(conn)
+            local saved=checked_pass(pass,conn)
+            check(saved.ready,"outbox_collection_review_required")
+            local current=read_collection(saved,saved.observed)
+            same_batch(saved.batch,current)
+            local last=current.next_scan and current.next_scan.started_at
+            local coverage=last and last-1
+            if coverage and (coverage<EARLIEST or coverage>LATEST) then coverage=nil end
+            local strengthened
+            if context.source_checkpoint.first_event=="" and current.scanned_count>0 then
+                local code
+                strengthened,code=require("quartzo/statistics").strengthen_empty_source(saved.path,context.source_checkpoint,runtime)
+                if not strengthened then error(code,0) end
+            end
+            local result=stage_batch(conn,current,coverage,function()
+                checked_pass(pass,conn)
+                if saved.restart then set_progress(conn,nil,nil) end -- Explicit rescan revokes progress, never grants ACK.
+            end,strengthened)
+            saved.after,saved.complete,saved.ready=current.next_scan,current.complete,false
+            saved.restart=false
+            if strengthened then collection_passes[pass]=nil end
+            result.complete=current.complete
+            return result
+        end)
+    end
+    function api.next_collection(pass,observed_at_utc)
+        return access(false,function(conn)
+            local saved=checked_pass(pass,conn)
+            check(not saved.ready and not saved.complete,"outbox_collection_review_required")
+            return pass_preview(pass,saved,read_collection(saved,observed_at_utc),observed_at_utc)
+        end)
+    end
+    local review_where="started_at=? AND book_id=? AND page=? AND duration=? AND pages=? AND types=?"
+    function api.review_rejections(limit)
+        limit=limit or 100
+        if not integer(limit) or limit<1 or limit>100 then return nil,"invalid_outbox_state" end
+        return access(false,function(conn)
+            check(context.schema_version==3,"outbox_collection_review_required")
+            local stmt=conn:prepare("SELECT started_at,"..bounded("book_id",20)..","..bounded("page",20)
+                ..","..bounded("duration",20)..","..bounded("pages",20)..","..bounded("types",39)
+                .." FROM review WHERE resolved=0 ORDER BY started_at,book_id,page,duration,pages,types LIMIT ?")
+            stmt:bind(limit)
+            local cases={}
+            for _=1,limit do
+                local row=stmt:step()
+                if not row then break end
+                verify_review(row)
+                row[1]=tonumber(row[1])
+                cases[#cases+1]=row
+            end
+            stmt:close()
+            local token={}
+            rejection_reviews[token]={name=name,context=context,cases=cases}
+            return {review=token,count=#cases,remaining=unresolved_count(conn,3)-#cases,canonical_ack=false}
+        end)
+    end
+    function api.resolve_rejections(token)
+        return access(true,function(conn)
+            local reviewed=rejection_reviews[token]
+            check(reviewed and reviewed.name==name and context.schema_version==3,"outbox_review_changed")
+            context_equal(reviewed.context,context)
+            source_equal(reviewed.context,context)
+            rejection_reviews[token]=nil
+            return transaction(conn,function()
+                local current=own_schema(conn)
+                context_equal(current,context)
+                source_equal(current,context)
+                for _,row in ipairs(reviewed.cases) do
+                    local saved=query(conn,"SELECT resolved FROM review WHERE "..review_where,unpack(row))
+                    check(saved and tonumber(saved[1])==0,"outbox_review_changed")
+                    execute(conn,"UPDATE review SET resolved=1 WHERE "..review_where.." AND resolved=0",unpack(row))
+                    check(tonumber(conn:rowexec("SELECT changes()"))==1,"outbox_review_changed")
+                end
+                -- Keep descriptors for audit/replay. Resolution is neither ACK
+                -- nor permission to delete Statistics or advance its watermark.
+                return {resolved=#reviewed.cases,unresolved=unresolved_count(conn,3),
+                    retained=count(conn,"review"),canonical_ack=false}
+            end)
+        end)
+    end
+    local function settled(conn)
+        check(context.schema_version==3,"outbox_collection_review_required")
+        check(count(conn,"pending")==0 and unresolved_count(conn,3)==0,"outbox_source_not_settled")
+    end
+    function api.review_new_generation(statistics_path)
+        return access(false,function(conn)
+            settled(conn)
+            local statistics=require("quartzo/statistics")
+            local same=statistics.with_source_snapshot(statistics_path,context.source_checkpoint,runtime,
+                function() return true end)
+            check(not same,"statistics_source_unchanged")
+            local reviewed,code=statistics.review_source(statistics_path,runtime)
+            if not reviewed then error(code,0) end
+            -- A nonempty replacement might contain already imported history.
+            -- Do not manufacture deduplication across a new epoch; reconcile it.
+            check(not reviewed.has_history,"statistics_source_reconciliation_required")
+            generation_reviews[reviewed.review]={name=name,context=context}
+            return {review=reviewed.review,canonical_ack=false}
+        end)
+    end
+    function api.begin_new_generation(token)
+        return access(true,function(conn)
+            settled(conn)
+            local reviewed=generation_reviews[token]
+            check(reviewed and reviewed.name==name,"statistics_source_review_required")
+            context_equal(reviewed.context,context)
+            source_equal(reviewed.context,context)
+            generation_reviews[token]=nil
+            local backup,code=api.backup()
+            if not backup then error(code,0) end
+            local changed,reason=require("quartzo/statistics").accept_source_review(token,function(checkpoint)
+                check(checkpoint.first_event=="" and checkpoint.history_boundary=="",
+                    "statistics_source_reconciliation_required")
+                return transaction(conn,function()
+                    local current=own_schema(conn)
+                    context_equal(current,context)
+                    source_equal(current,context)
+                    settled(conn)
+                    local epoch="qse_"..generated_device(runtime):sub(5)
+                    execute(conn,"UPDATE identity SET source_epoch=? WHERE id=1",epoch)
+                    update_source(conn,checkpoint)
+                    conn:exec("DELETE FROM review") -- Settled records survive in the mandatory recovery copy.
+                    set_progress(conn,nil,nil)
+                    return {queue=handle(name,runtime,own_schema(conn)),backup_leaf=backup.backup_leaf,canonical_ack=false}
+                end)
+            end)
+            if not changed then error(reason,0) end
+            return changed
         end)
     end
     function api.pending(limit)
@@ -480,6 +763,9 @@ local function handle(name, runtime, context)
             local accepted=paired.acknowledged(session,receipt,request_bytes)
             check(type(accepted)=="table" and #accepted<=1000,"unverified_reading_receipt")
             return transaction(conn,function()
+                local current=own_schema(conn)
+                context_equal(current,context)
+                source_equal(current,context)
                 local removed=0
                 for _,claim in ipairs(accepted) do
                     check(type(claim)=="table","unverified_reading_receipt")
@@ -492,7 +778,13 @@ local function handle(name, runtime, context)
                         removed=removed+1
                     end
                 end
-                return {removed=removed,review_retained=count(conn,"review"),source_watermark=nil,canonical_ack=false}
+                local saved=progress(conn,context.schema_version)
+                if context.schema_version==3 and removed>0 then
+                    local next_ack=frontier(conn,context,codec)
+                    if next_ack then saved.ack=math.max(saved.ack or EARLIEST,next_ack) end
+                    set_progress(conn,saved.ack,saved.scanned)
+                end
+                return {removed=removed,review_retained=count(conn,"review"),source_watermark=saved.ack,canonical_ack=false}
             end)
         end)
     end
@@ -518,13 +810,14 @@ local function create(root, source_epoch, runtime, checkpoint)
         return transaction(conn,function()
             fresh()
             local context={device_id=generated_device(runtime),source_epoch=source_epoch
-                or ("qse_"..generated_device(runtime):sub(5)),schema_version=checkpoint and 2 or 1,
+                or ("qse_"..generated_device(runtime):sub(5)),schema_version=checkpoint and 3 or 1,
                 source_checkpoint=checkpoint}
             create_schema(conn,"",context.schema_version)
             execute(conn,"INSERT INTO identity VALUES(1,?,?)",context.device_id,context.source_epoch)
             if checkpoint then
                 execute(conn,"INSERT INTO source VALUES(1,?,?,?,?,?,?)",checkpoint.volume,checkpoint.inode,
                     checkpoint.book_sequence,checkpoint.first_event,checkpoint.last_event,checkpoint.history_boundary)
+                conn:exec("INSERT INTO progress VALUES(1,NULL,NULL)")
             end
             conn:exec("PRAGMA user_version="..context.schema_version)
             return handle(name,runtime,context)
@@ -583,7 +876,8 @@ function M.inspect_backup(root, backup_leaf, runtime)
         local context=own_schema(conn)
         local selection=verify_contents(conn,runtime.codec,context)
         return {device_id=context.device_id,source_epoch=context.source_epoch,
-            pending=count(conn,"pending"),review=count(conn,"review"),selection_key=selection,canonical_ack=false}
+            pending=count(conn,"pending"),review=count(conn,"review"),
+            unresolved_review=unresolved_count(conn,context.schema_version),selection_key=selection,canonical_ack=false}
     end)
 end
 function M.list_backups(root, runtime)

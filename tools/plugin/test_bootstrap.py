@@ -59,6 +59,9 @@ class BootstrapTest(unittest.TestCase):
             e.ui = {menu = {registerToMainMenu = function(_, plugin)
                 table.insert(e.registered, plugin)
             end}}
+            e.set_clock=function()
+                os={date=function() return "2026-10-24T00:00:00.000Z" end}
+            end
             -- Any accidental filesystem, process, DB or network access must fail.
             io, os, package, dofile, loadfile = nil, nil, nil, nil, nil
             return e
@@ -109,6 +112,8 @@ class BootstrapTest(unittest.TestCase):
                                                 pending=2, review=1, selection_key="reviewed_content", canonical_ack=False)
         self.delivery_error = None
         self.source_reconfirmation = False
+        self.empty_generation = False
+        self.collection_stages = [dict(pending=2, review=1, complete=True)]
         self.source_review = self.lua.table()
         leaf = "quartzo_sync_recovery_" + "41" * 16 + ".sqlite3"
 
@@ -140,8 +145,39 @@ class BootstrapTest(unittest.TestCase):
             self.delivery_calls.append(("renew_source", reviewed))
             return (None, self.delivery_error) if self.delivery_error else queue
 
-        queue = self.lua.table(status=lambda: self.lua.table(pending=2, review=1), backup=backup,
+        def review_collection(source, observed, limit, mode=None):
+            self.delivery_calls.append(("review_collection", source, observed, limit))
+            return self.lua.table(**{"pass": self.source_review, "scanned_count": 2, "event_count": 2, "review_count": 0})
+
+        def stage_collection(reviewed):
+            self.delivery_calls.append(("stage_collection", reviewed))
+            if self.delivery_error:
+                return None, self.delivery_error
+            return self.lua.table_from(self.collection_stages.pop(0))
+
+        def next_collection(reviewed, observed):
+            self.delivery_calls.append(("next_collection", reviewed))
+            return self.lua.table(**{"pass": self.source_review})
+
+        def review_generation(source):
+            self.delivery_calls.append(("review_new_generation", source))
+            return self.lua.table(review=self.source_review) if self.empty_generation else (None, self.delivery_error)
+
+        def begin_generation(reviewed):
+            self.delivery_calls.append(("begin_new_generation", reviewed))
+            return self.lua.table(queue=queue)
+
+        def resolve(reviewed):
+            self.delivery_calls.append(("resolve_rejections", reviewed))
+            return self.lua.table(retained=1, unresolved=0)
+
+        queue = self.lua.table(status=lambda: self.lua.table(pending=2, review=1, unresolved_review=1,
+                              collection_supported=source_state=="matches_enrollment"), backup=backup,
             review_source_change=review_change, renew_source=renew,
+            review_new_generation=review_generation, begin_new_generation=begin_generation,
+            review_collection=review_collection, stage_collection=stage_collection, next_collection=next_collection,
+            review_rejections=lambda limit: self.lua.table(review=self.source_review, count=1, remaining=0),
+            resolve_rejections=resolve,
             check_source=lambda source: (None, self.delivery_error) if self.delivery_error
                          else self.lua.table(source_state=source_state))
         owner = self.lua.table(open=opened,
@@ -236,7 +272,7 @@ class BootstrapTest(unittest.TestCase):
         self.delivery_error = "statistics_source_changed"
         instance.showReadingSource(instance)
         self.assertIn("identity were preserved", self.environment.shown[2].text)
-        self.assertEqual([call[0] for call in self.delivery_calls], ["open", "open", "review_source_change"])
+        self.assertEqual([call[0] for call in self.delivery_calls], ["open", "open", "review_source_change", "review_new_generation"])
 
     def test_source_reconfirmation_preserves_identity_and_uses_explicit_owner_review(self):
         self.delivery_owner()
@@ -264,6 +300,91 @@ class BootstrapTest(unittest.TestCase):
         self.assertIn("existing reading identity was preserved", self.environment.shown[1].text)
         self.assertIn("needs review", self.environment.shown[1].text)
         self.assertEqual([call[0] for call in self.delivery_calls], ["open"])
+
+    def test_manual_collection_requires_history_consent_and_processes_bounded_ticks(self):
+        self.delivery_owner()
+        self.environment.set_clock()
+        self.collection_stages = [dict(pending=2, review=0, complete=False), dict(pending=4, review=1, complete=True)]
+        instance = self.instance()
+        instance.showCollection(instance)
+        confirmation = self.environment.shown[1]
+        self.assertIn("includes reading history", confirmation.text)
+        self.assertIn("No data is sent", confirmation.text)
+        self.assertFalse(any(call[0] == "stage_collection" for call in self.delivery_calls))
+        confirmation.ok_callback()
+        confirmation.ok_callback()
+        self.assertEqual(len(self.environment.ticks), 1)
+        self.environment.ticks[1]()
+        self.assertTrue(instance.delivery_busy)
+        self.environment.ticks[2]()
+        self.assertFalse(instance.delivery_busy)
+        self.assertEqual([call[0] for call in self.delivery_calls].count("stage_collection"), 2)
+        self.assertIn("Queued events: 4", self.environment.shown[3].text)
+        self.assertIn("Synchronization: inactive", self.environment.shown[3].text)
+
+    def test_collection_capacity_failure_is_visible_and_ends_busy_state_without_success(self):
+        self.delivery_owner()
+        self.environment.set_clock()
+        instance = self.instance()
+        instance.showCollection(instance)
+        self.delivery_error = "outbox_capacity"
+        self.environment.shown[1].ok_callback()
+        self.environment.ticks[1]()
+        self.assertFalse(instance.delivery_busy)
+        self.assertIn("queue is full", self.environment.shown[3].text)
+        self.assertFalse(any(message.text and "selection queued" in message.text
+                             for message in self.environment.shown.values()))
+
+    def test_collection_stops_at_finite_work_budget(self):
+        self.delivery_owner()
+        self.environment.set_clock()
+        self.collection_stages = [dict(pending=100, review=0, complete=False) for _ in range(10)]
+        instance = self.instance()
+        instance.showCollection(instance)
+        self.environment.shown[1].ok_callback()
+        for index in range(1, 11):
+            self.environment.ticks[index]()
+        self.assertFalse(instance.delivery_busy)
+        self.assertEqual(len(self.environment.ticks), 10)
+        self.assertIn("work limit", self.environment.shown[3].text)
+
+    def test_source_and_collection_actions_require_closed_book_before_any_owner_access(self):
+        self.delivery_owner()
+        self.environment.ui.document = self.lua.table()
+        instance = self.instance()
+        instance.showCollection(instance)
+        instance.showReadingSource(instance)
+        self.assertEqual(self.delivery_calls, [])
+        self.assertIn("Close the book", self.environment.shown[1].text)
+
+    def test_invalid_entry_resolution_requires_explicit_exclusion_and_keeps_audit_message(self):
+        self.delivery_owner()
+        instance = self.instance()
+        instance.showRejectionReview(instance)
+        confirmation = self.environment.shown[1]
+        self.assertIn("Keep these entries for audit", confirmation.text)
+        self.assertIn("does not confirm delivery", confirmation.text)
+        self.assertFalse(any(call[0] == "resolve_rejections" for call in self.delivery_calls))
+        confirmation.ok_callback()
+        self.environment.ticks[1]()
+        self.assertEqual(self.delivery_calls[-1][0], "resolve_rejections")
+        self.assertIn("No reading time was added", self.environment.shown[3].text)
+
+    def test_empty_new_generation_is_explicit_and_preserves_old_recovery(self):
+        self.delivery_owner()
+        self.delivery_error = "statistics_source_changed"
+        self.empty_generation = True
+        instance = self.instance()
+        instance.showReadingSource(instance)
+        confirmation = self.environment.shown[1]
+        self.assertIn("history is empty", confirmation.text)
+        self.assertIn("recovery copy", confirmation.text)
+        self.assertFalse(any(call[0] == "begin_new_generation" for call in self.delivery_calls))
+        self.delivery_error = None
+        confirmation.ok_callback()
+        self.environment.ticks[1]()
+        self.assertEqual(self.delivery_calls[-1][0], "begin_new_generation")
+        self.assertIn("device identity", self.environment.shown[3].text)
 
     def test_missing_statistics_sdk_is_a_sanitized_manual_diagnostic(self):
         instance = self.instance()

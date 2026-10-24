@@ -1,6 +1,20 @@
 # Quartzo ↔ KOReader — Product & Delivery Plan
 
 
+## 2026-10-24 Current reviewed-collection block
+
+Candidate0.0.9 now implements reviewed offline selection, bounded transient passes,
+receipt-only acknowledged overlap, explicit invalid-entry decisions, same-identity
+history rescan and settled empty-generation transitions with mandatory recovery.
+All use existing owners/private schema3; schema1/2 recovery remains unchanged.
+Validate current native CI, then prepare one source-bound0.0.9 artifact. Group
+changed UI/source/queue proof when the user is available; do not repeat prior
+unchanged physical scopes or build another phone APK for Lua-only work. Source
+provenance, nonempty replacement/state-loss reconciliation, explicit schema2
+migration and remaining performance/physical Gate4 proof stay OPEN. Do not enable
+later lifecycle/transport/effects before their gates. Full seven-topic goal intact.
+
+
 ## 2026-10-24 Current source-review implementation block
 
 Candidate0.0.8 adds explicit source enrollment/continuity review through the SAME
