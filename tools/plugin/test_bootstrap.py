@@ -179,8 +179,10 @@ class BootstrapTest(unittest.TestCase):
             self.delivery_calls.append(("upgrade_queue", reviewed))
             return self.lua.table(queue=queue)
 
-        queue = self.lua.table(status=lambda: (None,self.delivery_status_error) if self.delivery_status_error
+        queue = self.lua.table(context=lambda:self.lua.table(device_id="qrd_fixture",source_epoch="epoch_fixture"),
+                              status=lambda: (None,self.delivery_status_error) if self.delivery_status_error
                               else self.lua.table(pending=2, review=1, unresolved_review=1,
+                              source_state="enrolled" if source_state=="matches_enrollment" else "review_required",
                               collection_supported=source_state=="matches_enrollment"), backup=backup,
             review_source_change=review_change, renew_source=renew,
             review_new_generation=review_generation, begin_new_generation=begin_generation,
@@ -233,6 +235,25 @@ class BootstrapTest(unittest.TestCase):
         self.assertFalse(instance.delivery_busy)
         self.assertEqual(self.delivery_calls.count(("backup",)), 1)
         self.assertIn("Recovery copy saved", self.environment.shown[4].text)
+
+    def test_queue_identity_is_read_only_and_does_not_claim_current_statistics_provenance(self):
+        self.delivery_owner()
+        instance=self.instance()
+        instance.showDeliveryState(instance)
+        self.environment.shown[1].buttons[7][1].callback()
+        text=self.environment.shown[2].text
+        self.assertIn("Identity of the preserved reading queue",text)
+        self.assertIn("does not verify a changed Statistics source",text)
+        self.assertIn("Device ID:\nqrd_fixture",text)
+        self.assertIn("Source epoch:\nepoch_fixture",text)
+        self.assertEqual([call[0] for call in self.delivery_calls],["open","open"])
+        self.delivery_owner(source_state="review_required")
+        instance=self.instance()
+        instance.showDeliveryState(instance)
+        self.assertFalse(self.environment.shown[3].buttons[7][1].enabled)
+        instance.showReadingIdentity(instance)
+        self.assertNotIn("qrd_fixture",self.environment.shown[4].text)
+        self.assertEqual([call[0] for call in self.delivery_calls],["open","open"])
 
     def test_unreadable_primary_keeps_recovery_review_accessible_without_replacing_state(self):
         for error in ("invalid_outbox_state", "unsupported_outbox_file"):
@@ -321,6 +342,8 @@ class BootstrapTest(unittest.TestCase):
         instance = self.instance()
         instance.showReadingSource(instance)
         self.assertIn("matches the source reviewed", self.environment.shown[1].text)
+        self.assertIn("Device ID:\nqrd_fixture",self.environment.shown[1].text)
+        self.assertIn("Source epoch:\nepoch_fixture",self.environment.shown[1].text)
         self.assertEqual(self.delivery_calls, [("open", "/synthetic/custom/settings")])
         self.delivery_error = "statistics_source_changed"
         instance.showReadingSource(instance)
@@ -352,6 +375,8 @@ class BootstrapTest(unittest.TestCase):
         instance.showReadingSource(instance)
         self.assertIn("existing reading identity was preserved", self.environment.shown[1].text)
         self.assertIn("needs review", self.environment.shown[1].text)
+        self.assertNotIn("qrd_fixture",self.environment.shown[1].text)
+        self.assertNotIn("epoch_fixture",self.environment.shown[1].text)
         self.assertEqual([call[0] for call in self.delivery_calls], ["open"])
 
     def test_manual_collection_requires_history_consent_and_processes_bounded_ticks(self):

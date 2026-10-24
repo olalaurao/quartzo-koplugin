@@ -49,3 +49,13 @@ same old history under a guessed new identity. Canonical source inventory is
 read-only context, not restoration authority. Recovery of that case and nonempty
 replacement-history reconciliation remain open production paths. Host fixtures
 and this procedure do not close their physical or end-to-end gates.
+
+## Original queue identity
+
+The candidate Reading identity action displays the original device ID and source
+epoch from the same validated enrolled queue status. It does not inspect or trust
+changed Statistics history, restore identity from external labels or renew it.
+Reading source shows IDs only after its existing source guard succeeds. These
+views are read-only context for deliberate transfer/recovery review, never an ACK
+or permission to enroll a replacement history. Candidate0.0.12 is not physically
+accepted merely because host bootstrap tests pass.
