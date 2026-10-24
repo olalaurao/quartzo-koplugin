@@ -213,6 +213,34 @@ function Quartzo:showRejectionReview()
     end)
 end
 
+function Quartzo:showQueueUpgrade()
+    if self.delivery_busy or not self:sourceActionAllowed() then return end
+    self:deliveryRequest(function(owner,runtime)
+        local current,code=owner.open(self.state_root,runtime)
+        if not current then return nil,code end
+        local preview
+        preview,code=current.review_upgrade(self.statistics_path)
+        if not preview then return nil,code end
+        local token=preview.review
+        UIManager:show(ConfirmBox:new{
+            text=_("Upgrade this reading queue for reviewed collection? A recovery copy will be saved first. Existing events, review entries and reading identities will be retained. Earlier events may be retried with the same identity. Synchronization stays inactive."),
+            ok_text=_("Upgrade queue"),
+            ok_callback=function()
+                self:deliveryChange(_("Upgrading reading queue…"),function(current_owner,current_runtime)
+                    local active,reason=current_owner.open(self.state_root,current_runtime)
+                    if not active then return nil,reason end
+                    local upgraded
+                    upgraded,reason=active.upgrade_queue(token)
+                    if not upgraded then return nil,reason end
+                    UIManager:show(InfoMessage:new{ text=_("Reading queue upgraded. Its identity, queued data and recovery copy were retained. Synchronization is inactive.") })
+                    return true
+                end)
+            end,
+        })
+        return true
+    end)
+end
+
 function Quartzo:reviewSourceChange(queue)
     local preview,code=queue.review_source_change(self.statistics_path)
     if not preview then return nil,code end
@@ -314,6 +342,10 @@ function Quartzo:showDeliveryState()
                 {{text=_("Rescan reading history"),enabled=status and status.collection_supported or false,callback=function()
                     UIManager:close(dialog)
                     self:showCollection(true)
+                end}},
+                {{text=_("Upgrade reading queue"),enabled=status and status.upgrade_supported or false,callback=function()
+                    UIManager:close(dialog)
+                    self:showQueueUpgrade()
                 end}},
                 {{text=_("Close"),callback=function() UIManager:close(dialog) end}},
             },

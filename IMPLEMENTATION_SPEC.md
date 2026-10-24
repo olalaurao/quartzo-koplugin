@@ -2140,3 +2140,18 @@ transitions. Synthetic native proof is not PW3/source-generation or hardware
 power-loss acceptance. Gate4 remains OPEN for grouped changed0.0.9 physical/UI
 proof, nonempty replacement/state-loss reconciliation and remaining migration/
 performance cases. Production transport/lifecycle/effects remain unregistered.
+
+
+### Explicit schema2-to3 upgrade
+
+An existing schema2 queue can be upgraded only through a one-use reviewed action
+bound to that same queue, identity and source guard. Verify all current selected
+bytes/review descriptors and the current native Statistics snapshot; save a
+verified schema2 recovery copy first. Inside one transaction recheck the old scope,
+rebuild only the recognized review declaration with resolved=0 for existing rows,
+create empty progress and set version3. Preserve device/epoch, original source
+metadata, pending event bytes and every review descriptor. Failed DDL/commit
+rolls back to recognized schema2 and leaves the recovery copy. No new identity,
+old delivery ACK or source marker is inferred. Unknown schemas and schema1's
+unverified diagnostic source remain in explicit recovery/reconciliation, never
+silently upgraded. The UI requires a closed book and explicit confirmation.

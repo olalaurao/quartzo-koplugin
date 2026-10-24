@@ -171,6 +171,10 @@ class BootstrapTest(unittest.TestCase):
             self.delivery_calls.append(("resolve_rejections", reviewed))
             return self.lua.table(retained=1, unresolved=0)
 
+        def upgrade(reviewed):
+            self.delivery_calls.append(("upgrade_queue", reviewed))
+            return self.lua.table(queue=queue)
+
         queue = self.lua.table(status=lambda: self.lua.table(pending=2, review=1, unresolved_review=1,
                               collection_supported=source_state=="matches_enrollment"), backup=backup,
             review_source_change=review_change, renew_source=renew,
@@ -178,6 +182,7 @@ class BootstrapTest(unittest.TestCase):
             review_collection=review_collection, stage_collection=stage_collection, next_collection=next_collection,
             review_rejections=lambda limit: self.lua.table(review=self.source_review, count=1, remaining=0),
             resolve_rejections=resolve,
+            review_upgrade=lambda source: self.lua.table(review=self.source_review), upgrade_queue=upgrade,
             check_source=lambda source: (None, self.delivery_error) if self.delivery_error
                          else self.lua.table(source_state=source_state))
         owner = self.lua.table(open=opened,
@@ -385,6 +390,19 @@ class BootstrapTest(unittest.TestCase):
         self.environment.ticks[1]()
         self.assertEqual(self.delivery_calls[-1][0], "begin_new_generation")
         self.assertIn("device identity", self.environment.shown[3].text)
+
+    def test_queue_upgrade_requires_explicit_recovery_and_identity_preservation_consent(self):
+        self.delivery_owner()
+        instance = self.instance()
+        instance.showQueueUpgrade(instance)
+        confirmation = self.environment.shown[1]
+        self.assertIn("recovery copy will be saved first", confirmation.text)
+        self.assertIn("reading identities will be retained", confirmation.text)
+        self.assertFalse(any(call[0] == "upgrade_queue" for call in self.delivery_calls))
+        confirmation.ok_callback()
+        self.environment.ticks[1]()
+        self.assertEqual(self.delivery_calls[-1][0], "upgrade_queue")
+        self.assertIn("recovery copy were retained", self.environment.shown[3].text)
 
     def test_missing_statistics_sdk_is_a_sanitized_manual_diagnostic(self):
         instance = self.instance()

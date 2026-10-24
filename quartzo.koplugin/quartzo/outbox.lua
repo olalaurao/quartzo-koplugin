@@ -7,6 +7,7 @@ local source_reviews=setmetatable({}, {__mode="k"})
 local collection_passes=setmetatable({}, {__mode="k"})
 local rejection_reviews=setmetatable({}, {__mode="k"})
 local generation_reviews=setmetatable({}, {__mode="k"})
+local schema_reviews=setmetatable({}, {__mode="k"})
 local EARLIEST,LATEST=-62135596800,253402300799
 local function check(value, code)
     if not value then error(code or "invalid_outbox_state", 0) end
@@ -418,6 +419,7 @@ local function handle(name, runtime, context)
             return {pending=count(conn,"pending"), review=count(conn,"review"), capacity=CAP,
                 unresolved_review=unresolved_count(conn,context.schema_version),
                 collection_supported=context.schema_version==3,
+                upgrade_supported=context.schema_version==2,
                 source_state=context.source_checkpoint and "enrolled" or "review_required",
                 source_watermark=progress(conn,context.schema_version).ack, canonical_ack=false}
         end)
@@ -731,6 +733,47 @@ local function handle(name, runtime, context)
             end)
             if not changed then error(reason,0) end
             return changed
+        end)
+    end
+    function api.review_upgrade(statistics_path)
+        return access(false,function(conn)
+            check(context.schema_version==2,"outbox_collection_review_required")
+            verify_contents(conn,codec,context)
+            local matches,code=require("quartzo/statistics").with_source_snapshot(statistics_path,
+                context.source_checkpoint,runtime,function() return true end)
+            if not matches then error(code,0) end
+            local token={}
+            schema_reviews[token]={name=name,context=context,path=statistics_path}
+            return {review=token,canonical_ack=false}
+        end)
+    end
+    function api.upgrade_queue(token)
+        return access(true,function(conn)
+            local reviewed=schema_reviews[token]
+            check(reviewed and reviewed.name==name and context.schema_version==2,"outbox_collection_review_required")
+            context_equal(reviewed.context,context)
+            source_equal(reviewed.context,context)
+            schema_reviews[token]=nil
+            local matches,reason=require("quartzo/statistics").with_source_snapshot(reviewed.path,
+                context.source_checkpoint,runtime,function() return true end)
+            if not matches then error(reason,0) end
+            local backup,code=api.backup()
+            if not backup then error(code,0) end
+            return transaction(conn,function()
+                local current=own_schema(conn)
+                context_equal(current,context)
+                source_equal(current,context)
+                verify_contents(conn,codec,context)
+                conn:exec("ALTER TABLE review RENAME TO review_schema2")
+                conn:exec("CREATE TABLE review"..definition("review",3))
+                conn:exec("INSERT INTO review(started_at,book_id,page,duration,pages,types) "
+                    .."SELECT started_at,book_id,page,duration,pages,types FROM review_schema2")
+                conn:exec("DROP TABLE review_schema2")
+                conn:exec("CREATE TABLE progress"..definition("progress",3))
+                conn:exec("INSERT INTO progress VALUES(1,NULL,NULL)")
+                conn:exec("PRAGMA user_version=3")
+                return {queue=handle(name,runtime,own_schema(conn)),backup_leaf=backup.backup_leaf,canonical_ack=false}
+            end)
         end)
     end
     function api.pending(limit)

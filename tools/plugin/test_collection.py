@@ -276,7 +276,7 @@ class CollectionTest(unittest.TestCase):
         saved = self.outbox.inspect_backup(str(self.root), backups[0].name, self.runtime)
         self.assertEqual((saved.device_id, saved.source_epoch), (context["device_id"], context["source_epoch"]))
 
-    def test_legacy_schema2_recovery_is_recognized_without_progress_migration(self):
+    def schema2_queue(self):
         legacy = self.outbox.create(str(self.root), "legacy_epoch", self.runtime)
         self.assertNotIsInstance(legacy, tuple)
         with statistics.closing(sqlite3.connect(self.owned)) as conn, conn:
@@ -284,8 +284,11 @@ class CollectionTest(unittest.TestCase):
                          "book_sequence TEXT NOT NULL,first_event TEXT NOT NULL,last_event TEXT NOT NULL,history_boundary TEXT NOT NULL)")
             conn.execute("INSERT INTO source VALUES(1,'7','11','1','1,1,100,20,10','1,2,110,30,10','110')")
             conn.execute("PRAGMA user_version=2")
+        return self.reopen()
+
+    def test_legacy_schema2_recovery_is_recognized_without_progress_migration(self):
+        current = self.schema2_queue()
         before = self.owned.read_bytes()
-        current = self.reopen()
         self.assertEqual(current.check_source(str(self.path)).source_state, "matches_enrollment")
         self.assertFalse(current.status().collection_supported)
         self.assertEqual(current.review_collection(str(self.path), OBSERVED), (None, "outbox_collection_review_required"))
@@ -298,6 +301,53 @@ class CollectionTest(unittest.TestCase):
         with statistics.closing(sqlite3.connect(self.owned)) as conn:
             self.assertEqual(conn.execute("PRAGMA user_version").fetchone()[0], 2)
             self.assertEqual(conn.execute("SELECT COUNT(*) FROM sqlite_master WHERE name='progress'").fetchone()[0], 0)
+
+    def test_explicit_schema2_upgrade_preserves_identity_bytes_review_and_old_recovery(self):
+        self.mutate("INSERT INTO page_stat_data VALUES(1,0,105,20,10)")
+        self.queue = self.schema2_queue()
+        self.queue.stage(self.batch())
+        context = dict(self.queue.context().items())
+        lines = list(self.queue.pending().event_lines.values())
+        preview = self.queue.review_upgrade(str(self.path))
+        upgraded = self.queue.upgrade_queue(preview.review)
+        self.assertNotIsInstance(upgraded, tuple)
+        self.queue = upgraded.queue
+        self.assertEqual(dict(self.queue.context().items()), context)
+        self.assertEqual(list(self.queue.pending().event_lines.values()), lines)
+        self.assertEqual(self.queue.status().unresolved_review, 1)
+        self.assertIsNone(self.queue.status().source_watermark)
+        self.assertTrue(self.queue.status().collection_supported)
+        with statistics.closing(sqlite3.connect(self.root / upgraded.backup_leaf)) as conn:
+            self.assertEqual(conn.execute("PRAGMA user_version").fetchone()[0], 2)
+
+    def test_schema_upgrade_rechecks_source_and_rolls_back_failed_ddl_commit(self):
+        self.queue = self.schema2_queue()
+        self.queue.stage(self.batch())
+        context = dict(self.queue.context().items())
+        lines = list(self.queue.pending().event_lines.values())
+        preview = self.queue.review_upgrade(str(self.path))
+        before = self.owned.read_bytes()
+        self.identity["ino"] += 1
+        self.assertEqual(self.queue.upgrade_queue(preview.review), (None, "statistics_source_changed"))
+        self.assertEqual(self.owned.read_bytes(), before)
+        self.identity["ino"] -= 1
+        preview = self.queue.review_upgrade(str(self.path))
+        commits = []
+        def fail(operation, value):
+            if operation == "exec" and value == "COMMIT":
+                commits.append(True)
+                if len(commits) == 2:
+                    raise RuntimeError("synthetic migration commit failure")
+        self.query_hook = fail
+        self.assertEqual(self.queue.upgrade_queue(preview.review), (None, "outbox_unavailable"))
+        self.query_hook = None
+        self.queue = self.reopen()
+        self.assertEqual(dict(self.queue.context().items()), context)
+        self.assertEqual(list(self.queue.pending().event_lines.values()), lines)
+        self.assertTrue(self.queue.status().upgrade_supported)
+        with statistics.closing(sqlite3.connect(self.owned)) as conn:
+            self.assertEqual(conn.execute("PRAGMA user_version").fetchone()[0], 2)
+            self.assertEqual(conn.execute("SELECT COUNT(*) FROM sqlite_master WHERE name IN ('progress','review_schema2')").fetchone()[0], 0)
 
     def test_actual_pairing_owner_frontier_is_bounded_by_retained_review_and_pending(self):
         self.mutate("INSERT INTO page_stat_data VALUES(1,0,105,20,10)")
