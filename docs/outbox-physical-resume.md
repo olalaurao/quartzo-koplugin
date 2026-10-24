@@ -1,3 +1,16 @@
+# Latest UI/reading acceptance, 2026-10-23
+
+The user completed the0.0.7 missing-state UI and normal reading/restart trial.
+USB/private-copy verification passed: empty-state inspection changed no tracked
+bytes; normal reading added2nativeeventkeys, removed0 and changed0priorvalues.
+All352Lua sources and reservedQuartzo state stayed intact. See
+[physical UI/reading scope](evidence/outbox-ui-pw3-2026-10-23.json). Candidate0.0.7
+remains installed with exact0.0.2 rollback retained privately. No timed session
+is running and no new KUAL execution is requested. Earlier pending observations
+below are historical. Populated recovery UI, verified source-generation lifecycle
+and paired canonical receipt/prune/replay still need implementation/proof. The old
+fixed synthetic paired fixture must not stand in for a generated outbox identity.
+
 # Current actual-device state, 2026-10-23
 
 The actual PW3 offline synthetic diagnostic passed six native stage/backup/restore

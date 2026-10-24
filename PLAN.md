@@ -1,5 +1,14 @@
 # Quartzo ↔ KOReader — Product & Delivery Plan
 
+2026-10-23 current UI proof: actual0.0.7 empty-state UI and normal reading/restart
+passed. Empty-state execution left Statistics/settings and352Lua unchanged. Normal
+reading added2nativeeventkeys, removed0 and changed0existingvalues; all352Lua and
+reservedQuartzo state stayed intact. See docs/evidence/outbox-ui-pw3-2026-10-23.json.
+Populated recovery UI, verified generation enrollment/lifecycle and pairedcanonical
+receipt/prune/replay remain OPEN. The old fixed-identity paired fixture cannot
+prove the real outbox identity; adapt the existing test owners before a new session.
+
+
 2026-10-23 current physical progress: actual PW3 offline synthetic outbox subtest
 passed six stage/backup/restore process-stop cases on v2026.07.1. Statistics/settings
 and 347 tracked Lua sources matched before/after; diagnostic cleanup is verified.

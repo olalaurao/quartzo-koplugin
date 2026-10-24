@@ -1,5 +1,48 @@
 # Implementation Status
 
+## 2026-10-23 Paired outbox sequence candidate; native CI pending
+
+The existing paired sequence now supports a strictly shaped synthetic native
+context only with an existing outbox. A seed-only pass stages three selected
+canonical facts plus retained review, validates and deliberately discards the
+first receipt while leaving all three facts pending. A fresh replay composition
+requires that persisted seed; only the same paired owner's opaque receipts prune
+matching facts. Invalid wire neighbors do not prune selected neighbors; review
+and identity remain intact. No outbox creation or production enrollment is added.
+
+The fixture was generated through actual Dart models at upstream draftPR88,
+bdd95aa8, using explicit deterministic host context; it is not native entropy or
+hardware evidence. Five existing local paired cases PASS; four new actual native
+SQLite cases are explicit Linux skips locally and require CI. They exercise a
+fresh Lua VM after a lost receipt, independent private-fixture SQL, pending counts
+3/2/1/1/0/0 and rejected altered receipts. The physical two-process driver/bundle/
+collector is not prepared yet. No timed session or new device request is active.
+
+## 2026-10-23 Actual0.0.7 empty-state UI and normal reading/restart PASS
+
+The user confirmed Diagnostics0.0.7, no queue, inactive synchronization, disabled
+Create recovery copy and no recovery copies. On USB reconnection Statistics,
+reserved settings and all352 tracked Lua files were identical to the installed
+baseline. No identity, queue or recovery file was created.
+
+The user then confirmed the requested existing-book reading/navigation and
+KOReader restart checks, including unchanged Wi-Fi. Fresh private-copy SQL found
+two new native event keys (5729 to5731), zero removed keys and zero changed prior
+event values. Both copies passed schema20221111/quick_check; book rows stayed44.
+All344 other-plugin and8 candidate Lua files remained exact; reserved Quartzo
+state stayed absent. Host SQL never opened mounted Statistics. See
+[bounded UI/reading evidence](docs/evidence/outbox-ui-pw3-2026-10-23.json).
+
+These subtests pass only their observed scopes. Populated recovery UI, verified
+source-generation enrollment/reset/current-source lifecycle and paired canonical
+receipt/prune/replay remain OPEN. The older paired diagnostic uses a fixed
+synthetic identity; it cannot certify this outbox's generated identity unchanged.
+Prepare that next trial through the existing fixture/session/outbox/receipt owners,
+without starting a timer before source-bound host artifacts are accepted. PR5
+stays draft and full goal remains active/topic2 of7. Prior pending entries below
+record their observation times; current candidate0.0.7 remains installed, with
+the verified0.0.2 rollback retained privately. No production registration/release.
+
 ## 2026-10-23 Actual PW3 offline outbox subtest PASS; Gate4 remains OPEN
 
 The user executed the installed source-bound KUAL diagnostic on KOReader
