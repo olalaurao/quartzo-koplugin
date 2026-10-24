@@ -7,9 +7,9 @@ Candidate0.0.9 now implements reviewed offline selection, bounded transient pass
 receipt-only acknowledged overlap, explicit invalid-entry decisions, same-identity
 history rescan and settled empty-generation transitions with mandatory recovery.
 All use existing owners/private schema3; schema1/2 recovery remains unchanged.
-Exactd922bdb native CI40106347294 passed568/no skips. Validate the follow-up
-explicit schema2 upgrade through the same owners, then prepare one final
-source-bound0.0.9 artifact. Group
+Exactefbb0de native CI40107193589 passed576/no skips including explicit schema2
+upgrade/rollback through the same owners. One final source-bound0.0.9 artifact
+is prepared privately, not installed. Group
 changed UI/source/queue proof when the user is available; do not repeat prior
 unchanged physical scopes or build another phone APK for Lua-only work. Source
 provenance, nonempty replacement/state-loss reconciliation and remaining

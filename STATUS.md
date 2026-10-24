@@ -26,8 +26,10 @@ owned child stops before/after selection commit and the real paired-owner model.
 The initial UI-mock failure was fixed and its log retained. Exactd922bdb native
 CI40106347294 passed568/no skips (413 plugin,34 transport,121 wire), including
 actual SQ3 child stops and joined paired-owner/frontier cases. The follow-up
-explicit upgrade passed changed-path local tests (42 collection/40 UI); its
-native CI is still required before final packaging. Repo base3cff94d was clean with
+explicit upgrade efbb0de passed native CI40107193589:576/no skips (421 plugin,
+34 transport,121 wire). The final0.0.9 artifact contains the eight exact accepted
+Git sources and is not installed. Changed-path local tests passed42 collection/
+40 UI cases; native proof additionally covers official SQ3 migration/rollback. Repo base3cff94d was clean with
 exact CI40101783788 SUCCESS499/no skips. Gate4 and full goal stay OPEN/ACTIVE,
 topic2of7. No device, timed session, listener or human request was started.
 
