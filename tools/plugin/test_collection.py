@@ -26,6 +26,8 @@ class CollectionTest(unittest.TestCase):
     reopen = enrollment.EnrollmentTest.reopen
     receipt_owner = outbox.OutboxTest.receipt_owner
     batch = outbox.OutboxTest.batch
+    paired_delivery_fixture = outbox.OutboxTest.paired_delivery_fixture
+    send_selected = outbox.OutboxTest.send_selected
 
     def capture(self, limit=100):
         preview = self.queue.review_collection(str(self.path), OBSERVED, limit)
@@ -399,6 +401,15 @@ class CollectionTest(unittest.TestCase):
         self.expected_source_watermark = min(109, 104, second.started_at_seconds - 1)
         # Same real paired owner/carrier fixture, not a second receipt issuer.
         outbox.OutboxTest.test_actual_pairing_owner_and_shared_carrier_isolate_partial_receipt(self)
+
+    def test_send_selected_schema3_facts_keeps_frontier_bounded_after_source_loss(self):
+        self.mutate("INSERT INTO page_stat_data VALUES(1,0,105,20,10)")
+        self.queue=self.enroll()
+        self.capture()
+        self.already_selected=True
+        second=self.codec.inspect_event(self.queue.pending().event_lines[2])
+        self.expected_source_watermark=min(109,104,second.started_at_seconds-1)
+        outbox.OutboxTest.test_send_pending_uses_real_pairing_partial_receipt_and_closed_sqlite_handles(self)
 
     def stopped_collection(self, after_commit):
         self.mutate("DELETE FROM page_stat_data; DELETE FROM book; DELETE FROM sqlite_sequence")

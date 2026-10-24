@@ -1,5 +1,17 @@
 # Quartzo ↔ KOReader — Product & Delivery Plan
 
+## 2026-10-24 Durable queue to approved receipt, one explicit attempt
+
+PR5 merged f0db4ea with the same tested cd60a98 tree and608native PASS/no skips.
+Independent inactive candidate0.0.11 composes pending selection -> privately bound
+request -> existing pinned paired attempt -> existing receipt-only prune. SQLite
+is closed across I/O. One batch only; no new coordinator/retry/store/credential or
+production UI registration. Local34PASS/nine native-only skips, including partial
+acceptance, post-I/O commit failure/retry, closed session and preserved schema3
+frontier after native-source loss. Final native CI/package and relevant physical
+integration remain required. Actual installed0.0.9 and its real queue stay intact.
+Unknown source/identity reconciliation and full topic2 remain OPEN.
+
 ## 2026-10-24 Recovery destination safety
 
 Candidate0.0.10 refuses fresh create/backup/restore destinations with orphan

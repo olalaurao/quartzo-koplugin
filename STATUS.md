@@ -1,5 +1,38 @@
 # Implementation Status
 
+## 2026-10-24 One-batch queued delivery composition, inactive candidate0.0.11
+
+PR5 merged as f0db4ea after exact cd60a98 CI40127851668 passed608/no skips;
+the merge tree equals the tested source. Version0.0.10 was not installed or
+released. Actual installed0.0.9 retains its separate993pending/seven-review
+collection/recovery/restart proof. The previous goal turn made code/CI/merge
+progress; no device or session is needed to await this independent owner work.
+
+On feature/reading-queued-delivery from f0db4ea, the SAME approved pairing owner
+can prepare one canonical request from a snapshot of up to100 valid native lines
+using only its captured private binding. Foreign device/epoch, bad shape, nonce,
+window, expiry/backward time or closed handles fail before network. Preparation
+grants no receipt. The SAME outbox owner selects persisted bytes, closes SQLite,
+attempts once and delegates exact pruning to its existing opaque receipt consumer.
+An empty queue does not load pairing/network. There is no retry loop, background
+job, credential writer, new store or production caller. HTTP403 now shares the
+existing401 authentication-failure category.
+
+Focused local checks:34PASS/nine explicit native-only skips, including the older
+shared-carrier fixture after its helper refactor. A simulated local commit failure
+after I/O retains exact pending bytes; retry changes the request nonce while
+keeping event lines/batch identity. Partial acceptance,401/403/429/503 and session
+close after I/O preserve unacknowledged facts/review. Schema3 delivery remains
+bounded by retained review even after source loss. Full native CI and exact
+package proof are pending. No APK build, network session, phone, Wi-Fi or installed
+plugin change occurred. Host HTTP SDK models are not new physical delivery proof.
+
+This unregistered composition is independent preparation; it does not assume
+Gate4/full source reconciliation is complete or authorize production enrollment,
+transport UI, canonical ingestion, backfill/lifecycle or effects. Those remain
+required before full topic2/goal completion. Next validate these owner APIs in
+native CI, then integrate the explicit foreground flow under the existing gates.
+
 ## 2026-10-24 New recovery destinations refuse orphan SQLite sidecars
 
 Review reproduced a separate restoration hazard: an absent primary with leftover

@@ -64,6 +64,30 @@ function M.open(document_bytes,approved_sha256,runtime)
         local read_delivery=carrier.read_pinned_delivery
         local receipts=setmetatable({}, {__mode="k"})
         local session={}
+        function session.prepare(event_lines,request_id,issued_at_utc,expires_at_utc)
+            local succeeded,bytes=pcall(function()
+                check(type(event_lines)=="table" and #event_lines>=1 and #event_lines<=100)
+                local count=#event_lines
+                local selected=deps.array({})
+                for key in pairs(event_lines) do
+                    check(type(key)=="number" and key%1==0 and key>=1 and key<=count)
+                end
+                for i=1,count do check(type(event_lines[i])=="string");selected[i]=event_lines[i] end
+                for _,line in ipairs(selected) do
+                    local entry=codec.inspect_event(line)
+                    check(entry and entry.canonical_ack==false and entry.device_id==binding.device_id
+                        and entry.source_epoch==binding.source_epoch)
+                end
+                local fields=deps.object({protocol_version=1,request_id=request_id,
+                    issued_at_utc=issued_at_utc,expires_at_utc=expires_at_utc,event_lines=selected})
+                for key,value in pairs(binding) do fields[key]=value end
+                local result=codec.encode_request(fields,binding,current())
+                check(type(result)=="string")
+                return result -- Request preparation grants no receipt/ACK.
+            end)
+            if not succeeded then return nil,"invalid_reading_delivery_request" end
+            return bytes
+        end
         function session.attempt(request_bytes)
             local succeeded,receipt,reason=pcall(function()
                 check(codec.inspect_request(request_bytes,binding,current()))
@@ -74,7 +98,7 @@ function M.open(document_bytes,approved_sha256,runtime)
                     if body=="certificate verify failed" then return nil,"reading_certificate_rejected" end
                     return nil,transport_errors[body] and body or "unverified_reading_receipt"
                 end
-                if status==401 then return nil,"reading_http_unauthorized" end
+                if status==401 or status==403 then return nil,"reading_http_unauthorized" end
                 if status==429 or (type(status)=="number" and status>=500 and status<=599) then
                     return nil,"reading_http_retryable"
                 end
@@ -98,7 +122,7 @@ function M.open(document_bytes,approved_sha256,runtime)
             if not succeeded then return nil,"unverified_reading_receipt" end
             return receipt,reason
         end
-        -- Future outbox composition must consume this session-bound capability,
+        -- Outbox composition must consume this session-bound capability,
         -- not a caller-constructed table or a parsed committed claim. Copy all
         -- returned rows; mutating observations cannot change a later lookup.
         function session.acknowledged(receipt,request_bytes)
@@ -125,6 +149,11 @@ function M.open(document_bytes,approved_sha256,runtime)
     end)
     if not ok then return nil,"invalid_approved_reading_pairing" end
     return value
+end
+function M.prepare(handle,event_lines,request_id,issued_at_utc,expires_at_utc)
+    local session=sessions[handle]
+    if not session then return nil,"invalid_approved_reading_pairing" end
+    return session.prepare(event_lines,request_id,issued_at_utc,expires_at_utc)
 end
 function M.attempt(handle,request_bytes)
     local session=sessions[handle]

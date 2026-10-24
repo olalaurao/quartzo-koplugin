@@ -8,6 +8,23 @@ is introduced. Historical evidence paths remain bound to their original sources.
 
 ## Finite approved-pairing composition (G04, unregistered)
 
+Candidate0.0.11 adds `prepare(handle, eventLines, requestId, issuedUtc, expiresUtc)`
+to this SAME owner. It snapshots at most100 valid native lines and uses only the
+session's already approved binding. Device/epoch mismatch or invalid shape,
+nonce/window/session fails before network. The existing codec remains the only
+request serializer. Preparing bytes grants no receipt, ACK or identity authority.
+
+The SAME outbox now offers one explicit `send_pending` attempt: select its exact
+persisted lines within existing bounds, close the read handle, prepare/send through
+the approved pairing and pass the actual opaque receipt to `consume_receipt`.
+An empty queue skips pairing/network. Network/auth/retryable/closed-session or
+local receipt-commit failure retains unacknowledged bytes; there is no hidden
+retry. A later retry may use a fresh request nonce and the same native lines.
+401 and403 share the existing authentication-failure category. These APIs are
+unregistered preparation, not user-approved production import/UI, receiver
+registration, backfill/lifecycle or new physical proof. All earlier evidence
+remains source-specific.
+
 `quartzo.koplugin/quartzo/paired_exchange.lua` (promoted byte-for-byte from this
 tools directory) reuses the existing codec and shared pinned carrier. It
 accepts the exact private document issued by Quartzo's normal current-target
