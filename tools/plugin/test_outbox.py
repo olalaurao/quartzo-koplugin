@@ -568,7 +568,7 @@ class OutboxTest(unittest.TestCase):
         replay=self.queue.consume_receipt(owner.session,receipt,"request-a")
         self.assertEqual(replay.removed,0)
 
-    def test_actual_pairing_owner_and_shared_carrier_isolate_partial_receipt(self):
+    def paired_delivery_fixture(self):
         if not getattr(self, "already_selected", False):
             self.seed()
             self.queue.stage(self.batch())
@@ -585,7 +585,21 @@ class OutboxTest(unittest.TestCase):
                                                   peer_certificate_sha256="1"*64))
         fixture=pinned.PinnedTransportTest("runTest")
         fixture.lua,fixture.pin,fixture.config=self.lua,b"1"*64,self.lua.globals().config
-        _,_,http,https=fixture.make()
+        _,counts,http,https=fixture.make()
+        self.delivery_network_hook=None
+        self.delivery_http_status=None
+        def before_network():
+            self.assertEqual(sum(op=="open" for op,_ in self.calls),sum(op=="close" for op,_ in self.calls))
+            self.trace("network")
+        def after_network():
+            if self.delivery_network_hook:
+                self.delivery_network_hook()
+            return self.delivery_http_status
+        http.request=self.lua.eval('''function(original,before,after) return function(request)
+            before()
+            local first,status,headers=original(request)
+            return first,after() or status,headers
+        end end''')(http.request,before_network,after_network)
         paired=self.lua.execute((ROOT/"quartzo.koplugin/quartzo/paired_exchange.lua").read_text())
         self.lua.globals().package.loaded["quartzo/paired_exchange"]=paired
         now="2026-10-17T12:00:01.000Z"
@@ -612,12 +626,17 @@ class OutboxTest(unittest.TestCase):
                       peer_certificate_sha256="1"*64,binding=binding,token="t"*43,
                       not_before_utc="2026-10-17T12:00:00.000Z",expires_at_utc="2026-10-17T12:30:00.000Z")
         document_bytes=json.dumps(document,separators=(",", ":"))
+        self.codec_dependencies.array=self.lua.eval("function(t) return setmetatable(t,{wire_kind='array'}) end")
         runtime=self.lua.table(deps=self.codec_dependencies,codec=self.codec,carrier=self.lua.globals().carrier,
                                now=self.lua.eval("function() return '2026-10-17T12:00:01.000Z' end"),
                                http=http,https=https,ca_file="/fixture/ca.pem",
                                ltn12=self.lua.eval("{source={string=function(s) return function() local v=s;s=nil;return v end end}}"))
         session=paired.open(document_bytes,hashlib.sha256(document_bytes.encode()).hexdigest(),runtime)
         self.assertNotIsInstance(session,tuple)
+        return paired,session,request_bytes,response,request,counts
+
+    def test_actual_pairing_owner_and_shared_carrier_isolate_partial_receipt(self):
+        paired,session,request_bytes,response,_,_=self.paired_delivery_fixture()
         receipt,failure=paired.attempt(session,request_bytes)
         self.assertIsNone(failure)
         # Parsed matching claims cannot stand in for the actual opaque receipt.
@@ -629,6 +648,92 @@ class OutboxTest(unittest.TestCase):
         self.assertEqual(result.source_watermark, getattr(self, "expected_source_watermark", None))
         paired.close(session)
         self.assertEqual(self.queue.consume_receipt(session,receipt,request_bytes),(None,"unverified_reading_receipt"))
+
+    def send_selected(self,session,request,limit=100):
+        return self.queue.send_pending(session,request['request_id'],request['issued_at_utc'],
+                                       request['expires_at_utc'],limit)
+
+    def test_send_pending_uses_real_pairing_partial_receipt_and_closed_sqlite_handles(self):
+        paired,session,_,_,request,counts=self.paired_delivery_fixture()
+        original=list(self.queue.pending().event_lines.values())
+        # Selected facts survive even if the native source subsequently disappears.
+        self.mutate("DELETE FROM page_stat_data;DELETE FROM book")
+        result=self.send_selected(session,request)
+        self.assertNotIsInstance(result,tuple)
+        self.assertEqual((result.selected,result.removed,result.review_retained),(2,1,1))
+        self.assertFalse(result.canonical_ack)
+        self.assertEqual(result.source_watermark,getattr(self,"expected_source_watermark",None))
+        self.assertEqual(self.reopen().status().pending,1)
+        self.assertEqual(list(self.queue.pending().event_lines.values()),original[1:])
+        self.assertEqual(counts.http,1)
+        paired.close(session)
+
+    def test_send_pending_http_failures_preserve_exact_queue_without_hidden_retry(self):
+        for status,reason in ((401,"reading_http_unauthorized"),(403,"reading_http_unauthorized"),(429,"reading_http_retryable"),
+                              (503,"reading_http_retryable")):
+            with self.subTest(status=status):
+                self.setUp()
+                paired,session,_,_,request,counts=self.paired_delivery_fixture()
+                before=self.owned.read_bytes()
+                self.delivery_http_status=status
+                self.assertEqual(self.send_selected(session,request),(None,reason))
+                self.assertEqual(self.owned.read_bytes(),before)
+                self.assertEqual(self.reopen().status().pending,2)
+                self.assertEqual(counts.http,1)
+                paired.close(session)
+
+    def test_send_pending_commit_failure_after_network_keeps_original_lines_for_retry(self):
+        paired,session,_,response,request,counts=self.paired_delivery_fixture()
+        before=self.owned.read_bytes()
+        def fail(operation,value):
+            if operation=="exec" and value=="COMMIT":
+                self.assertTrue(any(op=="network" for op,_ in self.calls))
+                raise RuntimeError("synthetic local receipt commit failure")
+        self.query_hook=fail
+        self.assertEqual(self.send_selected(session,request),(None,"outbox_unavailable"))
+        self.query_hook=None
+        self.assertEqual(self.owned.read_bytes(),before)
+        self.assertEqual(self.reopen().status().pending,2)
+        self.assertEqual(counts.http,1)
+        first=json.loads(self.lua.globals().captured_body)
+        request['request_id']='qrtr_'+'b'*32
+        response['request_id']=request['request_id']
+        self.lua.globals().response_bytes=json.dumps(response,separators=(',',':'))
+        retried=self.send_selected(session,request)
+        second=json.loads(self.lua.globals().captured_body)
+        self.assertEqual(first['event_lines'],second['event_lines'])
+        self.assertEqual(first['batch_id'],second['batch_id'])
+        self.assertNotEqual(first['request_id'],second['request_id'])
+        self.assertEqual((retried.selected,retried.removed),(2,1))
+        self.assertEqual(self.reopen().status().pending,1)
+        self.assertEqual(counts.http,2)
+        paired.close(session)
+
+    def test_send_pending_session_closed_after_io_keeps_all_facts_and_review(self):
+        paired,session,_,_,request,counts=self.paired_delivery_fixture()
+        before=self.owned.read_bytes()
+        self.delivery_network_hook=lambda:paired.close(session)
+        self.assertEqual(self.send_selected(session,request),(None,"unverified_reading_receipt"))
+        self.assertEqual(self.owned.read_bytes(),before)
+        self.assertEqual((self.reopen().status().pending,self.queue.status().review),(2,1))
+        self.assertEqual(counts.http,1)
+
+    def test_send_pending_invalid_request_or_limit_is_rejected_before_network(self):
+        paired,session,_,_,request,counts=self.paired_delivery_fixture()
+        before=self.owned.read_bytes()
+        self.assertEqual(self.send_selected(session,request,101),(None,"invalid_outbox_state"))
+        request['request_id']='private invalid nonce'
+        self.assertEqual(self.send_selected(session,request),(None,"invalid_reading_delivery_request"))
+        self.assertEqual(self.owned.read_bytes(),before)
+        self.assertEqual(counts.http,0)
+        paired.close(session)
+
+    def test_send_pending_empty_queue_does_not_load_pairing_or_access_network(self):
+        before=self.owned.read_bytes()
+        result=self.queue.send_pending(self.lua.table(),"unused","unused","unused",100)
+        self.assertEqual(dict(result.items()),dict(selected=0,removed=0,canonical_ack=False))
+        self.assertEqual(self.owned.read_bytes(),before)
+        self.assertIsNone(self.lua.globals().package.loaded['quartzo/paired_exchange'])
 
     def test_prune_commit_failure_retains_original_pending_for_safe_replay(self):
         self.seed()

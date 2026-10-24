@@ -1,6 +1,7 @@
 """Actual Lua codec/shared carrier, injected SDK only; no device/approved user import proof."""
 import copy
 import hashlib
+import json
 import pathlib
 import unittest
 
@@ -18,6 +19,8 @@ class PairedExchangeTest(unittest.TestCase):
         self.lua = self.harness.lua
         self.harness.reference.dependencies[b'object'] = self.lua.eval(
             "function(value) return setmetatable(value,{wire_kind='object'}) end")
+        self.harness.reference.dependencies[b'array'] = self.lua.eval(
+            "function(value) return setmetatable(value,{wire_kind='array'}) end")
         self.module = self.lua.execute((ROOT.parents[1] / 'quartzo.koplugin/quartzo/paired_exchange.lua').read_text(encoding='utf-8'))
         self.document = dict(pairing_version=1, receiver_role='canonical_reading_activity_v1',
             endpoint='https://127.0.0.1:8443', certificate_pem='-----BEGIN CERTIFICATE-----\nsynthetic\n-----END CERTIFICATE-----\n',
@@ -56,6 +59,58 @@ class PairedExchangeTest(unittest.TestCase):
 
     def acknowledged(self, handle, receipt, request=None):
         return self.module[b'acknowledged'](handle, receipt, self.harness.sent if request is None else request)
+
+    def prepare(self,handle,lines=None,nonce=None,issued=None,expires=None):
+        request=reference.VECTOR['request']
+        return self.module[b'prepare'](handle,
+            self.lua.table_from([line.encode() for line in request['event_lines']]) if lines is None else lines,
+            request['request_id'].encode() if nonce is None else nonce,
+            request['issued_at_utc'].encode() if issued is None else issued,
+            request['expires_at_utc'].encode() if expires is None else expires)
+
+    def test_prepare_snapshots_exact_selected_lines_and_private_binding_without_network(self):
+        handle,counts,_=self.open()
+        lines=self.lua.table_from([line.encode() for line in reference.VECTOR['request']['event_lines']])
+        prepared=self.prepare(handle,lines)
+        self.assertEqual(prepared,self.harness.sent)
+        lines[1]=b'changed after preparation'
+        handle[b'vault_scope']=b'forged caller scope'
+        self.assertEqual(prepared,self.harness.sent)
+        self.assertEqual(counts[b'http'],0)
+        self.assertNotIn(b't'*43,prepared)
+
+    def test_prepare_refuses_foreign_native_scope_and_noncanonical_or_unbounded_selections(self):
+        handle,counts,_=self.open()
+        raw=json.loads(reference.VECTOR['request']['event_lines'][0]);raw.pop('event_id')
+        invalid=[self.lua.table(),self.lua.table_from([b'private malformed event']),
+            self.lua.table_from({1:reference.VECTOR['request']['event_lines'][0].encode(),b'extra':b'x'}),
+            self.lua.table_from([reference.VECTOR['request']['event_lines'][0].encode()]*101)]
+        for field in ('device_id','source_epoch'):
+            changed=dict(raw);changed[field]='another_scope'
+            line=self.harness.reference.codec[b'encode_event'](self.harness.reference.to_lua(changed))
+            self.assertIsInstance(line,bytes)
+            invalid.append(self.lua.table_from([line]))
+        for lines in invalid:
+            self.assertEqual(self.prepare(handle,lines),(None,b'invalid_reading_delivery_request'))
+        self.assertEqual(counts[b'http'],0)
+
+    def test_prepare_requires_live_session_nonce_and_request_window_without_creating_receipt(self):
+        handle,counts,_=self.open()
+        for changes in (dict(nonce=b'private invalid nonce'),dict(expires=b'2026-10-17T12:00:00.000Z')):
+            self.assertEqual(self.prepare(handle,**changes),(None,b'invalid_reading_delivery_request'))
+        prepared=self.prepare(handle)
+        self.assertEqual(self.acknowledged(handle,self.lua.table(),prepared),(None,b'unverified_reading_receipt'))
+        self.module[b'close'](handle)
+        self.assertEqual(self.prepare(handle),(None,b'invalid_approved_reading_pairing'))
+        self.assertEqual(counts[b'http'],0)
+        for instant in (b'2026-10-17T12:30:00.000Z',b'2026-10-17T12:00:00.000Z'):
+            self.lua.globals()[b'now_utc']=reference.NOW.encode()
+            handle,counts,_=self.open()
+            self.lua.globals()[b'now_utc']=instant
+            self.assertEqual(self.prepare(handle),(None,b'invalid_reading_delivery_request'))
+            self.lua.globals()[b'now_utc']=reference.NOW.encode()
+            self.assertEqual(self.prepare(handle),(None,b'invalid_reading_delivery_request'))
+            self.assertEqual(counts[b'http'],0)
 
     def test_only_approved_bound_tls_response_exposes_exact_committed_event(self):
         handle, counts, _ = self.open()
@@ -125,7 +180,7 @@ class PairedExchangeTest(unittest.TestCase):
         self.assertEqual(len(self.acknowledged(handle, receipt)), 1)
 
     def test_http_auth_retry_and_redirect_never_create_receipt_or_hidden_retry(self):
-        for status, reason in [(401, b'reading_http_unauthorized'), (429, b'reading_http_retryable'),
+        for status, reason in [(401, b'reading_http_unauthorized'), (403, b'reading_http_unauthorized'), (429, b'reading_http_retryable'),
                                (503, b'reading_http_retryable'), (302, b'unverified_reading_receipt')]:
             handle, counts, _ = self.open(status=status)
             self.assertEqual(self.attempt(handle), (None, reason))

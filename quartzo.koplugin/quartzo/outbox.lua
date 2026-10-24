@@ -855,6 +855,31 @@ local function handle(name, runtime, context)
             end)
         end)
     end
+    function api.send_pending(session,request_id,issued_at_utc,expires_at_utc,limit)
+        -- One explicit bounded attempt. pending() closes SQLite before any
+        -- network work; only the existing opaque receipt consumer can prune.
+        local ok,result,code=pcall(function()
+            local selected,reason=api.pending(limit)
+            if not selected then return nil,reason end
+            local count=#selected.event_lines
+            if count==0 then return {selected=0,removed=0,canonical_ack=false} end
+            local paired=require("quartzo/paired_exchange")
+            local request
+            request,reason=paired.prepare(session,selected.event_lines,request_id,issued_at_utc,expires_at_utc)
+            if not request then return nil,reason end
+            local receipt
+            receipt,reason=paired.attempt(session,request)
+            if not receipt then return nil,reason end
+            local consumed
+            consumed,reason=api.consume_receipt(session,receipt,request)
+            if not consumed then return nil,reason end
+            consumed.selected=count
+            return consumed
+        end)
+        if not ok then return nil,"outbox_delivery_unavailable" end
+        if result then return result end
+        return nil,code
+    end
     return api
 end
 

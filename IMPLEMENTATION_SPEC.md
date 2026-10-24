@@ -2247,3 +2247,30 @@ backup and restore, original backup/sidecar preservation and no destination
 SQLite open/ATTACH. The standalone source fixture must use actual LFS for the
 orphan checks and the real SDK for the subsequent supported restore. See
 docs/reading-queue-recovery.md for the original-copy authority and refusal paths.
+
+
+## 2026-10-24 Independent one-batch durable-delivery composition (candidate0.0.11)
+
+The SAME approved pairing owner prepares request bytes from up to100 dense valid
+native lines, a request ID and the original codec-validated request window. Copy
+lines before provider callbacks; reject foreign device/epoch against the captured
+private binding. Do not accept a caller-supplied binding or another serializer.
+Expired/backward-clock/closed sessions cannot prepare. Preparation grants no
+receipt, source-generation authority, identity restoration or canonical ACK.
+
+The SAME outbox owner may expose an unregistered one-attempt composition for
+already selected facts: bounded pending() -> paired.prepare -> paired.attempt ->
+existing consume_receipt. Close SQLite selection handles before network I/O;
+never hold a transaction across HTTP. Empty selection skips pairing and network.
+Only the existing opaque session/request-bound receipt consumer may prune or
+advance its guarded frontier. Network or local commit failure keeps unacknowledged
+bytes. Retry uses original native identities/lines with a fresh request nonce;
+no automatic retry, scheduler, new durable state or receipt issuer is introduced.
+HTTP403 belongs to the existing401 authentication-required category.
+
+Native tests must cover partial receipt, retained review/frontier, no open SQL
+handle across I/O, source loss after selection, failed local commit and exact-line
+retry, authentication/retryable failures and session close after I/O. Injected HTTP
+SDK fixtures are not physical delivery proof. This independent composition is
+inactive: it does not assume source reconciliation/Gate4 completion, register
+production transport or authorize later backfill/lifecycle/effect gates.
