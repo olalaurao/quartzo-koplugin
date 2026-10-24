@@ -21,9 +21,11 @@ UI0.0.8 adds manual Reading source setup/check/reconfirmation and keeps sync
 inactive. Nothing is installed; actual0.0.7 remains the latest installed proof.
 The implementation addendum records precise authority and remaining limits.
 
-Base dd4c93f/PR5 remains draft. Native CI for this candidate is required before
-any installation; local changed-path regressions pass on Lua5.1 and LuaJIT.
-The official native LFS/entropy/SQ3 fresh-process fixture is CI-only. Upstream
+Exact701bd12 native CI40100324573 passed493 cases without skips (338 plugin,
+34 transport,121 wire), including official LFS/entropy/SQ3 and fresh-process
+v2 recovery. Local plugin tests passed234 with104 explicit native-only skips.
+The98023-byte package in the private candidate manifest matches all eight Git
+sources; it is not installed. PR5 remains draft. Upstream
 main8375fc63 CI40053124500 retry passed2915 tests/8 skips; initial attempt failed
 reference preparation before tests. No hash pin was relaxed. Windows suites
 remain manual per the user's instruction. Goal ACTIVE/topic2of7; Gate4 OPEN.
