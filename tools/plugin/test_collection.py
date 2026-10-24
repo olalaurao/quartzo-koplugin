@@ -225,6 +225,28 @@ class CollectionTest(unittest.TestCase):
         self.assertEqual(self.reopen().status().pending, 2)
         self.assertIsNone(self.queue.status().source_watermark)
 
+    def test_corrupt_pending_neighbor_cannot_advance_frontier_when_another_receipt_arrives(self):
+        self.queue = self.enroll()
+        self.capture()
+        entries = [self.codec.inspect_event(line) for line in self.queue.pending().event_lines.values()]
+        earlier = next(entry for entry in entries if entry.started_at_seconds == 100)
+        later = next(entry for entry in entries if entry.started_at_seconds == 110)
+        raw = json.loads(next(line for line in self.queue.pending().event_lines.values()
+                              if self.codec.inspect_event(line).started_at_seconds == 100))
+        raw.pop("event_id")
+        raw["started_at_utc"] = "1970-01-01T00:03:20.000Z"
+        changed = self.codec.encode_event(self.to_lua(raw))
+        changed_info = self.codec.inspect_event(changed)
+        with statistics.closing(sqlite3.connect(self.owned)) as conn, conn:
+            conn.execute("UPDATE pending SET line=?,native_digest=? WHERE event_id=?",
+                         (changed, changed_info.native_digest, earlier.event_id))
+        owner = self.receipt_owner()
+        receipt = owner.mint(self.lua.table_from([later]), "request")
+        self.assertEqual(self.queue.consume_receipt(owner.session, receipt, "request"),
+                         (None, "invalid_outbox_state"))
+        self.assertEqual(self.reopen().status().pending, 2)
+        self.assertIsNone(self.queue.status().source_watermark)
+
     def test_explicit_full_rescan_restarts_progress_with_same_identity_and_catches_backdated_fact(self):
         self.queue = self.enroll()
         context = dict(self.queue.context().items())

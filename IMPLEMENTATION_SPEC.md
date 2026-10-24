@@ -2155,3 +2155,9 @@ rolls back to recognized schema2 and leaves the recovery copy. No new identity,
 old delivery ACK or source marker is inferred. Unknown schemas and schema1's
 unverified diagnostic source remain in explicit recovery/reconciliation, never
 silently upgraded. The UI requires a closed book and explicit confirmation.
+
+
+The ACK frontier validates each remaining pending row's event ID and native
+payload digest against its canonical line, just as delivery selection does.
+An internally inconsistent neighbor rejects/rolls back another event's local
+prune and marker update; a valid receipt does not certify unrelated local rows.

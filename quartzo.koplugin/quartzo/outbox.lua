@@ -239,12 +239,14 @@ local function frontier(conn,context,codec)
     local saved=progress(conn,context.schema_version)
     local candidate=saved.scanned
     if not candidate then return nil end
-    local stmt=conn:prepare("SELECT "..bounded("line",8192).." FROM pending LIMIT 1001")
+    local stmt=conn:prepare("SELECT "..bounded("line",8192)..","..bounded("event_id",68)
+        ..","..bounded("native_digest",64).." FROM pending LIMIT 1001")
     for i=1,CAP+1 do
         local row=stmt:step()
         if not row then break end
         check(i<=CAP,"outbox_capacity")
         local entry=inspect(codec,row[1],context)
+        check(entry.event_id==row[2] and entry.native_digest==row[3])
         check(integer(entry.started_at_seconds))
         candidate=math.min(candidate,entry.started_at_seconds-1)
     end

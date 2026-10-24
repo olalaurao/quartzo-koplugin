@@ -29,7 +29,13 @@ actual SQ3 child stops and joined paired-owner/frontier cases. The follow-up
 explicit upgrade efbb0de passed native CI40107193589:576/no skips (421 plugin,
 34 transport,121 wire). The final0.0.9 artifact contains the eight exact accepted
 Git sources and is not installed. Changed-path local tests passed42 collection/
-40 UI cases; native proof additionally covers official SQ3 migration/rollback. Repo base3cff94d was clean with
+40 UI cases; native proof additionally covers official SQ3 migration/rollback.
+A subsequent adversarial corruption regression exposed an unchecked pending
+neighbor in frontier calculation. The new comparison verifies its event ID and
+native digest before ACK progress; failure rolls back prune+marker. Its local
+regression passes (44 collection cases/22 native-only skips); exact new native
+CI and repackaging are required. The prior efbb artifact is superseded and must
+not be used for the final trial. Repo base3cff94d was clean with
 exact CI40101783788 SUCCESS499/no skips. Gate4 and full goal stay OPEN/ACTIVE,
 topic2of7. No device, timed session, listener or human request was started.
 
